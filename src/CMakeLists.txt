@@ -1,9 +1,13 @@
 
 SUBDIRS(netlib error)
 
-SET(CMAKE_CXX_FLAGS "-g -Wall")
-SET(CMAKE_CXX_FLAGS_DEBUG "-g -Wall")
-
+IF(WIN32)
+  SET(CMAKE_CXX_FLAGS "-D__GTHREAD_HIDE_WIN32API -g -Wall")
+  SET(CMAKE_CXX_FLAGS_DEBUG "-D__GTHREAD_HIDE_WIN32API -g -Wall")  
+ELSE(WIN32)
+  SET(CMAKE_CXX_FLAGS "-g -Wall")
+  SET(CMAKE_CXX_FLAGS_DEBUG "-g -Wall")
+ENDIF(WIN32)
 
 INCLUDE_DIRECTORIES(${Simulty_SOURCE_DIR}/src/netlib ${Simulty_SOURCE_DIR}/src/error /usr/local/include)
 
