@@ -3,11 +3,11 @@
 #ifndef _GUI_H_
 #define _GUI_H_
 
+#include "allegro.h"
+
 #ifdef WIN32
   #include "winalleg.h"
 #endif
-
-#include "allegro.h"
 
 #include <vector>
 

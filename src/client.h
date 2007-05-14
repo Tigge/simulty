@@ -3,11 +3,11 @@
 #ifndef _CLIENT_H_
 #define _CLIENT_H_
 
+#include "allegro.h"
+
 #ifdef WIN32
   #include "winalleg.h"
 #endif
-
-#include "allegro.h"
 
 #include "game_client.h"
 
