@@ -13,16 +13,23 @@ INCLUDE_DIRECTORIES(${Simulty_SOURCE_DIR}/src/netlib ${Simulty_SOURCE_DIR}/src/e
 
 LINK_DIRECTORIES(${Simulty_BINARY_DIR}/src/netlib ${Simulty_BINARY_DIR}/src/error /usr/local/lib L/usr/X11R6/lib)
 
-
 # Server:
 ADD_EXECUTABLE(../simulty-server server.cpp game_server.cpp game_server_player.cpp game_server_packet.cpp point.cpp map_base.cpp player_manager.cpp player_manager_server.cpp player.cpp player_server_network.cpp player_server_ai.cpp building.cpp building_manager.cpp tile.cpp)
 
+IF(WIN32)
+TARGET_LINK_LIBRARIES(../simulty-server netlib elog alleg)
+ELSE(WIN32)
 TARGET_LINK_LIBRARIES(../simulty-server netlib elog alleg-4.2.0)
+ENDIF(WIN32)
 
 # Client:
 ADD_EXECUTABLE(../simulty-client client.cpp game_client.cpp game_client_packet.cpp point.cpp map_base.cpp map.cpp tile.cpp player_manager.cpp player.cpp player_client_local.cpp player_client_remote.cpp building.cpp building_manager.cpp gui.cpp mouse_handler.cpp)
 
+IF(WIN32)
+TARGET_LINK_LIBRARIES(../simulty-client netlib elog alleg)
+ELSE(WIN32)
 TARGET_LINK_LIBRARIES(../simulty-client netlib elog alleg-4.2.0)
+ENDIF(WIN32)
 
 
 
