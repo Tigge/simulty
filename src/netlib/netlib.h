@@ -17,6 +17,7 @@
 #ifdef WIN32
  #include "winsock.h"
  #define  socklen_t int
+ #define  fd_set FD_SET
 
 #else
  #include <netdb.h>
