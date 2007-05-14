@@ -24,14 +24,14 @@ class player_manager
     virtual ~player_manager();
     
     virtual player *get_by_n(unsigned int n);
-    virtual player *get_by_id(INT32 i);
-    virtual player *get_by_slot(INT16 s);
+    virtual player *get_by_id(NL_INT32 i);
+    virtual player *get_by_slot(NL_INT16 s);
 
     virtual bool add(player *p);
 
     virtual bool del_by_p(player* p);
-    virtual bool del_by_id(INT32 i);
-    virtual bool del_by_slot(INT16 s);
+    virtual bool del_by_id(NL_INT32 i);
+    virtual bool del_by_slot(NL_INT16 s);
 
     unsigned int count();
     unsigned int count_max();

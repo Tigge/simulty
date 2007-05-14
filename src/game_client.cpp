@@ -188,8 +188,8 @@ void game_client::buy_land(point from, point to) {
               << to.x << ", " << to.y << std::endl;
 
     NPacket landpak(NPACKET_TYPE_SIMULTY_LAND_BUY);
-    landpak << (INT32)from.x << (INT32)from.y 
-            << (INT32)to.x   << (INT32)to.y;
+    landpak << (NL_INT32)from.x << (NL_INT32)from.y 
+            << (NL_INT32)to.x   << (NL_INT32)to.y;
     net_client->packet_put(landpak);
 }
 
@@ -198,7 +198,7 @@ void game_client::buy_road(point from, point to) {
     if(!m->get(to.x, to.y).road)
     {
         NPacket roadpak(NPACKET_TYPE_SIMULTY_ROAD_BUILD);
-        roadpak << (INT32)to.x << (INT32)to.y;
+        roadpak << (NL_INT32)to.x << (NL_INT32)to.y;
         net_client->packet_put(roadpak);
     }
 }
@@ -207,15 +207,15 @@ void game_client::buy_zone(point from, point to, int type) {
 
     NPacket zonepak(NPACKET_TYPE_SIMULTY_LAND_ZONE);
 
-    zonepak << (INT16)type
-            << (INT32)from.x << (INT32)from.y 
-            << (INT32)to.x   << (INT32)to.y;
+    zonepak << (NL_INT16)type
+            << (NL_INT32)from.x << (NL_INT32)from.y 
+            << (NL_INT32)to.x   << (NL_INT32)to.y;
             
     net_client->packet_put(zonepak);     
 
 
-    std::cout << (INT16)type
-             << (INT32)from.x << (INT32)from.y 
-             << (INT32)to.x   << (INT32)to.y; 
+    std::cout << (NL_INT16)type
+             << (NL_INT32)from.x << (NL_INT32)from.y 
+             << (NL_INT32)to.x   << (NL_INT32)to.y; 
 
 }

@@ -34,18 +34,18 @@ int NPacket::getSize()
 }
 
 // 32 bit numbers (4 chars)
-NPacket &NPacket::operator<< (const INT32 &val)
+NPacket &NPacket::operator<< (const NL_INT32 &val)
 { 
-    unsigned char b[4]; *((INT32 *)b) = htonl(val);
+    unsigned char b[4]; *((NL_INT32 *)b) = htonl(val);
     for(int i = 0; i < 4; i++)buffer.push_back((char)b[i]);
 
     return *this; 
 }
 
-NPacket &NPacket::operator>> (INT32 &val)
+NPacket &NPacket::operator>> (NL_INT32 &val)
 {
     unsigned char b[4]; for(int i = 0; i < 4; i++)b[i] = buffer[i];
-    val = ntohl( *((INT32 *)b) );
+    val = ntohl( *((NL_INT32 *)b) );
 
     buffer.erase(buffer.begin(), buffer.begin() + 4);        
     
@@ -53,18 +53,18 @@ NPacket &NPacket::operator>> (INT32 &val)
 }
 
 // 16 bit numbers (2 chars)
-NPacket &NPacket::operator<< (const INT16 &val)
+NPacket &NPacket::operator<< (const NL_INT16 &val)
 { 
-    unsigned char b[2]; *((INT16 *)b) = htons(val);
+    unsigned char b[2]; *((NL_INT16 *)b) = htons(val);
     for(int i = 0; i < 2; i++)buffer.push_back(b[i]);
 
     return *this; 
 }
 
-NPacket &NPacket::operator>> (INT16 &val)
+NPacket &NPacket::operator>> (NL_INT16 &val)
 {
     unsigned char b[2]; for(int i = 0; i < 2; i++)b[i] = buffer[i];
-    val = ntohs( *((INT16 *)b) );
+    val = ntohs( *((NL_INT16 *)b) );
 
     buffer.erase(buffer.begin(), buffer.begin() + 2);
     

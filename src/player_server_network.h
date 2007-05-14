@@ -18,7 +18,7 @@ class player_server_network: public player {
   
     virtual void money_set(int money_new);
   
-    player_server_network(INT32, INT16);
+    player_server_network(NL_INT32, NL_INT16);
     virtual ~player_server_network (  );
     void update (  );
 };

@@ -23,7 +23,7 @@ player *player_manager::get_by_n(unsigned int n)
 }
 
     
-player *player_manager::get_by_id(INT32 i)
+player *player_manager::get_by_id(NL_INT32 i)
 {
     for(unsigned int l = 0; l < count(); l++)
         if(list[l]->id_get() == i)return list[l];
@@ -31,7 +31,7 @@ player *player_manager::get_by_id(INT32 i)
     return NULL;
 }
 
-player *player_manager::get_by_slot(INT16 s)
+player *player_manager::get_by_slot(NL_INT16 s)
 {
     for(unsigned int l = 0; l < count(); l++)
         if(list[l]->slot_get() == s)return list[l];
@@ -88,7 +88,7 @@ bool player_manager::del_by_p(player* p)
     return true;
 }
 
-bool player_manager::del_by_id(INT32 i)
+bool player_manager::del_by_id(NL_INT32 i)
 {
     for(unsigned int l = 0; l < count(); l++)
         if(list[l]->id_get() == i)return del_by_p(list[l]);
@@ -96,7 +96,7 @@ bool player_manager::del_by_id(INT32 i)
     return false;
 }
 
-bool player_manager::del_by_slot(INT16 s)
+bool player_manager::del_by_slot(NL_INT16 s)
 {
     for(unsigned int l = 0; l < count(); l++)
         if(list[l]->slot_get() == s)return del_by_p(list[l]);

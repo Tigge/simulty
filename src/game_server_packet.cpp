@@ -49,7 +49,7 @@ bool game_server::packet_handle(player_server_network *from, NPacket pack)
         {
             std::cerr << "** Got version info from client" << std::endl;
             NPacket pid(NPACKET_TYPE_SIMULTY_ID); 
-            pid << (INT32)from->id_get() << (INT16)from->slot_get();
+            pid << (NL_INT32)from->id_get() << (NL_INT16)from->slot_get();
 
             from->socket->packet_put(pid);
 
@@ -60,7 +60,7 @@ bool game_server::packet_handle(player_server_network *from, NPacket pack)
         case NPACKET_TYPE_SIMULTY_LAND_BUY:
         {
             // Read values from packet:
-            INT32 startx, starty, endx, endy;
+            NL_INT32 startx, starty, endx, endy;
             pack >> startx >> starty >> endx >> endy;   
 
             // Calculate cost:                     
@@ -89,7 +89,7 @@ bool game_server::packet_handle(player_server_network *from, NPacket pack)
                 // Send change to everyone else:
 
                 NPacket landp(NPACKET_TYPE_SIMULTY_LAND_BUY);
-                landp << (INT16)from->slot_get() << startx << starty << endx << endy;
+                landp << (NL_INT16)from->slot_get() << startx << starty << endx << endy;
 
                 packet_send_to_all(landp);
             }                 
@@ -99,7 +99,7 @@ bool game_server::packet_handle(player_server_network *from, NPacket pack)
         // Buy road:
         case NPACKET_TYPE_SIMULTY_ROAD_BUILD:
         {
-            INT32 roadx; INT32 roady; NPacket roadp = pack;
+            NL_INT32 roadx; NL_INT32 roady; NPacket roadp = pack;
             roadp >> roadx >> roady;
 
             std::cerr << "** Got road build command" << std::endl;
@@ -126,7 +126,7 @@ bool game_server::packet_handle(player_server_network *from, NPacket pack)
         
         case NPACKET_TYPE_SIMULTY_LAND_ZONE:
         {
-            INT32 startx, starty, endx, endy; INT16 type;
+            NL_INT32 startx, starty, endx, endy; NL_INT16 type;
             pack >> type >> startx >> starty >> endx >> endy;
             
             int cost = 0;
@@ -150,7 +150,7 @@ bool game_server::packet_handle(player_server_network *from, NPacket pack)
                         }    
                         
                 NPacket zonepak(NPACKET_TYPE_SIMULTY_LAND_ZONE);
-                zonepak << (INT16)from->slot_get() << type << startx << starty << endx << endy;
+                zonepak << (NL_INT16)from->slot_get() << type << startx << starty << endx << endy;
 
                 packet_send_to_all(zonepak);
                 

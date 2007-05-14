@@ -10,7 +10,7 @@ class player_client_local: public player {
   // Attributes
   // Operations
   public:
-    player_client_local(INT32, INT16);
+    player_client_local(NL_INT32, NL_INT16);
     //player_client_local();
     virtual ~player_client_local();
     void update();

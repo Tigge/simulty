@@ -119,7 +119,7 @@ bool NSocket::packet_exists()
         unsigned char h[4]; for(int i = 0; i < 4; i++)h[i] = buffer_in[i];
 
         //INT16 type   = (int)h[0];
-        INT32 length = ntohl( *((INT32 *)h) & 0xFF000000 );
+        NL_INT32 length = ntohl( *((NL_INT32 *)h) & 0xFF000000 );
         /*
        cout << "NSocket: packet_exists, header is: ";
         for(int i = 0; i < 4; i++)
@@ -148,8 +148,8 @@ NPacket NSocket::packet_get()
 
         unsigned char h[4]; for(int i = 0; i < 4; i++)h[i] = buffer_in[i];
 
-        INT16 type   = (int)h[0];
-        INT32 length = ntohl( *((INT32 *)h) & 0xFF000000 );
+        NL_INT16 type   = (int)h[0];
+        NL_INT32 length = ntohl( *((NL_INT32 *)h) & 0xFF000000 );
 
         NPacket p; p.setType(type);
 
@@ -200,7 +200,7 @@ bool NSocket::packet_put(NPacket p)
 
         unsigned char h[4];
 
-        *((INT32 *)h) = htonl(p.getSize());
+        *((NL_INT32 *)h) = htonl(p.getSize());
         h[0]          = (unsigned char)p.getType();
 
 

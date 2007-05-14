@@ -12,7 +12,7 @@ ELog::ELog(): std::ostringstream(std::ios_base::in)
 
 ELog::~ELog()
 {
-    sync();
+    flush();
 }
 
 std::ostream& ELog::flush()

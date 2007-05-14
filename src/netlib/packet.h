@@ -8,8 +8,8 @@
 #include <vector>
 #include <string>
 
-#define INT16 short
-#define INT32 int
+#define NL_INT16 short
+#define NL_INT32 int
 
 #define NPACKET_TYPE_NONE 0
 
@@ -32,13 +32,13 @@ class NPacket {
     int  getSize();
 
     // 32 bit numbers (4 chars)
-    NPacket &operator<< (const INT32 &val);
-    NPacket &operator>> (INT32 &val);
+    NPacket &operator<< (const NL_INT32 &val);
+    NPacket &operator>> (NL_INT32 &val);
 
 
     // 16 bit numbers (2 chars)
-    NPacket &operator<< (const INT16 &val);
-    NPacket &operator>> (INT16 &val);
+    NPacket &operator<< (const NL_INT16 &val);
+    NPacket &operator>> (NL_INT16 &val);
    
     // Single chars (1 char)
     NPacket &operator<< (const char &val);

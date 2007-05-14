@@ -10,7 +10,7 @@ class player_server_ai: public player {
   // Attributes
   // Operations
   public:
-    player_server_ai(INT32, INT16);
+    player_server_ai(NL_INT32, NL_INT16);
     ~player_server_ai (  );
     void update (  );
 };

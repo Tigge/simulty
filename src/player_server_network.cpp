@@ -1,6 +1,6 @@
 #include "player_server_network.h"
 
-player_server_network::player_server_network (INT32 id_new, INT16 slot_new) : player(id_new, slot_new)
+player_server_network::player_server_network (NL_INT32 id_new, NL_INT16 slot_new) : player(id_new, slot_new)
 {
     type = PLAYER_TYPE_SERVER_NETWORK;
 }

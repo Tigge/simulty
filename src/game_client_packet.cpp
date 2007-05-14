@@ -18,7 +18,7 @@ void game_client::packet_handle(NPacket p)
                 std::string welcome; p >> welcome;
 
                 NPacket ver(NPACKET_TYPE_SIMULTY_VERSION_CLIENT); 
-                ver << (INT16)0 << (INT16)0 << (INT16)1;
+                ver << (NL_INT16)0 << (NL_INT16)0 << (NL_INT16)1;
                 net_client->packet_put(ver);
 
                 alert("Welcome message from server", welcome.c_str(), NULL, "Ok", NULL, 0, 0);
@@ -31,7 +31,7 @@ void game_client::packet_handle(NPacket p)
                 std::cerr << "** Got id message (update)" << std::endl;
 
                 // Fetch ID and slot from packet:
-                INT32 id_new; INT16 slot_new; p >> id_new >> slot_new;
+                NL_INT32 id_new; NL_INT16 slot_new; p >> id_new >> slot_new;
                 
                 // Create new local player and assign id and slot:
                 player_client_local *pl = new player_client_local(id_new, slot_new);
@@ -49,7 +49,7 @@ void game_client::packet_handle(NPacket p)
             }
             case NPACKET_TYPE_SIMULTY_ROAD_BUILD:
             {
-                INT32 x, y; p >> x >> y;
+                NL_INT32 x, y; p >> x >> y;
                 m->tiles[y * m->width + x].road = true;
                 break;
             }
@@ -64,7 +64,7 @@ void game_client::packet_handle(NPacket p)
 
             case NPACKET_TYPE_SIMULTY_MONEY_CHANGE:
             {
-                INT16 player_affected; INT32 money_new;
+                NL_INT16 player_affected; NL_INT32 money_new;
                 p >> player_affected >> money_new;
                 
                 
@@ -74,7 +74,7 @@ void game_client::packet_handle(NPacket p)
             case NPACKET_TYPE_SIMULTY_LAND_BUY:
             {
                 // Fetch area:
-                INT16 pl_slot; INT32 x1, y1, x2, y2;
+                NL_INT16 pl_slot; NL_INT32 x1, y1, x2, y2;
                 p >> pl_slot >> x1 >> y1 >> x2 >> y2;
             
                 for(int x = x1; x <= x2; x++)
@@ -89,7 +89,7 @@ void game_client::packet_handle(NPacket p)
             case NPACKET_TYPE_SIMULTY_LAND_ZONE:
             {
                 // Fetch area:
-                INT16 pl_slot, ztype; INT32 x1, y1, x2, y2;
+                NL_INT16 pl_slot, ztype; NL_INT32 x1, y1, x2, y2;
                 p >> pl_slot >> ztype >> x1 >> y1 >> x2 >> y2;
             
                 for(int x = x1; x <= x2; x++)
@@ -107,7 +107,7 @@ void game_client::packet_handle(NPacket p)
             
             case NPACKET_TYPE_SIMULTY_PLAYER_JOINED:
             {
-                std::string nick; INT32 id; INT16 slot;
+                std::string nick; NL_INT32 id; NL_INT16 slot;
                 p >> id >> slot >> nick;
                 
                 
@@ -118,7 +118,7 @@ void game_client::packet_handle(NPacket p)
             
             case NPACKET_TYPE_SIMULTY_PLAYER_LEFT:
             {
-                INT32 id;
+                NL_INT32 id;
                 p >> id;
                 
                 client->g->console_log("Player left");

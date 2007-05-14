@@ -38,7 +38,7 @@ class player {
 
     virtual void update();
 
-    player(INT32, INT16);
+    player(NL_INT32, NL_INT16);
     virtual ~player ();
 
 
