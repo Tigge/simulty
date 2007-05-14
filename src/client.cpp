@@ -29,5 +29,7 @@ int main(int argc, char *argv[])
     delete client;
 
     std::cerr << "Ending..." << std::endl;
+    
+    return 0;
 }
 END_OF_MAIN()
