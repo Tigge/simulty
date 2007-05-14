@@ -1,4 +1,4 @@
-#include "allegro.h"
+
 #include "game_server.h"
 
 #include "netlib.h"

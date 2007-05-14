@@ -1,6 +1,12 @@
 #ifndef GAME_SERVER_H
 #define GAME_SERVER_H
 
+#include "allegro.h"
+
+#ifdef WIN32
+  #include "winalleg.h"
+#endif
+
 #include "netlib.h"
 
 #include "map_base.h"

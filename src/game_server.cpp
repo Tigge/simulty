@@ -24,8 +24,6 @@
  */
 
 
-#include "allegro.h"
-
 #include "shared.h"
 
 #include "game_server.h"
