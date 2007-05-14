@@ -129,8 +129,7 @@ void map::clean_bitmap(BITMAP *b)
 
 point map::val2tile(point input)
 {
-    point output;
-    
+    point output;    
 
     output.y = input.x / TILE_W + input.y / TILE_H - (height) / 2;
     output.x = input.y / TILE_H * 2 - (input.x / TILE_W + input.y / TILE_H - (height) / 2);

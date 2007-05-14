@@ -9,9 +9,9 @@ game_client *client;
 
 int main(int argc, char *argv[])
 {
-    cerr << "Starting..." << endl;    
+    std::cerr << "Starting..." << std::endl;    
     client = new game_client;
-    cerr << "New game client" << endl;
+    std::cerr << "New game client" << std::endl;
 
     while(client->running())
     {
@@ -25,9 +25,9 @@ int main(int argc, char *argv[])
         rest(0);
     }
 
-    cerr << "Deleting game client..." << endl;
+    std::cerr << "Deleting game client..." << std::endl;
     delete client;
 
-    cerr << "Ending..." << endl;
+    std::cerr << "Ending..." << std::endl;
 }
 END_OF_MAIN()

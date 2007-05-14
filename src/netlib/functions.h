@@ -5,9 +5,8 @@
 
 #include <string>
 
-using namespace std;
 
-string host_to_address(string host);
-string address_to_host(string address);
+std::string host_to_address(std::string host);
+std::string address_to_host(std::string address);
 
 #endif

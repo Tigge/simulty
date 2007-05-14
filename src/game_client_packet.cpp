@@ -5,7 +5,6 @@
 #include "shared.h"
 #include "game_client.h"
 
-#define err cerr
 
 
 void game_client::packet_handle(NPacket p)
@@ -14,9 +13,9 @@ void game_client::packet_handle(NPacket p)
         {
             case NPACKET_TYPE_SIMULTY_WELCOME: 
             {
-                err << "** Got welcome message" << endl;
+                std::cerr << "** Got welcome message" << std::endl;
 
-                string welcome; p >> welcome;
+                std::string welcome; p >> welcome;
 
                 NPacket ver(NPACKET_TYPE_SIMULTY_VERSION_CLIENT); 
                 ver << (INT16)0 << (INT16)0 << (INT16)1;
@@ -29,7 +28,7 @@ void game_client::packet_handle(NPacket p)
 
             case NPACKET_TYPE_SIMULTY_ID:
             {
-                err << "** Got id message (update)" << endl;
+                std::cerr << "** Got id message (update)" << std::endl;
 
                 // Fetch ID and slot from packet:
                 INT32 id_new; INT16 slot_new; p >> id_new >> slot_new;
@@ -44,7 +43,7 @@ void game_client::packet_handle(NPacket p)
                 // Set the player to our local player:                
                 player_me = pl;
        
-                err << "*** ID is " << id_new << " and slot is " << slot_new << endl;
+                std::cerr << "*** ID is " << id_new << " and slot is " << slot_new << std::endl;
                 
                 break;
             }
@@ -108,7 +107,7 @@ void game_client::packet_handle(NPacket p)
             
             case NPACKET_TYPE_SIMULTY_PLAYER_JOINED:
             {
-                std:string nick; INT32 id; INT16 slot;
+                std::string nick; INT32 id; INT16 slot;
                 p >> id >> slot >> nick;
                 
                 
@@ -129,7 +128,7 @@ void game_client::packet_handle(NPacket p)
 
             default:
             {
-                err << "** Got uknown message with id " << p.getType() << endl;
+                std::cerr << "** Got uknown message with id " << p.getType() << std::endl;
                 p.print();
                 break;
             }           

@@ -60,7 +60,7 @@ bool player_manager::del_by_p(player* p)
     if(n == -1) return false;
     
 
-    err << "* Removing player" << endl;
+    std::cerr << "* Removing player" << std::endl;
 
     // Empty slot:
     slots[p->slot_get()] = 0;
@@ -69,7 +69,7 @@ bool player_manager::del_by_p(player* p)
     if(p->type_get() == PLAYER_TYPE_SERVER_NETWORK)
     {
         player_server_network *play = (player_server_network *)p;
-        err << "  - Was connected from " << play->socket->get_ip() << ":" << play->socket->get_port() << endl;
+        std::cerr << "  - Was connected from " << play->socket->get_ip() << ":" << play->socket->get_port() << std::endl;
 
         delete (player_server_network *)p;
     }
@@ -77,10 +77,10 @@ bool player_manager::del_by_p(player* p)
     {
         
         delete (player_server_ai *)p;
-        err << "  - Was an AI that runned on the server" << endl;
+        std::cerr << "  - Was an AI that runned on the server" << std::endl;
     }
 
-    err << endl;
+    std::cerr << std::endl;
 
     // Erase from list:
     list.erase(list.begin() + n);

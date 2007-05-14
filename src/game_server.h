@@ -11,6 +11,8 @@
 #include "player_server_network.h"
 #include "player_server_ai.h"
 
+#include "building_manager.h"
+
 #include "point.h"
 
 
@@ -37,6 +39,8 @@ class game_server {
     void packet_send_to_all(NPacket pack);
 
     player_manager_server pman;
+    
+    building_manager bman;
 
     bool time_advance;
 

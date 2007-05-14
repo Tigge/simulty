@@ -36,7 +36,7 @@
 bool game_server::player_add(unsigned char type)
 {
     // Handle new connection
-    err << "* Player joined" << endl;
+    std::cerr << "* Player joined" << std::endl;
     
 
     // Get free slot:    
@@ -50,7 +50,7 @@ bool game_server::player_add(unsigned char type)
         player_server_ai *player_ai_tmp = new player_server_ai(0 - (rand() % 1024), slot);      
         player_tmp = player_ai_tmp;
 
-        err << "  - Player is an AI running on the server" << endl;
+        std::cerr << "  - Player is an AI running on the server" << std::endl;
 
         // TODO: give player a negative id BETTER!
         // TODO: reject if full. 
@@ -74,7 +74,7 @@ bool game_server::player_add(unsigned char type)
                 player_network_tmp->socket = socket_tmp;
 
                 // Print som useful information:
-                err << "  - Connected from " << player_network_tmp->socket->get_ip() << ":" << player_network_tmp->socket->get_port() << endl;
+                std::cerr << "  - Connected from " << player_network_tmp->socket->get_ip() << ":" << player_network_tmp->socket->get_port() << std::endl;
 
                 // TODO SLOT, wich slot.. let the user decide?
 
@@ -94,7 +94,7 @@ bool game_server::player_add(unsigned char type)
             else 
             {
                 // TODO, delete tmp socket
-                err << "* New connection failed!" << endl;
+                std::cerr << "* New connection failed!" << std::endl;
                 return false;
             }
         }
@@ -107,7 +107,7 @@ bool game_server::player_add(unsigned char type)
     }
     
     // Write info
-    err << "  - Gave player the id " << player_tmp->id_get() << " and assigned to slot " << player_tmp->slot_get() << endl << endl;
+    std::cerr << "  - Gave player the id " << player_tmp->id_get() << " and assigned to slot " << player_tmp->slot_get() << std::endl << std::endl;
 
     // Add player to the list
     pman.add(player_tmp);
@@ -126,8 +126,8 @@ bool game_server::player_add(unsigned char type)
 // =====================================================================
 bool game_server::player_remove(player *pl)
 {
-    err << "* Player left" << endl;
-    err << "  - Had the the id " << pl->id_get() << " and was assigned to slot " << pl->slot_get() << endl;
+    std::cerr << "* Player left" << std::endl;
+    std::cerr << "  - Had the the id " << pl->id_get() << " and was assigned to slot " << pl->slot_get() << std::endl;
 
 
     NPacket left(NPACKET_TYPE_SIMULTY_PLAYER_LEFT);
@@ -138,11 +138,11 @@ bool game_server::player_remove(player *pl)
 
     if(pman.del_by_p(pl))
     {
-        err << "  - Deleted successfully" << endl;  
+        std::cerr << "  - Deleted successfully" << std::endl;  
         return true;          
     }
 
-    err << "  - Delete failed" << endl;
+    std::cerr << "  - Delete failed" << std::endl;
     return false;
     
 }

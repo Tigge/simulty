@@ -7,7 +7,6 @@
 #include <vector>
 #include <iostream>
 
-using namespace std;
 
 class NNetwork
 {
@@ -18,7 +17,7 @@ class NNetwork
  fd_set       filedescset;
  unsigned int filedescmax;
  
- vector<NSocket *> sockets;
+ std::vector<NSocket *> sockets;
 
  bool socket_init(NSocket *);
  bool socket_fixreuse(NSocket *);
@@ -43,8 +42,8 @@ class NNetwork
  virtual bool del_by_id(unsigned int n);
  
  // Move these two! (or perhaps make them static, hmm) TODO
- static string host_to_address(string host);
- static string address_to_host(string address); 
+ static std::string host_to_address(std::string host);
+ static std::string address_to_host(std::string address); 
 
  virtual NSocket *operator[](int);
 

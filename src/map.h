@@ -15,7 +15,7 @@
 
 #include <vector>
 
-using namespace std;
+
 
 class map : public map_base {
 

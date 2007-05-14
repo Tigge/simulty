@@ -14,6 +14,8 @@
 #include "player_client_local.h"
 #include "player_client_remote.h"
 
+#include "building_manager.h"
+
 
 #include "map_base.h"
 #include "map.h"
@@ -42,17 +44,16 @@ class game_client {
     private:
 
     BITMAP *buffer;
-    BITMAP *mouse_pointer;
-    BITMAP *mouse_block;
-
+    
     NNetwork net;
 
 
   public:
 
     player_manager pman;
-
     player_client_local *player_me;
+
+    building_manager bman;
 
     bool cam_move_step(int dir, int step);
     bool cam_move_jump(int x, int y);
@@ -60,9 +61,7 @@ class game_client {
   public:
 
     map *m;
-
-    mouse_handler *mouse;
-
+    
     bool state_running;
     
     unsigned char state_menu;
@@ -73,11 +72,10 @@ class game_client {
     int frames;
 
     int time;
-    int tool;
+
 
     int money;
 
-    point mouse_down_tile;
     point cam;
 
     NSocket *net_client;
@@ -96,6 +94,11 @@ class game_client {
     void update (  );
 
     void packet_handle(NPacket p);
+    
+    void buy_land(point from, point to);
+    void buy_road(point from, point to);
+    void buy_zone(point from, point to, int type);
+    
 };
 
 

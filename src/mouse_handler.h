@@ -5,16 +5,19 @@
 #include "allegro.h"
 #include "point.h"
 
-const unsigned char BUTTON_IS_UP    = 0;
-const unsigned char BUTTON_DOWN     = 1;
-const unsigned char BUTTON_IS_DOWN  = 2;
-const unsigned char BUTTON_UP       = 3;
+const unsigned char EVENT_NONE    = 0; // On "normal"
+const unsigned char EVENT_PRESS   = 1; // On press
+const unsigned char EVENT_HOLD    = 2; // On hold
+const unsigned char EVENT_RELEASE = 3; // On release
 
 class mouse_handler
 {
     public:
 
     point pos;
+    
+    point up;
+    point down;
 
     unsigned char button_left;
     unsigned char button_middle;

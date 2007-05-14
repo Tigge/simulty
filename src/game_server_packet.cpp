@@ -22,11 +22,12 @@
  *
  * Version ##revision##
  */
- 
+//#include "allegro.h"
+
 #include "client.h"
 
 
-#include "allegro.h"
+
 
 #include "shared.h"
 
@@ -46,7 +47,7 @@ bool game_server::packet_handle(player_server_network *from, NPacket pack)
         // Version type:
         case NPACKET_TYPE_SIMULTY_VERSION_CLIENT: 
         {
-            err << "** Got version info from client" << endl;
+            std::cerr << "** Got version info from client" << std::endl;
             NPacket pid(NPACKET_TYPE_SIMULTY_ID); 
             pid << (INT32)from->id_get() << (INT16)from->slot_get();
 
@@ -101,7 +102,7 @@ bool game_server::packet_handle(player_server_network *from, NPacket pack)
             INT32 roadx; INT32 roady; NPacket roadp = pack;
             roadp >> roadx >> roady;
 
-            err << "** Got road build command" << endl;
+            std::cerr << "** Got road build command" << std::endl;
             if(from->money_get() > SIMULTY_COST_ROAD && !m->tiles[roady * m->width + roadx].road && 
                 m->tiles[roady * m->width + roadx].owner == from->slot_get())
             {
@@ -118,7 +119,7 @@ bool game_server::packet_handle(player_server_network *from, NPacket pack)
             }
             else
             {
-                err << "Road: Didn't build: money: " << from->money_get() << " owner: " << (int)(m->tiles[roady * m->width + roadx].owner) << " road: " << (int)(m->tiles[roady * m->width + roadx].road) << endl;
+                std::cerr << "Road: Didn't build: money: " << from->money_get() << " owner: " << (int)(m->tiles[roady * m->width + roadx].owner) << " road: " << (int)(m->tiles[roady * m->width + roadx].road) << std::endl;
             }
             break;
         }
@@ -153,11 +154,11 @@ bool game_server::packet_handle(player_server_network *from, NPacket pack)
 
                 packet_send_to_all(zonepak);
                 
-                err << "Zone: Built: " << endl;
+                std::cerr << "Zone: Built: " << std::endl;
             }
             else
             {
-              err << "Zone: Didn't build: " << endl;
+              std::cerr << "Zone: Didn't build: " << std::endl;
             }
             
             
@@ -168,7 +169,7 @@ bool game_server::packet_handle(player_server_network *from, NPacket pack)
 
         default:
         {
-            err << "** Got uknown message with id " << NPACKET_TYPE_SIMULTY_LAND_ZONE << " " << pack.getType() << endl;
+            std::cerr << "** Got uknown message with id " << NPACKET_TYPE_SIMULTY_LAND_ZONE << " " << pack.getType() << std::endl;
             pack.print();
             
             return false;

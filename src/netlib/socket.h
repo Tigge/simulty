@@ -7,8 +7,6 @@
 #include <string>
 #include <iostream>
 
-using namespace std;
-
 class NSocket
 {
     private:
@@ -25,12 +23,12 @@ class NSocket
     bool gotsome;
 
     // Information:              
-    string ip;
-    int    port;
+    std::string ip;
+    int         port;
 
     // Buffers:
-    vector<char> buffer_in; 
-    vector<char> buffer_out;
+    std::vector<char> buffer_in; 
+    std::vector<char> buffer_out;
  
     public:
 
@@ -45,7 +43,7 @@ class NSocket
     bool packet_put(NPacket);
         
     // Connection functions:
-    bool connect_to(string addr, int port);
+    bool connect_to(std::string addr, int port);
     bool listen_on(int port);
 
     // State functions:
@@ -55,7 +53,7 @@ class NSocket
     bool got_connection() { return listening && gotsome; }
  
     // Information:
-    string get_ip();
+    std::string get_ip();
     int get_port();
     int get_id() { return socketid; }
 

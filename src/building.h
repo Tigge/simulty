@@ -3,13 +3,12 @@
 
 #include <string>
 
-using namespace std;
 
 class building {
   // Associations
   // Attributes
   public:
-    string name;
+    std::string name;
     int owner;
     int cost;
     int maintenace;

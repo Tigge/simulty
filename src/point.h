@@ -11,6 +11,11 @@ class point {
     point();
     point(int nx, int ny);
 
+    void translate(int x, int y);
+    void translate(point p);
+
+    static void fix_points(point &a, point &b);
+
 };
 
 #endif

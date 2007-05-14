@@ -8,7 +8,6 @@
 
 #include <vector>
 
-using namespace std;
 
 class map_base {
   // Attributes
@@ -16,7 +15,7 @@ class map_base {
     int width;
     int height;
 
-    vector<tile> tiles;
+    std::vector<tile> tiles;
 
   // Operations
   public:

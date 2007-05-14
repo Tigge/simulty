@@ -51,19 +51,19 @@ game_server::game_server() {
     net_server->listen_on(5557);
 
 
-    cout << "  _______ __                  __ __         " << endl;
-    cout << " |     __|__|.--------.--.--.|  |  |_.--.--." << endl;
-    cout << " |__     |  ||        |  |  ||  |   _|  |  |" << endl;
-    cout << " |_______|__||__|__|__|_____||__|____|___  |" << endl;
-    cout << "                                     |_____|" << endl;
-    cout << " Server - Released under GPL v2             " << endl;
-    cout << " ___________________________________________" << endl;
+    std::cout << "  _______ __                  __ __         " << std::endl;
+    std::cout << " |     __|__|.--------.--.--.|  |  |_.--.--." << std::endl;
+    std::cout << " |__     |  ||        |  |  ||  |   _|  |  |" << std::endl;
+    std::cout << " |_______|__||__|__|__|_____||__|____|___  |" << std::endl;
+    std::cout << "                                     |_____|" << std::endl;
+    std::cout << " Server - Released under GPL v2             " << std::endl;
+    std::cout << " ___________________________________________" << std::endl;
 
-    err  << " * Starting game server                     " << endl;
-    err  << " * Initializing resources                   " << endl;
-    err  << " * Reticulating splines                     " << endl;
+    std::cerr << " * Starting game server                     " << std::endl;
+    std::cerr << " * Initializing resources                   " << std::endl;
+    std::cerr << " * Reticulating splines                     " << std::endl;
 
-    err  << endl;
+    std::cerr << std::endl;
 
     m = new map_base;
 

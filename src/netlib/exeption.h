@@ -6,9 +6,8 @@
 #include <iostream>
 #include <exception>
 
-using namespace std;
 
-class NException: public exception {
+class NException: public std::exception {
       
   virtual const char* what() const throw();
       

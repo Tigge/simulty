@@ -309,7 +309,7 @@ NSocket *NNetwork::add(NSocket *s_i)
 
 
 
-string NNetwork::host_to_address(string host)
+std::string NNetwork::host_to_address(std::string host)
 {
  struct hostent *h;  
  if((h = gethostbyname(host.c_str())) == NULL)
@@ -322,13 +322,13 @@ string NNetwork::host_to_address(string host)
   return NULL; 
  }
  
- string address; 
+ std::string address; 
  address = inet_ntoa(*((struct in_addr *)h->h_addr));
        
  return address;       
 }
 
-string NNetwork::address_to_host(string address)
+std::string NNetwork::address_to_host(std::string address)
 {
  struct in_addr addr;
  addr.s_addr = inet_addr(address.c_str());
@@ -338,7 +338,7 @@ string NNetwork::address_to_host(string address)
  {
   return NULL;
  } 
- return (string)h->h_name;
+ return (std::string)h->h_name;
 }
 
 

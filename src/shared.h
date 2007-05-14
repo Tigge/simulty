@@ -3,7 +3,7 @@
 
 
 
-#define err cerr
+//#define err std::cerr
 
 const unsigned char SIMULTY_MAX_PLAYERS = 16;
 

@@ -25,7 +25,7 @@ NSocket::NSocket(int socketid_new)
     DEBUG(cout << "NSocket: Constructor (from id)" << endl;)
 }
 
-string NSocket::get_ip()
+std::string NSocket::get_ip()
 {
 	return ip;
 }
@@ -39,7 +39,7 @@ NSocket::~NSocket()
 {
     DEBUG(cout << "NSocket: Destructor" << endl;)
 }
-bool NSocket::connect_to(string addr, int prt)
+bool NSocket::connect_to(std::string addr, int prt)
 {
     DEBUG(cout << "NSocket: Connect to " << addr << ":" << prt << endl;)
     
