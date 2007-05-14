@@ -16,8 +16,7 @@
 
 #ifdef WIN32
  #include "winsock.h"
- #define  socklen_t int
- 
+ #define  socklen_t int 
 #else
  #include <netdb.h>
  #include <errno.h>
