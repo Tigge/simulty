@@ -2,6 +2,10 @@
 #ifndef _GAME_CLIENT_H_
 #define _GAME_CLIENT_H_
 
+#ifdef WIN32
+  #include "winalleg.h"
+#endif
+
 #include "allegro.h"
 
 #include "netlib.h"

@@ -6,7 +6,13 @@
 
 
 
+#ifdef WIN32
+  #include "winalleg.h"
+#endif
+
 #include "allegro.h"
+
+
 
 #include "map_base.h"
 #include "tile.h"

@@ -1,4 +1,3 @@
-#include "allegro.h"
 
 #include "shared.h"
 

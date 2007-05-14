@@ -1,4 +1,9 @@
-#include "allegro.h"
+#ifdef WIN32
+  #include "winalleg.h"
+#else 
+  #include "allegro.h"
+#endif
+
 #include "client.h"
 #include "game_client.h"
 #include <iostream>

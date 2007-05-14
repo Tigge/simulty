@@ -3,10 +3,14 @@
 #ifndef _GUI_H_
 #define _GUI_H_
 
+#ifdef WIN32
+  #include "winalleg.h"
+#endif
+
+#include "allegro.h"
 
 #include <vector>
 
-#include "allegro.h"
 #include "mouse_handler.h"
 
 

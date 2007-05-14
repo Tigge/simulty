@@ -1,6 +1,4 @@
 
-#include "allegro.h"
-
 #include "client.h"
 
 #include "map.h"
