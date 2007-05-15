@@ -1,9 +1,9 @@
 
-#include "netlib.h"
+#include "NL.hpp"
 
 NLPacket::NLPacket()
 {
-    type = NLPacket_TYPE_NONE;
+    type = NLPACKET_TYPE_NONE;
     buffer.reserve(10);
 }
 

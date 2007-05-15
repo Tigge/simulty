@@ -15,7 +15,7 @@
 
 class NLPacket { 
 
-    friend class NSocket;
+    friend class NLSocket;
 
     std::vector<char> buffer;
     int type;

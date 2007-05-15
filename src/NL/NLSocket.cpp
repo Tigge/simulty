@@ -1,4 +1,4 @@
-#include "netlib.h"
+#include "NL.hpp"
 
 NLSocket::NLSocket()
 {
@@ -43,7 +43,7 @@ bool NLSocket::connect_to(std::string addr, int prt)
 {
     DEBUG(cout << "NLSocket: Connect to " << addr << ":" << prt << endl;)
     
-    addr = NNetwork::host_to_address(addr);
+    addr = NLNetwork::host_to_address(addr);
 
     DEBUG(cout << "Address after lookup: " << addr << endl;)
 
@@ -119,7 +119,7 @@ bool NLSocket::packet_exists()
         unsigned char h[4]; for(int i = 0; i < 4; i++)h[i] = buffer_in[i];
 
         //INT16 type   = (int)h[0];
-        NL_INT32 length = ntohl( *((NL_INT32 *)h) & 0xFF000000 );
+        NLINT32 length = ntohl( *((NLINT32 *)h) & 0xFF000000 );
         /*
        cout << "NLSocket: packet_exists, header is: ";
         for(int i = 0; i < 4; i++)
@@ -138,7 +138,7 @@ bool NLSocket::packet_exists()
     return false;
 }
 
-NPacket NLSocket::packet_get()
+NLPacket NLSocket::packet_get()
 {
     DEBUG(cout << "NLSocket: packet_get, checking" << endl;)
 
@@ -148,10 +148,10 @@ NPacket NLSocket::packet_get()
 
         unsigned char h[4]; for(int i = 0; i < 4; i++)h[i] = buffer_in[i];
 
-        NL_INT16 type   = (int)h[0];
-        NL_INT32 length = ntohl( *((NL_INT32 *)h) & 0xFF000000 );
+        NLINT16 type   = (int)h[0];
+        NLINT32 length = ntohl( *((NLINT32 *)h) & 0xFF000000 );
 
-        NPacket p; p.setType(type);
+        NLPacket p; p.setType(type);
 
         DEBUG(cout << " - type is:   " << type << endl;)
         DEBUG(cout << " - length is: " << length << endl;)
@@ -184,12 +184,12 @@ NPacket NLSocket::packet_get()
 
     DEBUG(cout << "NLSocket: packet_get, no packet exists..." << endl;)
 
-    NPacket p;
+    NLPacket p;
     return p;
 }
 
 
-bool NLSocket::packet_put(NPacket p)
+bool NLSocket::packet_put(NLPacket p)
 {
 
 
@@ -200,8 +200,8 @@ bool NLSocket::packet_put(NPacket p)
 
         unsigned char h[4];
 
-        *((NL_INT32 *)h) = htonl(p.getSize());
-        h[0]          = (unsigned char)p.getType();
+        *((NLINT32 *)h) = htonl(p.getSize());
+        h[0]            = (unsigned char)p.getType();
 
 
         DEBUG(cout << "NLSocket: packet_put, header is: ";)

@@ -1,7 +1,7 @@
 
 #include "shared.h"
 
-#include "game_client.h"
+#include "Client.hpp"
 
 #include "map_base.h"
 #include "map.h"
@@ -12,18 +12,49 @@
 
 #define err std::cerr
 
+Client *client;
+
+
+int main(int argc, char *argv[])
+{
+    std::cerr << "Starting..." << std::endl;    
+    client = new game_client;
+    std::cerr << "New game client" << std::endl;
+
+    while(client->running())
+    {
+        //cerr << ".";
+        while(client->needupdate())
+        {
+            client->update();
+        }
+
+        client->render();
+        rest(0);
+    }
+
+    std::cerr << "Deleting game client..." << std::endl;
+    delete client;
+
+    std::cerr << "Ending..." << std::endl;
+    
+    return 0;
+}
+END_OF_MAIN()
+
+
 
 // TODO - static functions instead?
 void speedhandler(void *data)
 {
-    ((game_client *)data)->speed_counter++;
+    ((Client *)data)->speed_counter++;
 }
 END_OF_FUNCTION()
 
 void fpshandler(void *data)
 {
-    ((game_client *)data)->fps = ((game_client *)data)->frames;
-    ((game_client *)data)->frames = 0;
+    ((Client *)data)->fps = ((Client *)data)->frames;
+    ((Client *)data)->frames = 0;
 }
 END_OF_FUNCTION()
 
@@ -33,7 +64,7 @@ void mousehandler(int flags)
 }
 
 
-game_client::game_client()
+Client::Client()
 {
 
     // Initializing allegro (and some sub elements)
@@ -95,23 +126,23 @@ game_client::game_client()
 
 }
 
-game_client::~game_client (){
+Client::~Client (){
 
 
 
 }
 
-bool game_client::needupdate()
+bool Client::needupdate()
 {
     return speed_counter > 0;
 }
 
-bool game_client::running()
+bool Client::running()
 {
     return state_running;
 }
 
-void game_client::render ()
+void Client::render ()
 {
     // Clear the double buffer:
     clear_bitmap(buffer);
@@ -137,7 +168,7 @@ void game_client::render ()
 
 
 
-void game_client::update (  )
+void Client::update (  )
 {
 
     speed_counter--;  
@@ -164,7 +195,7 @@ void game_client::update (  )
 }
 
 
-void game_client::buy_land(Point from, Point to) {
+void Client::buy_land(Point from, Point to) {
 
     std::cout << "buy from " 
               << from.getX() << ", " << from.getY() << " to "
@@ -177,7 +208,7 @@ void game_client::buy_land(Point from, Point to) {
     net_client->packet_put(landpak);
 }
 
-void game_client::buy_road(Point from, Point to) {
+void Client::buy_road(Point from, Point to) {
 
     if(!m->get(to.getX(), to.getY()).road)
     {
@@ -187,7 +218,7 @@ void game_client::buy_road(Point from, Point to) {
     }
 }
 
-void game_client::buy_zone(Point from, Point to, int type) {
+void Client::buy_zone(Point from, Point to, int type) {
 
     NLPacket zonepak(NPACKET_TYPE_SIMULTY_LAND_ZONE);
 
@@ -205,7 +236,7 @@ void game_client::buy_zone(Point from, Point to, int type) {
 }
 
 
-void game_client::buy_building(Point where, int type) {
+void Client::buy_building(Point where, int type) {
 
     NLPacket buildpak(NPACKET_TYPE_SIMULTY_BUILDING_BUILD);
     

@@ -1,6 +1,6 @@
 
-#ifndef _GAME_CLIENT_H_
-#define _GAME_CLIENT_H_
+#ifndef _CLIENT_HPP_
+#define _CLIENT_HPP_
 
 
 #include "allegro.h"
@@ -34,7 +34,7 @@ const unsigned char SIMULTY_CLIENT_STATE_MENU_NONE  = 0;
 
 
 
-class game_client {
+class Client {
   // Attributes
 
     private:
@@ -79,8 +79,8 @@ class game_client {
 
   // Operations
   public:
-    game_client (  );
-    ~game_client (  );
+    Client (  );
+    ~Client (  );
 
     bool running();
 
@@ -98,5 +98,6 @@ class game_client {
     
 };
 
+extern Client *client;
 
 #endif

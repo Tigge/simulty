@@ -1,13 +1,13 @@
-#include "network.h"
+#include "NLNetwork.hpp"
 
 
-bool NNetwork::init = false;
-NNetwork::NNetwork()
+bool NLNetwork::init = false;
+NLNetwork::NLNetwork()
 {
- //cout << "NNetwork: Constructor" << endl;
+ //cout << "NLNetwork: Constructor" << endl;
  if(!init)
  {
- //cout << "NNetwork: Init first time" << endl;
+ //cout << "NLNetwork: Init first time" << endl;
 
   #ifdef WIN32  
    WSADATA data;
@@ -22,9 +22,9 @@ NNetwork::NNetwork()
  
 }
 
-NNetwork::~NNetwork()
+NLNetwork::~NLNetwork()
 {
- //cout << "NNetwork: Destructor" << endl;
+ //cout << "NLNetwork: Destructor" << endl;
 
  #ifdef WIN32  
   WSADATA data;
@@ -34,7 +34,7 @@ NNetwork::~NNetwork()
 
  for(int i = sockets.size() - 1; i >= 0; i--)
  {
-  //cout << "NNetwork: Deleting socket " << i << endl;
+  //cout << "NLNetwork: Deleting socket " << i << endl;
   delete sockets[i];
   sockets.pop_back();
 
@@ -42,19 +42,19 @@ NNetwork::~NNetwork()
 }
 
 
-bool NNetwork::socket_init(NSocket *s)
+bool NLNetwork::socket_init(NLSocket *s)
 {
     int res = socket(PF_INET, SOCK_STREAM, 0);
     if(res  == -1)
     {
-        //cout << "NNetwork: socket_init, failed to init socket - " << h_errno << endl;
+        //cout << "NLNetwork: socket_init, failed to init socket - " << h_errno << endl;
         return false;
     }
     s->socketid = res;
     return true;
 }
 
-bool NNetwork::socket_fixreuse(NSocket *s)
+bool NLNetwork::socket_fixreuse(NLSocket *s)
 {
     // set SO_REUSEADDR on a socket to true (1):
     // Note: on Windows and sun this is a char instead of an int!
@@ -66,15 +66,15 @@ bool NNetwork::socket_fixreuse(NSocket *s)
 
     if(setsockopt(s->socketid, SOL_SOCKET, SO_REUSEADDR, &optval, sizeof(optval)) == -1)
     {
-        //cout << "NNetwork: socket_fixreuse, setsockopt failed - " << errno << endl;
+        //cout << "NLNetwork: socket_fixreuse, setsockopt failed - " << errno << endl;
         return false;
     }
     return true;
 }
 
-bool NNetwork::socket_addlist(NSocket *s)
+bool NLNetwork::socket_addlist(NLSocket *s)
 {
-    //cout << "NNetwork: socket_add, successful (got id " << s->socketid << ")" << endl;
+    //cout << "NLNetwork: socket_add, successful (got id " << s->socketid << ")" << endl;
     sockets.push_back(s);
 
     // Adjust the socket description set (max and set):
@@ -85,7 +85,7 @@ bool NNetwork::socket_addlist(NSocket *s)
 }
 
 
-bool NNetwork::del_by_n(unsigned int n)
+bool NLNetwork::del_by_n(unsigned int n)
 {
  if(n < sockets.size() && n >= 0)
  {
@@ -98,7 +98,7 @@ bool NNetwork::del_by_n(unsigned int n)
  } 
 }
 
-bool NNetwork::del_by_id(unsigned int n)
+bool NLNetwork::del_by_id(unsigned int n)
 {
  for(unsigned int i = 0; i < sockets.size(); i++)
  {
@@ -110,19 +110,19 @@ bool NNetwork::del_by_id(unsigned int n)
  return false;
 }
 
-int NNetwork::count()
+int NLNetwork::count()
 {
- ////cout << "NNetwork: Socket count is " << sockets.size() << endl;
+ ////cout << "NLNetwork: Socket count is " << sockets.size() << endl;
  return sockets.size();
 }
 
-bool NNetwork::update(int uwait)
+bool NLNetwork::update(int uwait)
 {
-    //cout << "NNetwork: Update" << endl;
+    //cout << "NLNetwork: Update" << endl;
     fd_set read  = filedescset;
     fd_set write = filedescset;
 
-    //cout << "NNetwork: File desc max is " << filedescmax << endl;
+    //cout << "NLNetwork: File desc max is " << filedescmax << endl;
 
     struct timeval tv;
     tv.tv_sec = uwait / 1000;
@@ -131,18 +131,18 @@ bool NNetwork::update(int uwait)
     int count = 0;
     if((count = select(filedescmax + 1, &read, &write, NULL, &tv)) == -1)
     {
-        //cout << "NNetwork: Update, select failed " << errno << endl;
+        //cout << "NLNetwork: Update, select failed " << errno << endl;
         return false;
     }
 
-    //cout << "NNetwork: Update, # " << count << " sockets had an update" << endl;
+    //cout << "NLNetwork: Update, # " << count << " sockets had an update" << endl;
 
     for(unsigned int i = 0, c = 0; i <= filedescmax && c < (unsigned int)count; i++)
     {
         if(FD_ISSET(i, &read) || FD_ISSET(i, &write))
         {
-            NSocket *s = get_by_id(i);
-            //cout << "NNetwork: Update. An update has hapend on socket with id" << i << endl;            
+            NLSocket *s = get_by_id(i);
+            //cout << "NLNetwork: Update. An update has hapend on socket with id" << i << endl;            
             
             c++;
             if(FD_ISSET(i, &read))
@@ -150,7 +150,7 @@ bool NNetwork::update(int uwait)
               
                 if(s->listening)
                 {
-                    //cout << "NNetwork: Update. We got an incomming connection on socket with id" << i << endl;
+                    //cout << "NLNetwork: Update. We got an incomming connection on socket with id" << i << endl;
                     s->gotsome = true;
                 }
                 else if(s->connected)
@@ -160,7 +160,7 @@ bool NNetwork::update(int uwait)
 
                     if(count == 0)
                     {
-                        //cout << "NNetwork: Update. A socket " << i << " disconnected gracefully" << endl;
+                        //cout << "NLNetwork: Update. A socket " << i << " disconnected gracefully" << endl;
 	    
                         shutdown(s->socketid, 2);
                         s->connected = false;     
@@ -168,26 +168,26 @@ bool NNetwork::update(int uwait)
                     }
                     else if(count == -1)
                     {
-                        //cout << "NNetwork: Update. A socket " << i << " errored out, disconnecting" << endl;
+                        //cout << "NLNetwork: Update. A socket " << i << " errored out, disconnecting" << endl;
                         shutdown(s->socketid, 2);
                         s->connected = false; 
                         FD_CLR(s->socketid, &filedescset);
                     }
                     else
                     {
-                        //cout << "NNetwork: update. Socket has something to recieve" << endl;
+                        //cout << "NLNetwork: update. Socket has something to recieve" << endl;
                         //buf[count] = '\0';
-                        //cout << "NNetwork: Update. Got " << count << " chars on socket " << i << endl;
-                        //cout << "NNetwork: Update. We got: '" << buf << "'" << endl;
-                        //cout << "NNetwork: Update. Buffer before: '" << sockread->buffer << "'" << endl;
+                        //cout << "NLNetwork: Update. Got " << count << " chars on socket " << i << endl;
+                        //cout << "NLNetwork: Update. We got: '" << buf << "'" << endl;
+                        //cout << "NLNetwork: Update. Buffer before: '" << sockread->buffer << "'" << endl;
                         //sockread->buffer += buf;
                         for(int i = 0; i < count; i++)
                         {
                             s->buffer_in.push_back(buf[i]);
                         }
                         //cout << " - we got " << count << " bytes" << endl;	                 
-                        //cout << "NNetwork: update, buffert is now '" << (char *)&(sockread->buffer[0]) << "' (" << sockread->buffer.size() << ") bytes long" << endl;	
-                        //cout << "NNetwork: Update. Buffer after: '" << sockread->buffer << "'" << endl;
+                        //cout << "NLNetwork: update, buffert is now '" << (char *)&(sockread->buffer[0]) << "' (" << sockread->buffer.size() << ") bytes long" << endl;	
+                        //cout << "NLNetwork: Update. Buffer after: '" << sockread->buffer << "'" << endl;
                     }
                 }
             }
@@ -195,7 +195,7 @@ bool NNetwork::update(int uwait)
             {
                 if(s->connected && !s->buffer_out.empty())
                 {   
-                    //cout << "NNetwork: update. Socket has something to send" << endl;
+                    //cout << "NLNetwork: update. Socket has something to send" << endl;
                     int sent;
                     if((sent = send(s->socketid, (const char *)&(s->buffer_out[0]), s->buffer_out.size(), 0)) == -1)
                     {
@@ -214,11 +214,11 @@ bool NNetwork::update(int uwait)
     return true;
 }
                   
-NSocket *NNetwork::get_by_n(unsigned int n)
+NLSocket *NLNetwork::get_by_n(unsigned int n)
 {
     if(n >= 0 && n < sockets.size())
     {
-        //cout << "NNetwork: get_by_n, found with " << n << endl;
+        //cout << "NLNetwork: get_by_n, found with " << n << endl;
         return sockets[n];
     }
     else
@@ -227,7 +227,7 @@ NSocket *NNetwork::get_by_n(unsigned int n)
     }
 }
 
-NSocket *NNetwork::get_by_id(unsigned int n)
+NLSocket *NLNetwork::get_by_id(unsigned int n)
 {
  for(unsigned int i = 0; i < sockets.size(); i++)
  {
@@ -241,11 +241,11 @@ NSocket *NNetwork::get_by_id(unsigned int n)
 }
 
 
-NSocket *NNetwork::add()
+NLSocket *NLNetwork::add()
 {
-    //cout << "NNetwork: add, Adding socket" << endl;
+    //cout << "NLNetwork: add, Adding socket" << endl;
 
-    NSocket *s = new NSocket();
+    NLSocket *s = new NLSocket();
 
     if(!socket_init(s) || !socket_fixreuse(s) || !socket_addlist(s))
     {
@@ -257,9 +257,9 @@ NSocket *NNetwork::add()
 }
 
 
-NSocket *NNetwork::add(NSocket *s_i)
+NLSocket *NLNetwork::add(NLSocket *s_i)
 {
-    //cout << "NNetwork: add (incomming connection)" << endl;
+    //cout << "NLNetwork: add (incomming connection)" << endl;
 
     if(s_i != NULL && s_i->is_listening())
     {
@@ -272,12 +272,12 @@ NSocket *NNetwork::add(NSocket *s_i)
 
         if((sid = accept(s_i->socketid, (struct sockaddr *)&theirstuff, &theirstuff_len)) == -1)
         {
-            //cout << "NNetwork: add (incomming connection), failed for some reason (" << sid << ", " << errno << ")" << endl;
+            //cout << "NLNetwork: add (incomming connection), failed for some reason (" << sid << ", " << errno << ")" << endl;
             perror("accept");
             return NULL;
         }
 
-        NSocket *s = new NSocket(sid);
+        NLSocket *s = new NLSocket(sid);
 
         if(!socket_fixreuse(s))
         {
@@ -309,7 +309,7 @@ NSocket *NNetwork::add(NSocket *s_i)
 
 
 
-std::string NNetwork::host_to_address(std::string host)
+std::string NLNetwork::host_to_address(std::string host)
 {
  struct hostent *h;  
  if((h = gethostbyname(host.c_str())) == NULL)
@@ -328,7 +328,7 @@ std::string NNetwork::host_to_address(std::string host)
  return address;       
 }
 
-std::string NNetwork::address_to_host(std::string address)
+std::string NLNetwork::address_to_host(std::string address)
 {
  struct in_addr addr;
  addr.s_addr = inet_addr(address.c_str());
@@ -342,7 +342,7 @@ std::string NNetwork::address_to_host(std::string address)
 }
 
 
-NSocket *NNetwork::operator[](int n)
+NLSocket *NLNetwork::operator[](int n)
 {
     return get_by_n(n);
 }

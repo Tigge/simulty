@@ -7,7 +7,7 @@
 #include <exception>
 
 
-class NException: public std::exception {
+class NLException: public std::exception {
       
   virtual const char* what() const throw();
       
