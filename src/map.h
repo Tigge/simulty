@@ -17,6 +17,7 @@
 #include "tile.h"
 
 #include "Point.hpp"
+#include "Camera.hpp"
 
 #include <vector>
 
@@ -56,7 +57,7 @@ class map : public map_base {
 
     map (  );
     ~map (  );
-    void render (BITMAP *b, Point cam);
+    void render (BITMAP *b, Camera cam);
 };
 
 #endif

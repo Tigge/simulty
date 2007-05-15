@@ -39,7 +39,11 @@ class Point {
 
     void translate(int x, int y);
     void translate(Point p);
+    
+    void move(int x, int y);
+    void move(Point p);
 
+    // TODO: rename!
     static void fix_points(Point &a, Point &b);
 
 };

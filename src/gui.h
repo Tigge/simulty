@@ -11,7 +11,8 @@
 
 #include <vector>
 
-#include "mouse_handler.h"
+#include "Camera.hpp"
+#include "Mouse.hpp"
 
 const unsigned char SIMULTY_CLIENT_TOOL_NONE           = 0;
 const unsigned char SIMULTY_CLIENT_TOOL_LAND           = 1;
@@ -41,7 +42,8 @@ class gui {
     bool                    console_show;
     std::vector<std::string> console_data;
         
-    mouse_handler *mouse;
+    Mouse mouse;
+    Camera camera;
     
     Point mouse_down_tile;
     Point mouse_up_tile;

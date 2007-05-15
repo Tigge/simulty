@@ -120,7 +120,7 @@ void game_client::render ()
         
         if(state_game == SIMULTY_CLIENT_STATE_GAME_ON) {
 
-            m->render(buffer, cam);
+            //m->render(buffer, cam);
 
         } 
     }

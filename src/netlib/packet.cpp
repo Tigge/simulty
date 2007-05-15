@@ -1,51 +1,51 @@
 
 #include "netlib.h"
 
-NPacket::NPacket()
+NLPacket::NLPacket()
 {
-    type = NPACKET_TYPE_NONE;
+    type = NLPacket_TYPE_NONE;
     buffer.reserve(10);
 }
 
-NPacket::NPacket(int t)
+NLPacket::NLPacket(int t)
 {
     setType(t);
 }
 
-NPacket::~NPacket()
+NLPacket::~NLPacket()
 {
     
 }
 
-int NPacket::getType()
+int NLPacket::getType()
 {
     return type;
 }
 
-bool NPacket::setType(int val)
+bool NLPacket::setType(int val)
 {
     type = val;
     return true; // (TODO), better checking
 }
 
-int NPacket::getSize()
+int NLPacket::getSize()
 {
     return buffer.size();
 }
 
 // 32 bit numbers (4 chars)
-NPacket &NPacket::operator<< (const NL_INT32 &val)
+NLPacket &NLPacket::operator<< (const NLINT32 &val)
 { 
-    unsigned char b[4]; *((NL_INT32 *)b) = htonl(val);
+    unsigned char b[4]; *((NLINT32 *)b) = htonl(val);
     for(int i = 0; i < 4; i++)buffer.push_back((char)b[i]);
 
     return *this; 
 }
 
-NPacket &NPacket::operator>> (NL_INT32 &val)
+NLPacket &NLPacket::operator>> (NLINT32 &val)
 {
     unsigned char b[4]; for(int i = 0; i < 4; i++)b[i] = buffer[i];
-    val = ntohl( *((NL_INT32 *)b) );
+    val = ntohl( *((NLINT32 *)b) );
 
     buffer.erase(buffer.begin(), buffer.begin() + 4);        
     
@@ -53,18 +53,18 @@ NPacket &NPacket::operator>> (NL_INT32 &val)
 }
 
 // 16 bit numbers (2 chars)
-NPacket &NPacket::operator<< (const NL_INT16 &val)
+NLPacket &NLPacket::operator<< (const NLINT16 &val)
 { 
-    unsigned char b[2]; *((NL_INT16 *)b) = htons(val);
+    unsigned char b[2]; *((NLINT16 *)b) = htons(val);
     for(int i = 0; i < 2; i++)buffer.push_back(b[i]);
 
     return *this; 
 }
 
-NPacket &NPacket::operator>> (NL_INT16 &val)
+NLPacket &NLPacket::operator>> (NLINT16 &val)
 {
     unsigned char b[2]; for(int i = 0; i < 2; i++)b[i] = buffer[i];
-    val = ntohs( *((NL_INT16 *)b) );
+    val = ntohs( *((NLINT16 *)b) );
 
     buffer.erase(buffer.begin(), buffer.begin() + 2);
     
@@ -72,26 +72,26 @@ NPacket &NPacket::operator>> (NL_INT16 &val)
 }
 
 
-NPacket &NPacket::operator<< (const char &val) 
+NLPacket &NLPacket::operator<< (const char &val) 
 { 
     buffer.push_back(val); 
     return *this; 
 }
-NPacket &NPacket::operator<< (const unsigned char &val) 
+NLPacket &NLPacket::operator<< (const unsigned char &val) 
 { 
     buffer.push_back(val); 
     return *this; 
 }
 
 
-NPacket &NPacket::operator>> (char &val) 
+NLPacket &NLPacket::operator>> (char &val) 
 {
     //std::cout << "output char (" << buffer.size() << ")" << std::endl;
     val = buffer[0]; buffer.erase(buffer.begin()); 
     return *this; 
 }
 
-NPacket &NPacket::operator>> (unsigned char &val)
+NLPacket &NLPacket::operator>> (unsigned char &val)
 {
     //std::cout << "output unsigned char (" << buffer.size() << ")" << std::endl;
     val = buffer[0]; buffer.erase(buffer.begin()); 
@@ -99,7 +99,7 @@ NPacket &NPacket::operator>> (unsigned char &val)
 }
 
 
-NPacket &NPacket::operator<< (const std::string &val) 
+NLPacket &NLPacket::operator<< (const std::string &val) 
 {
     for(unsigned int i = 0; i < val.length(); i++)
         buffer.push_back(val[i]); 
@@ -107,7 +107,7 @@ NPacket &NPacket::operator<< (const std::string &val)
     return *this; 
 }
 
-NPacket &NPacket::operator>> (std::string &val)
+NLPacket &NLPacket::operator>> (std::string &val)
 {
     //std::cerr << "getting string" << std::endl;
     unsigned int pos = 0;

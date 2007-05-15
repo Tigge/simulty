@@ -19,7 +19,7 @@
 
 #include "building_manager.h"
 
-#include "point.h"
+#include "Point.hpp"
 
 
 const unsigned char SIMULTY_SERVER_STATE_LOBBY      = 1;

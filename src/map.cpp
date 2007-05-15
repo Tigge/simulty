@@ -162,7 +162,7 @@ Point map::tile2val(Point input)
 
 
 
-void map::render (BITMAP *b, Point cam)
+void map::render (BITMAP *b, Camera cam)
 {
     Point start, end;
 

@@ -33,12 +33,22 @@ int Point::getY() {
 // Functions:
 
 void Point::translate(int x, int y) {
-  setX(getX() + x);
-  setY(getY() + y);
+   setX(getX() + x);
+   setY(getY() + y);
 }
 
 void Point::translate(Point p) {
-  translate(p.getX(), p.getY());
+    translate(p.getX(), p.getY());
+}
+    
+    
+void Point::move(int x, int y) {
+    setX(x);
+    setY(y);
+}
+
+void Point::move(Point p) {
+    move(p.getX(), p.getY());
 }
     
 void Point::fix_points(Point &a, Point &b) {

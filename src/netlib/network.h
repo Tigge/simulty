@@ -1,5 +1,5 @@
-#ifndef _NNETWORK_H_
-#define _NNETWORK_H_
+#ifndef _NLNETWORK_H_
+#define _NLNETWORK_H_
 
 #include "socket.h"
 #include "netlib.h"
@@ -7,7 +7,7 @@
 #include <vector>
 #include <iostream>
 
-class NNetwork
+class NLNetwork
 {
  private:
  
@@ -16,26 +16,26 @@ class NNetwork
  fd_set       filedescset;
  unsigned int filedescmax;
  
- std::vector<NSocket *> sockets;
+ std::vector<NLSocket *> sockets;
 
- bool socket_init(NSocket *);
- bool socket_fixreuse(NSocket *);
- bool socket_addlist(NSocket *);
+ bool socket_init(NLSocket *);
+ bool socket_fixreuse(NLSocket *);
+ bool socket_addlist(NLSocket *);
       
  public:
         
- NNetwork();
+ NLNetwork();
  virtual ~NNetwork();  
 
- NSocket *get_by_id(unsigned int n);
- NSocket *get_by_n(unsigned int n);
+ NLSocket *get_by_id(unsigned int n);
+ NLSocket *get_by_n(unsigned int n);
  
  int count();
  
  virtual bool update(int uwait); 
 
- virtual NSocket *add();
- virtual NSocket *add(NSocket *);
+ virtual NLSocket *add();
+ virtual NLSocket *add(NSocket *);
  
  virtual bool del_by_n(unsigned int n);
  virtual bool del_by_id(unsigned int n);
@@ -44,7 +44,7 @@ class NNetwork
  static std::string host_to_address(std::string host);
  static std::string address_to_host(std::string address); 
 
- virtual NSocket *operator[](int);
+ virtual NLSocket *operator[](int);
 
 };
 

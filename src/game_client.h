@@ -9,8 +9,6 @@
   #include "winalleg.h"
 #endif
 
-#include "mouse_handler.h"
-
 #include "player_manager.h"
 
 #include "player.h"

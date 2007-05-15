@@ -17,9 +17,6 @@ gui::gui (  ){
     icon_com        = load_bitmap("img/menu_icon_com.pcx", NULL);        
 
     console_show = false;
-
-    // Init mouse handler:
-    mouse = new mouse_handler;
     
     if(!mouse_pointer || !mouse_block || !menu_background || !gui_background)
     {
@@ -33,9 +30,6 @@ gui::gui (  ){
 
 gui::~gui (  ){
 
-
-    // Delete mouse handler:
-    delete mouse;
 }
 
 void gui::render ( BITMAP *buffer ){
@@ -55,6 +49,8 @@ void gui::render ( BITMAP *buffer ){
     else if(client->state_game)
     {
     
+        client->m->render(buffer, camera);
+      
     
         Point pos = client->m->val2tile(Point(mouse_x + client->cam.getX(), mouse_y + client->cam.getY()));            
         Point ral = client->m->val2tile_real(Point(mouse_x + client->cam.getX(), mouse_y + client->cam.getY()));
@@ -63,18 +59,12 @@ void gui::render ( BITMAP *buffer ){
         Point xpos = client->m->tile2val(pos);
         Point xral = client->m->tile2val(ral);
       
-        if(mouse->button_left == EVENT_PRESS) {
+        if(mouse.getLeftButtonState() == STATE_PRESS) {
         
-            mouse_down_tile = mouse->down;
-            mouse_down_tile.translate(client->cam);
-            mouse_down_tile = client->m->val2tile_real(mouse_down_tile);
+
         
-        } if(mouse->button_left == EVENT_HOLD) {
+        } if(mouse.getLeftButtonState() == STATE_HOLD) {
         
-            mouse_up_tile = mouse->pos;
-            mouse_up_tile.translate(client->cam);
-            mouse_up_tile = client->m->val2tile_real(mouse_up_tile);
-               
             Point cam = client->cam;
             
             //Point ms = m->val2tile_real();
@@ -123,7 +113,7 @@ void gui::render ( BITMAP *buffer ){
         textprintf_ex(buffer, font, 200, SCREEN_H - 20, makecol(0, 0, 0), -1, "FPS: %i", client->fps); 
 
         Point cam = client->cam;
-        Point realpos  = Point(mouse->pos.getX() + cam.getX(), mouse->pos.getY() + cam.getY());
+        Point realpos  = Point(mouse.getPosition().getX() + cam.getX(), mouse.getPosition().getY() + cam.getY());
         Point realtile = client->m->val2tile_real(realpos);
 
 
@@ -147,7 +137,7 @@ void gui::render ( BITMAP *buffer ){
     }    
     
     // Draw mouse pointer:
-    masked_blit(mouse_pointer, buffer, 0, 0, mouse->pos.getX(), mouse->pos.getX(), 32, 32);
+    masked_blit(mouse_pointer, buffer, 0, 0, mouse.getPosition().getX(), mouse.getPosition().getY(), 32, 32);
 
 }
 
@@ -155,27 +145,30 @@ void gui::render ( BITMAP *buffer ){
 void gui::update()
 {
 
-    mouse->update();
+    mouse.update();    
+
+    if(client->state_menu) {
+
+
+
+    } else if(client->state_game) {
     
-
-    
-
-    if(client->state_menu)
-    {
-
-
-
-    }
-    else if(client->state_game)
-    {
         // Mouse input:
-        if(mouse->button_left == EVENT_PRESS) {
+        if(mouse.getLeftButtonState() == STATE_PRESS) {
+        
+            mouse_down_tile = mouse.getPressPosition();
+            mouse_down_tile.translate(client->cam);
+            mouse_down_tile = client->m->val2tile_real(mouse_down_tile);
+                    
             std::cout << "mouse press event" << std::endl;
-            mouse_down_tile = client->m->val2tile_real(Point(mouse->pos.getX() + client->cam.getX(), mouse->pos.getY() + client->cam.getY()));
+            
         }
-        else if(mouse->button_left == EVENT_RELEASE) {    
+        else if(mouse.getLeftButtonState() == STATE_RELEASE) {    
+        
+            mouse_up_tile = mouse.getPressPosition();
+            mouse_up_tile.translate(client->cam);
+            mouse_up_tile = client->m->val2tile_real(mouse_up_tile);        
             std::cout << "mouse release event" << std::endl;
-            mouse_up_tile   = client->m->val2tile_real(Point(mouse->pos.getX() + client->cam.getX(), mouse->pos.getY() + client->cam.getY()));
              
             Point::fix_points(mouse_down_tile, mouse_up_tile);
             
@@ -194,6 +187,11 @@ void gui::update()
             
                 
         }
+
+        if(key[KEY_UP]    || mouse_y < 15           )camera.step(DIR_UP,    3, client->m->width * TILE_W / 2, client->m->height * TILE_H / 2);        
+        if(key[KEY_RIGHT] || mouse_x > SCREEN_W - 15)camera.step(DIR_RIGHT, 3, client->m->width * TILE_W / 2, client->m->height * TILE_H / 2);
+        if(key[KEY_DOWN]  || mouse_y > SCREEN_H - 15)camera.step(DIR_DOWN,  3, client->m->width * TILE_W / 2, client->m->height * TILE_H / 2);
+        if(key[KEY_LEFT]  || mouse_x < 15           )camera.step(DIR_LEFT,  3, client->m->width * TILE_W / 2, client->m->height * TILE_H / 2);
     
         if(keypressed()) {
             if(key[KEY_ESC])client->state_running = false;
@@ -204,10 +202,7 @@ void gui::update()
             
               
 
-            if(key[KEY_UP]    || mouse_y < 15           )client->cam_move_step(DIR_UP,    3);        
-            if(key[KEY_RIGHT] || mouse_x > SCREEN_W - 15)client->cam_move_step(DIR_RIGHT, 3);
-            if(key[KEY_DOWN]  || mouse_y > SCREEN_H - 15)client->cam_move_step(DIR_DOWN,  3);
-            if(key[KEY_LEFT]  || mouse_x < 15           )client->cam_move_step(DIR_LEFT,  3);
+
             
             clear_keybuf();
         }

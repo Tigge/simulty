@@ -23,7 +23,7 @@ TARGET_LINK_LIBRARIES(../simulty-server netlib elog alleg-4.2.0)
 ENDIF(WIN32)
 
 # Client:
-ADD_EXECUTABLE(../simulty-client client.cpp game_client.cpp game_client_packet.cpp Point.cpp map_base.cpp map.cpp tile.cpp player_manager.cpp player.cpp player_client_local.cpp player_client_remote.cpp building.cpp building_manager.cpp gui.cpp mouse_handler.cpp)
+ADD_EXECUTABLE(../simulty-client client.cpp game_client.cpp game_client_packet.cpp Point.cpp map_base.cpp map.cpp tile.cpp player_manager.cpp player.cpp player_client_local.cpp player_client_remote.cpp building.cpp building_manager.cpp gui.cpp Mouse.cpp Camera.cpp)
 
 IF(WIN32)
 TARGET_LINK_LIBRARIES(../simulty-client netlib elog alleg wsock32)
