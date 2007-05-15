@@ -1,6 +1,7 @@
 #ifndef _POINT_HPP_
 #define _POINT_HPP_
 
+#include <ostream>
 
 /** 
  * Simple class representation of a point. 
@@ -45,6 +46,13 @@ class Point {
 
     // TODO: rename!
     static void fix_points(Point &a, Point &b);
+    
+    // For output in streams:
+    friend std::ostream& operator<<(std::ostream& output, const Point& p);
+    
+    // Addition and substraction of points
+    Point operator+(Point p);
+    Point operator-(Point p);
 
 };
 

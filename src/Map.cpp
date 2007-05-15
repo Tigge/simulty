@@ -3,9 +3,9 @@
 #include "Tile.hpp"
 
 
-Tile Map::getTile(int x, int y) {
+Tile *Map::getTile(int x, int y) {
 
-  return tiles[y * width + x];
+  return &tiles[y * width + x];
 
 }
 

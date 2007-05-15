@@ -37,12 +37,10 @@ const unsigned char SIMULTY_CLIENT_STATE_MENU_NONE  = 0;
 class Client {
   // Attributes
 
-    private:
+  private:
 
-    BITMAP *buffer;
-    
+    BITMAP *buffer;    
     NLNetwork net;
-
 
   public:
 
@@ -68,8 +66,6 @@ class Client {
     int frames;
 
     int time;
-
-
     int money;
 
     Point cam;

@@ -1,12 +1,12 @@
-#include "player_manager_server.h"
+#include "PlayerManagerServer.hpp"
 
-player_manager_server::player_manager_server() : player_manager()
+PlayerManagerServer::PlayerManagerServer() : PlayerManager()
 {
 
 
 }
 
-player_manager_server::~player_manager_server()
+PlayerManagerServer::~PlayerManagerServer()
 {
 
 
@@ -14,7 +14,7 @@ player_manager_server::~player_manager_server()
 
 
 
-int  player_manager_server::slot_next()
+int  PlayerManagerServer::slot_next()
 {
     for(unsigned int slot = 0; slot < count_max(); slot++)
     {

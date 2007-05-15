@@ -64,3 +64,17 @@ void Point::fix_points(Point &a, Point &b) {
     }
 }
 
+
+std::ostream& operator<<(std::ostream& output, const Point& p) {
+    output << "(" <<  p.x << ", " << p.y << ")";
+    return output;
+}
+
+Point Point::operator+(Point p) {
+    return Point(getX() + p.getX(), getY() + p.getY());
+}
+
+Point Point::operator-(Point p) {
+    return Point(getX() - p.getX(), getY() - p.getY());
+}
+

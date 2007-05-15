@@ -23,7 +23,7 @@ class Map {
     Map(int width, int height);
     virtual ~Map();
 
-    virtual Tile getTile(int x, int y);    
+    virtual Tile *getTile(int x, int y);    
     
     virtual int getWidth();
     virtual int getHeight();

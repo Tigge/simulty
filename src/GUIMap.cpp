@@ -95,10 +95,10 @@ GUIMap::~GUIMap()
 BITMAP *GUIMap::road_tile(int x, int y)
 {
 
-    int n = 1 * (int)getTile(x - 1, y).isRoad();
-    int e = 2 * (int)getTile(x, y + 1).isRoad();
-    int s = 4 * (int)getTile(x + 1, y).isRoad();
-    int w = 8 * (int)getTile(x, y - 1).isRoad();
+    int n = 1 * (int)getTile(x - 1, y)->isRoad();
+    int e = 2 * (int)getTile(x, y + 1)->isRoad();
+    int s = 4 * (int)getTile(x + 1, y)->isRoad();
+    int w = 8 * (int)getTile(x, y - 1)->isRoad();
 
     return t_roads[n + e + s + w];
 
@@ -123,6 +123,54 @@ void GUIMap::clean_bitmap(BITMAP *b)
    
 }
 
+Point GUIMap::toTileCoord(Point screenCoord) {
+
+    Point tileCoord;
+    tileCoord.setY(screenCoord.getX() / TILE_W + screenCoord.getY() / TILE_H - (getHeight()) / 2);
+    tileCoord.setX(screenCoord.getY() / TILE_H * 2 - (screenCoord.getX() / TILE_W + screenCoord.getY() / TILE_H - (getHeight()) / 2));
+
+    Point shavedScreenCoord = toScreenCoord(tileCoord);
+
+    int mouse_hint_color = getpixel(mouse_hint, 
+            screenCoord.getX() - shavedScreenCoord.getX(), 
+            screenCoord.getY() - shavedScreenCoord.getY());
+
+    if(mouse_hint_color == makecol(255, 0, 0))      tileCoord.translate(0, -1);
+    else if(mouse_hint_color == makecol(0, 255, 0)) tileCoord.translate(-1, 0);
+    else if(mouse_hint_color == makecol(0, 0, 255)) tileCoord.translate(1,  0);
+    else if(mouse_hint_color == makecol(0, 0, 0))   tileCoord.translate(0,  1);             
+
+    return tileCoord;
+
+
+}
+
+Point GUIMap::toTileCoord(Point screenCoord, Camera cam) {
+
+    screenCoord.translate(cam);
+    return toTileCoord(screenCoord);
+
+}
+   
+Point GUIMap::toScreenCoord(Point tileCoord) {
+
+    Point screenCoord;
+    screenCoord.setX((getHeight() - (tileCoord.getX() - tileCoord.getY())) * TILE_W / 2);
+    screenCoord.setY((tileCoord.getX() + tileCoord.getY()) * TILE_H / 2);    
+    return screenCoord;
+
+}
+Point GUIMap::toScreenCoord(Point tileCoord, Camera cam) {
+
+    Point screenCoord = toScreenCoord(tileCoord);
+    screenCoord.translate(-cam.getX(), -cam.getY());
+    return screenCoord;
+    
+}
+
+
+
+/*
 
 Point GUIMap::val2tile(Point input)
 {
@@ -160,15 +208,20 @@ Point GUIMap::tile2val(Point input)
     return output;
 }
 
+*/
 
 
 void GUIMap::render (BITMAP *b, Camera cam)
 {
     Point start, end;
-
+  
+    start = toTileCoord(cam);
+    end   = toTileCoord(cam + Point(SCREEN_W, SCREEN_H));
+  
+    /*
     start = val2tile(cam);
     end   = val2tile(Point(cam.getX() + SCREEN_W, cam.getY() + SCREEN_H));
-
+    */
     //al_trace("start %i,%i\n", start.x, start.y);
     //al_trace("end %i,%i\n", end.x, end.y);
 
@@ -193,34 +246,34 @@ void GUIMap::render (BITMAP *b, Camera cam)
             // If tile is a valid one, then we draw it:
             if(y >= 0 && x >= 0 && y < getHeight() && x < getWidth())
             {
-                Point pos = tile2val(Point(x, y));
-                pos.translate(-cam.getX(), -cam.getY());
-                Tile tile = getTile(x, y);
+                Point pos = toScreenCoord(Point(x, y)) - cam;
+                Tile *tile = getTile(x, y);
               
                 // Draw terrain:            
-                masked_blit(t_terrain[tile.getTerrain()], b, 1, 1, pos.getX(), pos.getY(), TILE_W, TILE_H);
+                masked_blit(t_terrain[tile->getTerrain()], b, 1, 1, pos.getX(), pos.getY(), TILE_W, TILE_H);
                
                 // Draw zone:
-                if(tile.getZone() == SIMULTY_CLIENT_TOOL_ZONE_RES)
+                if(tile->getZone() == SIMULTY_CLIENT_TOOL_ZONE_RES)
                     masked_blit(t_zone_res, b, 1, 1, pos.getX(), pos.getY(), TILE_W, TILE_H);
-                else if(tile.getZone() == SIMULTY_CLIENT_TOOL_ZONE_COM)
+                else if(tile->getZone() == SIMULTY_CLIENT_TOOL_ZONE_COM)
                     masked_blit(t_zone_com, b, 1, 1, pos.getX(), pos.getY(), TILE_W, TILE_H);
-                else if(tile.getZone() == SIMULTY_CLIENT_TOOL_ZONE_IND)
+                else if(tile->getZone() == SIMULTY_CLIENT_TOOL_ZONE_IND)
                     masked_blit(t_zone_ind, b, 1, 1, pos.getX(), pos.getY(), TILE_W, TILE_H);
 
                 // Draw road:
-                if(tile.isRoad())
+                if(tile->isRoad())
                     masked_blit(road_tile(x, y), b, 1, 1, pos.getX(), pos.getY(), TILE_W, TILE_H);
-
+                
                 // Draw borders:
-                if(tile.getOwner() != -1) {
-                  if(getTile(x, y - 1).getOwner() != getTile(x, y).getOwner())
+                if(tile->getOwner() != -1) {
+                
+                  if(getTile(x, y - 1)->getOwner() != getTile(x, y)->getOwner())
                       masked_blit(t_border[DIR_LEFT], b, 1, 1, pos.getX(), pos.getY(), TILE_W, TILE_H);                
-                  if(getTile(x + 1, y).getOwner() != getTile(x, y).getOwner())
+                  if(getTile(x + 1, y)->getOwner() != getTile(x, y)->getOwner())
                       masked_blit(t_border[DIR_DOWN], b, 1, 1, pos.getX(), pos.getY(), TILE_W, TILE_H);                
-                  if(getTile(x, y + 1).getOwner() != getTile(x, y).getOwner())
+                  if(getTile(x, y + 1)->getOwner() != getTile(x, y)->getOwner())
                       masked_blit(t_border[DIR_RIGHT], b, 1, 1, pos.getX(), pos.getY(), TILE_W, TILE_H);                
-                  if(getTile(x - 1, y).getOwner() != getTile(x, y).getOwner())
+                  if(getTile(x - 1, y)->getOwner() != getTile(x, y)->getOwner())
                       masked_blit(t_border[DIR_UP], b, 1, 1, pos.getX(), pos.getY(), TILE_W, TILE_H);   
                                                                                                
                   //textprintf_ex(b, font, place.x + 20 - cam.x, place.y + 10 - cam.y, makecol(0, 0, 0), -1, "O");

@@ -190,6 +190,8 @@ void Client::update (  )
 
 void Client::buy_land(Point from, Point to) {
 
+    client->gui->console_log("Bought land (request)");
+
     std::cout << "buy from " 
               << from.getX() << ", " << from.getY() << " to "
               << to.getX() << ", "   << to.getY() << std::endl;
@@ -203,7 +205,7 @@ void Client::buy_land(Point from, Point to) {
 
 void Client::buy_road(Point from, Point to) {
 
-    if(!map->getTile(to.getX(), to.getY()).isRoad())
+    if(!map->getTile(to.getX(), to.getY())->isRoad())
     {
         NLPacket roadpak(NPACKET_TYPE_SIMULTY_ROAD_BUILD);
         roadpak << (NLINT32)to.getX() << (NLINT32)to.getY();
@@ -212,6 +214,8 @@ void Client::buy_road(Point from, Point to) {
 }
 
 void Client::buy_zone(Point from, Point to, int type) {
+  
+    client->gui->console_log("Bought zone (request)");
 
     NLPacket zonepak(NPACKET_TYPE_SIMULTY_LAND_ZONE);
 
@@ -240,131 +244,136 @@ void Client::buy_building(Point where, int type) {
 
 void Client::packet_handle(NLPacket p)
 {
-    switch(p.getType())
+    
+
+    switch(p.getType()) {
+    
+        case NPACKET_TYPE_SIMULTY_WELCOME: 
         {
-            case NPACKET_TYPE_SIMULTY_WELCOME: 
-            {
-                std::cerr << "** Got welcome message" << std::endl;
+            std::cerr << "** Got welcome message" << std::endl;
 
-                std::string welcome; p >> welcome;
+            std::string welcome; p >> welcome;
 
-                NLPacket ver(NPACKET_TYPE_SIMULTY_VERSION_CLIENT); 
-                ver << (NLINT16)0 << (NLINT16)0 << (NLINT16)1;
-                net_client->packet_put(ver);
+            NLPacket ver(NPACKET_TYPE_SIMULTY_VERSION_CLIENT); 
+            ver << (NLINT16)0 << (NLINT16)0 << (NLINT16)1;
+            net_client->packet_put(ver);
 
-                alert("Welcome message from server", welcome.c_str(), NULL, "Ok", NULL, 0, 0);
+            alert("Welcome message from server", welcome.c_str(), NULL, "Ok", NULL, 0, 0);
 
-                break;
-            }
-
-            case NPACKET_TYPE_SIMULTY_ID:
-            {
-                std::cerr << "** Got id message (update)" << std::endl;
-
-                // Fetch ID and slot from packet:
-                NLINT32 id_new; NLINT16 slot_new; p >> id_new >> slot_new;
-                
-                // Create new local player and assign id and slot:
-                player_client_local *pl = new player_client_local(id_new, slot_new);
-                //pl->get_id() = id_new; pl->slot = slot_new;
-
-                // Add to player manager:
-                pman.add(pl);
-
-                // Set the player to our local player:                
-                player_me = pl;
-       
-                std::cerr << "*** ID is " << id_new << " and slot is " << slot_new << std::endl;
-                
-                break;
-            }
-            case NPACKET_TYPE_SIMULTY_ROAD_BUILD:
-            {
-                NLINT32 x, y; p >> x >> y;
-                map->getTile(x, y).setRoad(true);
-                break;
-            }
-
-
-            case NPACKET_TYPE_SIMULTY_TIME_INCR:
-            {
-                time++;
-                break;
-            }
-
-
-            case NPACKET_TYPE_SIMULTY_MONEY_CHANGE:
-            {
-                NLINT16 player_affected; NLINT32 money_new;
-                p >> player_affected >> money_new;
-                
-                
-                break;
-            }
-
-            case NPACKET_TYPE_SIMULTY_LAND_BUY:
-            {
-                // Fetch area:
-                NLINT16 pl_slot; NLINT32 x1, y1, x2, y2;
-                p >> pl_slot >> x1 >> y1 >> x2 >> y2;
-            
-                for(int x = x1; x <= x2; x++)
-                    for(int y = y1; y <= y2; y++)
-                    {
-                        if(map->getTile(x, y).getOwner() == -1)
-                            map->getTile(x, y).setOwner(pl_slot);
-                    }
-                break;
-            }
-            
-            case NPACKET_TYPE_SIMULTY_LAND_ZONE:
-            {
-                // Fetch area:
-                NLINT16 pl_slot, ztype; NLINT32 x1, y1, x2, y2;
-                p >> pl_slot >> ztype >> x1 >> y1 >> x2 >> y2;
-            
-                for(int x = x1; x <= x2; x++)
-                    for(int y = y1; y <= y2; y++)
-                    {
-                        if(map->getTile(x, y).getZone() == 0)
-                            map->getTile(x, y).setZone(ztype);
-                    }
-                    
-                client->gui->console_log("Bought zone");
-                    
-                break;            
-            
-            }
-            
-            case NPACKET_TYPE_SIMULTY_PLAYER_JOINED:
-            {
-                std::string nick; NLINT32 id; NLINT16 slot;
-                p >> id >> slot >> nick;
-                
-                
-                client->gui->console_log("Player joined");                
-            
-                break;
-            }
-            
-            case NPACKET_TYPE_SIMULTY_PLAYER_LEFT:
-            {
-                NLINT32 id;
-                p >> id;
-                
-                client->gui->console_log("Player left");
-                            
-                break;
-            }
-
-            default:
-            {
-                std::cerr << "** Got uknown message with id " << p.getType() << std::endl;
-                p.print();
-                break;
-            }           
-
+            break;
         }
+
+        case NPACKET_TYPE_SIMULTY_ID:
+        {
+            std::cerr << "** Got id message (update)" << std::endl;
+
+            // Fetch ID and slot from packet:
+            NLINT32 id_new; NLINT16 slot_new; p >> id_new >> slot_new;
+            
+            // Create new local player and assign id and slot:
+            player_client_local *pl = new player_client_local(id_new, slot_new);
+            //pl->get_id() = id_new; pl->slot = slot_new;
+
+            // Add to player manager:
+            pman.add(pl);
+
+            // Set the player to our local player:                
+            player_me = pl;
+    
+            std::cerr << "*** ID is " << id_new << " and slot is " << slot_new << std::endl;
+            
+            break;
+        }
+        case NPACKET_TYPE_SIMULTY_ROAD_BUILD:
+        {
+            NLINT32 x, y; p >> x >> y;
+            map->getTile(x, y)->setRoad(true);
+            break;
+        }
+
+
+        case NPACKET_TYPE_SIMULTY_TIME_INCR:
+        {
+            time++;
+            break;
+        }
+
+
+        case NPACKET_TYPE_SIMULTY_MONEY_CHANGE:
+        {
+            NLINT16 player_affected; NLINT32 money_new;
+            p >> player_affected >> money_new;
+            
+            
+            break;
+        }
+
+        case NPACKET_TYPE_SIMULTY_LAND_BUY:
+        {
+            client->gui->console_log("Land is bought!");
+            
+            // Fetch area:
+            NLINT16 pl_slot; NLINT32 x1, y1, x2, y2;
+            p >> pl_slot >> x1 >> y1 >> x2 >> y2;
+        
+            for(int x = x1; x <= x2; x++)
+                for(int y = y1; y <= y2; y++)
+                {
+                    if(map->getTile(x, y)->getOwner() == -1) {
+                        map->getTile(x, y)->setOwner(pl_slot);
+                    }
+                }
+            break;
+        }
+        
+        case NPACKET_TYPE_SIMULTY_LAND_ZONE: {
+        
+            // Fetch area:
+            NLINT16 pl_slot, ztype; NLINT32 x1, y1, x2, y2;
+            p >> pl_slot >> ztype >> x1 >> y1 >> x2 >> y2;
+        
+            for(int x = x1; x <= x2; x++)
+                for(int y = y1; y <= y2; y++)
+                {
+                    if(map->getTile(x, y)->getZone() == 0)
+                        map->getTile(x, y)->setZone(ztype);
+                }
+                
+            client->gui->console_log("Bought zone");
+                
+            break;            
+        
+        }
+        
+        case NPACKET_TYPE_SIMULTY_PLAYER_JOINED:
+        {
+            std::string nick; NLINT32 id; NLINT16 slot;
+            p >> id >> slot >> nick;
+            
+            
+            client->gui->console_log("Player joined");                
+        
+            break;
+        }
+        
+        case NPACKET_TYPE_SIMULTY_PLAYER_LEFT:
+        {
+            NLINT32 id;
+            p >> id;
+            
+            client->gui->console_log("Player left");
+                        
+            break;
+        }
+
+        default:
+        {
+            std::cerr << "** Got uknown message with id " << p.getType() << std::endl;
+            p.print();
+            break;
+        }           
+
+    }
 
 
 }

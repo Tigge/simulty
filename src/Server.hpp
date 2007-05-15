@@ -1,5 +1,5 @@
-#ifndef GAME_SERVER_H
-#define GAME_SERVER_H
+#ifndef _SERVER_HPP_
+#define _SERVER_HPP_
 
 #include "allegro.h"
 
@@ -7,21 +7,20 @@
   #include "winalleg.h"
 #endif
 
-#include "netlib.h"
+#include "NL.hpp"
 
-#include "map_base.h"
+#include "Map.hpp"
 
-#include "player_manager_server.h"
+#include "PlayerManagerServer.hpp"
 
-#include "player.h"
+#include "Player.hpp"
 #include "player_server_network.h"
 #include "player_server_ai.h"
 
-#include "building_manager.h"
+#include "BuildingManager.hpp"
 
 #include "Point.hpp"
 
-extern Server *server;
 
 
 const unsigned char SIMULTY_SERVER_STATE_LOBBY      = 1;
@@ -32,37 +31,39 @@ const unsigned char SIMULTY_SERVER_STATE_GAME_END   = 4;
 
 
 
-class game_server {
+class Server {
   // Associations
   // Attributes
   private:
-    NNetwork net;
-    map_base *m;
+    NLNetwork net;
+    Map *map;
 
     bool player_add(unsigned char player_type);
-    bool player_remove(player *);
+    bool player_remove(Player *);
 
-    bool packet_handle(player_server_network *from, NPacket pack);
-    void packet_send(player_server_network *to, NPacket pack);
-    void packet_send_to_all(NPacket pack);
+    bool packet_handle(player_server_network *from, NLPacket pack);
+    void packet_send(player_server_network *to, NLPacket pack);
+    void packet_send_to_all(NLPacket pack);
 
-    player_manager_server pman;
+    PlayerManagerServer pman;
     
-    building_manager bman;
+    BuildingManager bman;
 
     bool time_advance;
 
   public:
-    NSocket *net_server; 
+    NLSocket *net_server; 
   // Operations
   public:
 
-    game_server();
-    virtual ~game_server();
+    Server();
+    virtual ~Server();
 
 
     void static time_increment(void *);
     void update (  );
 };
+
+extern Server *server;
 
 #endif

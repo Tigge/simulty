@@ -15,7 +15,7 @@ LINK_DIRECTORIES(${Simulty_BINARY_DIR}/src/NL ${Simulty_BINARY_DIR}/src/error /u
 
 # Server:
 ###############################################################################
-ADD_EXECUTABLE(../simulty-server server.cpp game_server.cpp game_server_player.cpp game_server_packet.cpp Point.cpp Map.cpp PlayerManager.cpp player_manager_server.cpp Player.cpp player_server_network.cpp player_server_ai.cpp Building.cpp BuildingManager.cpp Tile.cpp)
+ADD_EXECUTABLE(../simulty-server Server.cpp Point.cpp Map.cpp PlayerManager.cpp PlayerManagerServer.cpp Player.cpp player_server_network.cpp player_server_ai.cpp Building.cpp BuildingManager.cpp Tile.cpp)
 
 IF(WIN32)
   TARGET_LINK_LIBRARIES(../simulty-server NL elog alleg wsock32)

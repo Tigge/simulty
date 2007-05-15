@@ -33,8 +33,8 @@ GUI::~GUI (  ){
 
 void GUI::render ( BITMAP *buffer ){
 
-    if(client->state_menu)
-    {
+    if(client->state_menu) {
+    
         blit(menu_background, buffer, 0, 0, 0, 0, 800, 600);
 
         textprintf_ex(buffer, font, SCREEN_W - 200, SCREEN_H - 300, makecol(0, 0, 0), -1, "New local game");
@@ -44,28 +44,29 @@ void GUI::render ( BITMAP *buffer ){
         textprintf_ex(buffer, font, SCREEN_W - 200, SCREEN_H - 200, makecol(0, 0, 0), -1, "Quit");
 
 
-    }
-    else if(client->state_game)
-    {
+    } else if(client->state_game) {
     
-        client->map->render(buffer, camera);
-      
+        // Render map:
+        client->map->render(buffer, camera);      
     
+        client->map->toTileCoord(mouse.getPosition() + camera);
+        client->map->toTileCoord(mouse.getPosition() + camera);
+    
+        /*
         Point pos = client->map->val2tile(Point(mouse_x + client->cam.getX(), mouse_y + client->cam.getY()));            
         Point ral = client->map->val2tile_real(Point(mouse_x + client->cam.getX(), mouse_y + client->cam.getY()));
 
 
         Point xpos = client->map->tile2val(pos);
         Point xral = client->map->tile2val(ral);
-      
+        */
+        
         if(mouse.getLeftButtonState() == STATE_PRESS) {
         
 
         
         } if(mouse.getLeftButtonState() == STATE_HOLD) {
         
-            Point cam = client->cam;
-            
             //Point ms = m->val2tile_real();
             Point c1 = mouse_down_tile;
             Point c3 = mouse_up_tile;
@@ -75,21 +76,21 @@ void GUI::render ( BITMAP *buffer ){
             Point c2 = Point(c3.getX(), c1.getY());
             Point c4 = Point(c1.getX(), c3.getY());
 
-            c1 = client->map->tile2val(c1); c2 = client->map->tile2val(c2); 
-            c3 = client->map->tile2val(c3); c4 = client->map->tile2val(c4);
+            c1 = client->map->toScreenCoord(c1, camera); c2 = client->map->toScreenCoord(c2, camera); 
+            c3 = client->map->toScreenCoord(c3, camera); c4 = client->map->toScreenCoord(c4, camera);
 
             //Point mt = client->map->val2tile_real(Point(mouse_x + client->cam.x, client->mapouse_y + cam.y));
 
-            int points[8] = { c1.getX() - cam.getX() + TILE_W / 2, c1.getY() - cam.getY() + TILE_H / 2,
-                              c2.getX() - cam.getX() + TILE_W / 2, c2.getY() - cam.getY() + TILE_H / 2,
-                              c3.getX() - cam.getX() + TILE_W / 2, c3.getY() - cam.getY() + TILE_H / 2,
-                              c4.getX() - cam.getX() + TILE_W / 2, c4.getY() - cam.getY() + TILE_H / 2, };
+            int points[8] = { c1.getX() + TILE_W / 2, c1.getY() + TILE_H / 2, 
+                              c2.getX() + TILE_W / 2, c2.getY() + TILE_H / 2,
+                              c3.getX() + TILE_W / 2, c3.getY() + TILE_H / 2, 
+                              c4.getX() + TILE_W / 2, c4.getY() + TILE_H / 2 };
 
             polygon(buffer, 4, points, makecol(255, 255, 255));
 
             //Point pos = client->map->tile2val(client->map->val2tile_real(Point(mouse_x + cam.x, mouse_y + cam.y)));
 
-            masked_blit(mouse_block, buffer, 0, 0, pos.getX() - cam.getX(), pos.getY() - cam.getY(), mouse_block->w, mouse_block->h);
+            //masked_blit(mouse_block, buffer, 0, 0, pos.getX() - cam.getX(), pos.getY() - cam.getY(), mouse_block->w, mouse_block->h);
 
             textprintf_ex(buffer, font, SCREEN_W - 200, SCREEN_H - 260, makecol(0, 0, 0), -1, "%i, %i", c3.getX(), c3.getY());
 
@@ -111,15 +112,18 @@ void GUI::render ( BITMAP *buffer ){
 
         textprintf_ex(buffer, font, 200, SCREEN_H - 20, makecol(0, 0, 0), -1, "FPS: %i", client->fps); 
 
-        Point cam = client->cam;
-        Point realpos  = Point(mouse.getPosition().getX() + cam.getX(), mouse.getPosition().getY() + cam.getY());
-        Point realtile = client->map->val2tile_real(realpos);
-
+        Point realtile = client->map->toTileCoord(mouse.getPosition(), camera);
+        Point realscrn = client->map->toScreenCoord(realtile, camera);
+        
+        masked_blit(mouse_block, buffer, 0, 0, realscrn.getX(), realscrn.getY(), mouse_block->w, mouse_block->h);
 
         textprintf_ex(buffer, font, 200, SCREEN_H - 30, makecol(0, 0, 0), -1, "Mouse: %i, %i", realtile.getX(), realtile.getY()); 
 
         if(realtile.getX() > 5 && realtile.getY() > 5)
         textprintf_ex(buffer, font, 300, SCREEN_H - 30, makecol(0, 0, 0), -1, "Thrive: %i", client->bman.thrive_value_get(client->map, client->player_me->slot_get(), realtile.getX(), realtile.getY()));
+
+
+        textprintf_ex(buffer, font, 600, SCREEN_H - 30, makecol(0, 0, 0), -1, "MD: %i, %i MU: %i, %i", mouse_down_tile.getX(), mouse_down_tile.getY(), mouse_up_tile.getX(), mouse_up_tile.getY());
 
         // Draw console:
         if(console_show)
@@ -155,18 +159,18 @@ void GUI::update()
         // Mouse input:
         if(mouse.getLeftButtonState() == STATE_PRESS) {
         
-            mouse_down_tile = mouse.getPressPosition();
-            mouse_down_tile.translate(client->cam);
-            mouse_down_tile = client->map->val2tile_real(mouse_down_tile);
+            mouse_down_tile = client->map->toTileCoord(mouse.getPressPosition(), camera);
                     
             std::cout << "mouse press event" << std::endl;
             
-        }
-        else if(mouse.getLeftButtonState() == STATE_RELEASE) {    
+        } else if(mouse.getLeftButtonState() == STATE_HOLD) {
         
-            mouse_up_tile = mouse.getPressPosition();
-            mouse_up_tile.translate(client->cam);
-            mouse_up_tile = client->map->val2tile_real(mouse_up_tile);        
+            mouse_up_tile = client->map->toTileCoord(mouse.getPosition(), camera);
+
+            std::cout << "mouse hold event" << std::endl;
+        
+        } else if(mouse.getLeftButtonState() == STATE_RELEASE) {    
+        
             std::cout << "mouse release event" << std::endl;
              
             Point::fix_points(mouse_down_tile, mouse_up_tile);
@@ -198,10 +202,6 @@ void GUI::update()
 
             if(key[KEY_PLUS_PAD])tool++;
             if(key[KEY_MINUS_PAD])tool--;
-            
-              
-
-
             
             clear_keybuf();
         }

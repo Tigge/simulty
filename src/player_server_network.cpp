@@ -1,7 +1,7 @@
 #include "player_server_network.h"
 
-player_server_network::player_server_network (NL_INT32 id_new, NL_INT16 slot_new) : player(id_new, slot_new)
-{
+player_server_network::player_server_network (NLINT32 id_new, NLINT16 slot_new) : Player(id_new, slot_new) {
+
     type = PLAYER_TYPE_SERVER_NETWORK;
 }
 
@@ -16,7 +16,7 @@ void player_server_network::money_set(int money_new)
     money = money_new;
 
     // Update remote money:
-    NPacket money_update(NPACKET_TYPE_SIMULTY_MONEY_CHANGE);
+    NLPacket money_update(NPACKET_TYPE_SIMULTY_MONEY_CHANGE);
     money_update << id_get() << money_new;
     socket->packet_put(money_update);
     

@@ -46,7 +46,14 @@ class GUIMap : public Map {
   // Operations
   public:
 
+    
 
+    Point toTileCoord(Point screenCoord);
+    Point toTileCoord(Point screenCoord, Camera cam);    
+    Point toScreenCoord(Point tileCoord);
+    Point toScreenCoord(Point tileCoord, Camera cam);
+
+    /*
     Point val2tile(Point input);
     Point val2tile_real(Point input);
 
@@ -54,7 +61,8 @@ class GUIMap : public Map {
 
     Point pos_to_tile(Point pos, Point cam);
     Point tile_to_pos(Point tile, int dir, Point cam);
-
+    */
+    
     GUIMap(int width, int height);
     ~GUIMap();
     void render (BITMAP *b, Camera cam);
