@@ -4,8 +4,7 @@
 #include "map.h"
 #include "tile.h"
 
-map::map()
-{
+map::map() {
     t_zone_res     = load_bitmap("img/terrain_zone_res.pcx",  NULL);
     t_zone_com     = load_bitmap("img/terrain_zone_com.pcx",  NULL);
     t_zone_ind     = load_bitmap("img/terrain_zone_ind.pcx",  NULL);
@@ -125,56 +124,56 @@ void map::clean_bitmap(BITMAP *b)
 }
 
 
-point map::val2tile(point input)
+Point map::val2tile(Point input)
 {
-    point output;    
+    Point output;    
 
-    output.y = input.x / TILE_W + input.y / TILE_H - (height) / 2;
-    output.x = input.y / TILE_H * 2 - (input.x / TILE_W + input.y / TILE_H - (height) / 2);
+    output.setY(input.getX() / TILE_W + input.getY() / TILE_H - (height) / 2);
+    output.setX(input.getY() / TILE_H * 2 - (input.getX() / TILE_W + input.getY() / TILE_H - (height) / 2));
 
     return output;
 }
 
-point map::val2tile_real(point input)
+Point map::val2tile_real(Point input)
 {
-    point base = val2tile(input);
-    point pos  = tile2val(base);
+    Point base = val2tile(input);
+    Point pos  = tile2val(base);
 
-    int mouse_hint_color = getpixel(mouse_hint, input.x - pos.x, input.y - pos.y);
+    int mouse_hint_color = getpixel(mouse_hint, input.getX() - pos.getX(), input.getY() - pos.getY());
 
-    if(mouse_hint_color == makecol(255, 0, 0))      base.y--;
-    else if(mouse_hint_color == makecol(0, 255, 0)) base.x--;
-    else if(mouse_hint_color == makecol(0, 0, 255)) base.x++;
-    else if(mouse_hint_color == makecol(0, 0, 0))   base.y++;             
+    if(mouse_hint_color == makecol(255, 0, 0))      base.translate(0, -1);
+    else if(mouse_hint_color == makecol(0, 255, 0)) base.translate(-1, 0);
+    else if(mouse_hint_color == makecol(0, 0, 255)) base.translate(1,  0);
+    else if(mouse_hint_color == makecol(0, 0, 0))   base.translate(0,  1);             
 
     return base;
 }
 
 
-point map::tile2val(point input)
+Point map::tile2val(Point input)
 {
-    point output;
+    Point output;
 
-    output.x = (height - (input.x - input.y)) * TILE_W / 2;
-    output.y = (input.x + input.y) * TILE_H / 2;
+    output.setX((height - (input.getX() - input.getY())) * TILE_W / 2);
+    output.setY((input.getX() + input.getY()) * TILE_H / 2);
 
     return output;
 }
 
 
 
-void map::render (BITMAP *b, point cam)
+void map::render (BITMAP *b, Point cam)
 {
-    point start, end;
+    Point start, end;
 
     start = val2tile(cam);
-    end   = val2tile(point(cam.x + SCREEN_W, cam.y + SCREEN_H));
+    end   = val2tile(Point(cam.getX() + SCREEN_W, cam.getY() + SCREEN_H));
 
     //al_trace("start %i,%i\n", start.x, start.y);
     //al_trace("end %i,%i\n", end.x, end.y);
 
-    int base_x = start.x - 1;
-    int base_y = start.y - 2;
+    int base_x = start.getX() - 1;
+    int base_y = start.getY() - 2;
 
     //if(cam.y % TILE_H > TILE_H / 2){ base_y--; base_x--; }
 
@@ -189,7 +188,7 @@ void map::render (BITMAP *b, point cam)
             //al_trace("p %i,%i\n", x, y);
 
             
-            point place = tile2val(point(x, y));
+            Point place = tile2val(Point(x, y));
 
             //textprintf_ex(b, font, place.x + 20 - cam.x, place.y + 10 - cam.y, makecol(255, 255, 255), -1, "%i,%i", x, y);
 
@@ -197,31 +196,31 @@ void map::render (BITMAP *b, point cam)
             if(y >= 0 && x >= 0 && y < height && x < width)
             {
                 // Draw terrain:            
-                masked_blit(t_terrain[tiles[(y) * width + (x)].terrain], b, 1, 1, place.x - cam.x, place.y - cam.y, TILE_W, TILE_H);
+                masked_blit(t_terrain[tiles[(y) * width + (x)].terrain], b, 1, 1, place.getX() - cam.getX(), place.getY() - cam.getY(), TILE_W, TILE_H);
                
                 // Draw zone:
                 if(tiles[y * width + x].zone == SIMULTY_CLIENT_TOOL_ZONE_RES)
-                    masked_blit(t_zone_res, b, 1, 1, place.x - cam.x, place.y - cam.y, TILE_W, TILE_H);
+                    masked_blit(t_zone_res, b, 1, 1, place.getX() - cam.getX(), place.getY() - cam.getY(), TILE_W, TILE_H);
                 else if(tiles[y * width + x].zone == SIMULTY_CLIENT_TOOL_ZONE_COM)
-                    masked_blit(t_zone_com, b, 1, 1, place.x - cam.x, place.y - cam.y, TILE_W, TILE_H);
+                    masked_blit(t_zone_com, b, 1, 1, place.getX() - cam.getX(), place.getY() - cam.getY(), TILE_W, TILE_H);
                 else if(tiles[y * width + x].zone == SIMULTY_CLIENT_TOOL_ZONE_IND)
-                    masked_blit(t_zone_ind, b, 1, 1, place.x - cam.x, place.y - cam.y, TILE_W, TILE_H);
+                    masked_blit(t_zone_ind, b, 1, 1, place.getX() - cam.getX(), place.getY() - cam.getY(), TILE_W, TILE_H);
 
                 // Draw road:
                 if(tiles[y * width + x].road)
-                    masked_blit(road_tile(x, y), b, 1, 1, place.x - cam.x, place.y - cam.y, TILE_W, TILE_H);
+                    masked_blit(road_tile(x, y), b, 1, 1, place.getX() - cam.getX(), place.getY() - cam.getY(), TILE_W, TILE_H);
 
                 // Draw info (debug)
                 if(tiles[y * width + x].owner != -1)
                 {                
                   if(tiles[(y - 1) * width + x].owner != tiles[y * width + x].owner )
-                      masked_blit(t_border[DIR_LEFT], b, 1, 1, place.x - cam.x, place.y - cam.y, TILE_W, TILE_H);                
+                      masked_blit(t_border[DIR_LEFT], b, 1, 1, place.getX() - cam.getX(), place.getY() - cam.getY(), TILE_W, TILE_H);                
                   if(tiles[y * width + (x + 1)].owner != tiles[y * width + x].owner )
-                      masked_blit(t_border[DIR_DOWN], b, 1, 1, place.x - cam.x, place.y - cam.y, TILE_W, TILE_H);                
+                      masked_blit(t_border[DIR_DOWN], b, 1, 1, place.getX() - cam.getX(), place.getY() - cam.getY(), TILE_W, TILE_H);                
                   if(tiles[(y + 1) * width + x].owner != tiles[y * width + x].owner )
-                      masked_blit(t_border[DIR_RIGHT], b, 1, 1, place.x - cam.x, place.y - cam.y, TILE_W, TILE_H);                
+                      masked_blit(t_border[DIR_RIGHT], b, 1, 1, place.getX() - cam.getX(), place.getY() - cam.getY(), TILE_W, TILE_H);                
                   if(tiles[y * width + x - 1].owner != tiles[y * width + x].owner )
-                      masked_blit(t_border[DIR_UP], b, 1, 1, place.x - cam.x, place.y - cam.y, TILE_W, TILE_H);   
+                      masked_blit(t_border[DIR_UP], b, 1, 1, place.getX() - cam.getX(), place.getY() - cam.getY(), TILE_W, TILE_H);   
                                                                                                
                   //textprintf_ex(b, font, place.x + 20 - cam.x, place.y + 10 - cam.y, makecol(0, 0, 0), -1, "O");
                  }

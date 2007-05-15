@@ -34,12 +34,7 @@ const unsigned char SIMULTY_CLIENT_STATE_GAME_END   = 4;
 const unsigned char SIMULTY_CLIENT_STATE_MENU_NONE  = 0;
 
 
-const unsigned char SIMULTY_CLIENT_TOOL_NONE   = 0;
-const unsigned char SIMULTY_CLIENT_TOOL_LAND   = 1;
-const unsigned char SIMULTY_CLIENT_TOOL_ROAD   = 2;
-const unsigned char SIMULTY_CLIENT_TOOL_ZONE_RES = 10;
-const unsigned char SIMULTY_CLIENT_TOOL_ZONE_COM = 11;
-const unsigned char SIMULTY_CLIENT_TOOL_ZONE_IND = 12;
+
 
 class game_client {
   // Attributes
@@ -79,7 +74,7 @@ class game_client {
 
     int money;
 
-    point cam;
+    Point cam;
 
     NSocket *net_client;
     gui *g;
@@ -98,9 +93,10 @@ class game_client {
 
     void packet_handle(NPacket p);
     
-    void buy_land(point from, point to);
-    void buy_road(point from, point to);
-    void buy_zone(point from, point to, int type);
+    void buy_land(Point from, Point to);
+    void buy_road(Point from, Point to);
+    void buy_zone(Point from, Point to, int type);
+    void buy_building(Point where, int type);
     
 };
 

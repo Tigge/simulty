@@ -3,7 +3,7 @@
 #define _MOUSE_HANDLER_H_
 
 #include "allegro.h"
-#include "point.h"
+#include "Point.hpp"
 
 const unsigned char EVENT_NONE    = 0; // On "normal"
 const unsigned char EVENT_PRESS   = 1; // On press
@@ -14,10 +14,10 @@ class mouse_handler
 {
     public:
 
-    point pos;
+    Point pos;
     
-    point up;
-    point down;
+    Point up;
+    Point down;
 
     unsigned char button_left;
     unsigned char button_middle;

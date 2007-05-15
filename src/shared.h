@@ -27,18 +27,21 @@ const unsigned char SIMULTY_COST_ZONE_RES = 80;
 
 // Packets:
 
-const unsigned char NPACKET_TYPE_SIMULTY_WELCOME = 100;
-const unsigned char NPACKET_TYPE_SIMULTY_VERSION_CLIENT = 101;
-const unsigned char NPACKET_TYPE_SIMULTY_VERSION_SERVER = 102;
+const unsigned char NPACKET_TYPE_SIMULTY_WELCOME          = 100;
+const unsigned char NPACKET_TYPE_SIMULTY_VERSION_CLIENT   = 101;
+const unsigned char NPACKET_TYPE_SIMULTY_VERSION_SERVER   = 102;
 
-const unsigned char NPACKET_TYPE_SIMULTY_ID      = 103;
+const unsigned char NPACKET_TYPE_SIMULTY_ID               = 103;
 
-const unsigned char NPACKET_TYPE_SIMULTY_PLAYER_JOINED  = 120;
-const unsigned char NPACKET_TYPE_SIMULTY_PLAYER_LEFT = 121;
+const unsigned char NPACKET_TYPE_SIMULTY_PLAYER_JOINED    = 120;
+const unsigned char NPACKET_TYPE_SIMULTY_PLAYER_LEFT      = 121;
 
 
-const unsigned char NPACKET_TYPE_SIMULTY_ROAD_BUILD = 200;
-const unsigned char NPACKET_TYPE_SIMULTY_ROAD_DESTROY = 201;
+const unsigned char NPACKET_TYPE_SIMULTY_ROAD_BUILD       = 200;
+const unsigned char NPACKET_TYPE_SIMULTY_ROAD_DESTROY     = 201;
+
+const unsigned char NPACKET_TYPE_SIMULTY_BUILDING_BUILD   = 204;
+const unsigned char NPACKET_TYPE_SIMULTY_BUILDING_DESTROY = 205;
 
 const unsigned char NPACKET_TYPE_SIMULTY_LAND_BUY  = 230;
 const unsigned char NPACKET_TYPE_SIMULTY_LAND_SELL = 231;

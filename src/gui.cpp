@@ -7,16 +7,21 @@ gui::gui (  ){
 
 
     menu_background = load_bitmap("img/menubg.pcx", NULL);
+    gui_background  = load_bitmap("img/guibg.pcx", NULL);
 
-    mouse_pointer = load_bitmap("img/cursor.pcx", NULL);
-    mouse_block  = load_bitmap("img/mouse_block.pcx", NULL);
+    mouse_pointer   = load_bitmap("img/cursor.pcx", NULL);
+    mouse_block     = load_bitmap("img/mouse_block.pcx", NULL);
+    
+    icon_ind        = load_bitmap("img/menu_icon_ind.pcx", NULL);
+    icon_res        = load_bitmap("img/menu_icon_res.pcx", NULL);
+    icon_com        = load_bitmap("img/menu_icon_com.pcx", NULL);        
 
     console_show = false;
 
     // Init mouse handler:
     mouse = new mouse_handler;
     
-    if(!mouse_pointer || !mouse_block || ! menu_background)
+    if(!mouse_pointer || !mouse_block || !menu_background || !gui_background)
     {
         allegro_message("Couldn't load / create some images");
         exit(1);
@@ -51,12 +56,12 @@ void gui::render ( BITMAP *buffer ){
     {
     
     
-        point pos = client->m->val2tile(point(mouse_x + client->cam.x, mouse_y + client->cam.y));            
-        point ral = client->m->val2tile_real(point(mouse_x + client->cam.x, mouse_y + client->cam.y));
+        Point pos = client->m->val2tile(Point(mouse_x + client->cam.getX(), mouse_y + client->cam.getY()));            
+        Point ral = client->m->val2tile_real(Point(mouse_x + client->cam.getX(), mouse_y + client->cam.getY()));
 
 
-        point xpos = client->m->tile2val(pos);
-        point xral = client->m->tile2val(ral);
+        Point xpos = client->m->tile2val(pos);
+        Point xral = client->m->tile2val(ral);
       
         if(mouse->button_left == EVENT_PRESS) {
         
@@ -70,42 +75,46 @@ void gui::render ( BITMAP *buffer ){
             mouse_up_tile.translate(client->cam);
             mouse_up_tile = client->m->val2tile_real(mouse_up_tile);
                
-            point cam = client->cam;
+            Point cam = client->cam;
             
-            //point ms = m->val2tile_real();
-            point c1 = mouse_down_tile;
-            point c3 = mouse_up_tile;
+            //Point ms = m->val2tile_real();
+            Point c1 = mouse_down_tile;
+            Point c3 = mouse_up_tile;
             
-            point::fix_points(c1, c3);
+            Point::fix_points(c1, c3);
 
-            point c2 = point(c3.x, c1.y);
-            point c4 = point(c1.x, c3.y);
+            Point c2 = Point(c3.getX(), c1.getY());
+            Point c4 = Point(c1.getX(), c3.getY());
 
             c1 = client->m->tile2val(c1); c2 = client->m->tile2val(c2); 
             c3 = client->m->tile2val(c3); c4 = client->m->tile2val(c4);
 
-            //point mt = client->m->val2tile_real(point(mouse_x + client->cam.x, client->mouse_y + cam.y));
+            //Point mt = client->m->val2tile_real(Point(mouse_x + client->cam.x, client->mouse_y + cam.y));
 
-            int points[8] = { c1.x - cam.x + TILE_W / 2, c1.y - cam.y + TILE_H / 2,
-                              c2.x - cam.x + TILE_W / 2, c2.y - cam.y + TILE_H / 2,
-                              c3.x - cam.x + TILE_W / 2, c3.y - cam.y + TILE_H / 2,
-                              c4.x - cam.x + TILE_W / 2, c4.y - cam.y + TILE_H / 2, };
+            int points[8] = { c1.getX() - cam.getX() + TILE_W / 2, c1.getY() - cam.getY() + TILE_H / 2,
+                              c2.getX() - cam.getX() + TILE_W / 2, c2.getY() - cam.getY() + TILE_H / 2,
+                              c3.getX() - cam.getX() + TILE_W / 2, c3.getY() - cam.getY() + TILE_H / 2,
+                              c4.getX() - cam.getX() + TILE_W / 2, c4.getY() - cam.getY() + TILE_H / 2, };
 
             polygon(buffer, 4, points, makecol(255, 255, 255));
 
-            //point pos = client->m->tile2val(client->m->val2tile_real(point(mouse_x + cam.x, mouse_y + cam.y)));
+            //Point pos = client->m->tile2val(client->m->val2tile_real(Point(mouse_x + cam.x, mouse_y + cam.y)));
 
-            masked_blit(mouse_block, buffer, 0, 0, pos.x - cam.x, pos.y - cam.y, mouse_block->w, mouse_block->h);                
+            masked_blit(mouse_block, buffer, 0, 0, pos.getX() - cam.getX(), pos.getY() - cam.getY(), mouse_block->w, mouse_block->h);
 
-            textprintf_ex(buffer, font, SCREEN_W - 200, SCREEN_H - 260, makecol(0, 0, 0), -1, "%i, %i", c3.x, c3.y);
+            textprintf_ex(buffer, font, SCREEN_W - 200, SCREEN_H - 260, makecol(0, 0, 0), -1, "%i, %i", c3.getX(), c3.getY());
 
 
             //rect(buffer, mouse_down_tile_x * TILE_W, , mouse_to_tile_x() * TILE_W, mouse_to_tile_y() * TILE_H / 2, makecol(255, 0, 0));
             
         }
         //blit(mouse_hint, buffer, 0, 0, (mouse_x / TILE_W) * TILE_W, (mouse_y / TILE_H) * TILE_H, mouse_hint->w, mouse_hint->h);    
-
-        rectfill(buffer, 0, SCREEN_H - 50, SCREEN_W, SCREEN_H, makecol(200, 200, 200));
+        
+        masked_blit(gui_background, buffer, 0, 0, 0, 0, gui_background->w, gui_background->h);
+        
+        blit(icon_com, buffer, 0, 0, SCREEN_W - 37, 5,  32, 32);
+        blit(icon_res, buffer, 0, 0, SCREEN_W - 74, 5,  32, 32);
+        blit(icon_ind, buffer, 0, 0, SCREEN_W - 37, 42, 32, 32);
 
         textprintf_ex(buffer, font, 20, SCREEN_H - 40, makecol(0, 0, 0), -1, "Money: %i", client->money); 
         textprintf_ex(buffer, font, 20, SCREEN_H - 30, makecol(0, 0, 0), -1, "Time: %i", client->time); 
@@ -113,17 +122,17 @@ void gui::render ( BITMAP *buffer ){
 
         textprintf_ex(buffer, font, 200, SCREEN_H - 20, makecol(0, 0, 0), -1, "FPS: %i", client->fps); 
 
-        point cam = client->cam;
-        point realpos  = point(mouse->pos.x + cam.x, mouse->pos.y + cam.y);
-        point realtile = client->m->val2tile_real(realpos);
+        Point cam = client->cam;
+        Point realpos  = Point(mouse->pos.getX() + cam.getX(), mouse->pos.getY() + cam.getY());
+        Point realtile = client->m->val2tile_real(realpos);
 
 
-        textprintf_ex(buffer, font, 200, SCREEN_H - 30, makecol(0, 0, 0), -1, "Mouse: %i, %i", realtile.x, realtile.y); 
+        textprintf_ex(buffer, font, 200, SCREEN_H - 30, makecol(0, 0, 0), -1, "Mouse: %i, %i", realtile.getX(), realtile.getY()); 
 
-        if(realtile.x > 5 && realtile.y > 5)
-        textprintf_ex(buffer, font, 300, SCREEN_H - 30, makecol(0, 0, 0), -1, "Thrive: %i", client->bman.thrive_value_get(client->m, client->player_me->slot_get(), realtile.x, realtile.y));
+        if(realtile.getX() > 5 && realtile.getY() > 5)
+        textprintf_ex(buffer, font, 300, SCREEN_H - 30, makecol(0, 0, 0), -1, "Thrive: %i", client->bman.thrive_value_get(client->m, client->player_me->slot_get(), realtile.getX(), realtile.getY()));
 
-
+        // Draw console:
         if(console_show)
         {
             rectfill(buffer, 0, 0, SCREEN_W, 100, makecol(50, 50, 50)); 
@@ -137,7 +146,8 @@ void gui::render ( BITMAP *buffer ){
 
     }    
     
-    masked_blit(mouse_pointer, buffer, 0, 0, mouse->pos.x, mouse->pos.y, 32, 32);
+    // Draw mouse pointer:
+    masked_blit(mouse_pointer, buffer, 0, 0, mouse->pos.getX(), mouse->pos.getX(), 32, 32);
 
 }
 
@@ -161,13 +171,13 @@ void gui::update()
         // Mouse input:
         if(mouse->button_left == EVENT_PRESS) {
             std::cout << "mouse press event" << std::endl;
-            mouse_down_tile = client->m->val2tile_real(point(mouse->pos.x + client->cam.x, mouse->pos.y + client->cam.y));
+            mouse_down_tile = client->m->val2tile_real(Point(mouse->pos.getX() + client->cam.getX(), mouse->pos.getY() + client->cam.getY()));
         }
         else if(mouse->button_left == EVENT_RELEASE) {    
             std::cout << "mouse release event" << std::endl;
-            mouse_up_tile   = client->m->val2tile_real(point(mouse->pos.x + client->cam.x, mouse->pos.y + client->cam.y));
+            mouse_up_tile   = client->m->val2tile_real(Point(mouse->pos.getX() + client->cam.getX(), mouse->pos.getY() + client->cam.getY()));
              
-            point::fix_points(mouse_down_tile, mouse_up_tile);
+            Point::fix_points(mouse_down_tile, mouse_up_tile);
             
             if(tool == SIMULTY_CLIENT_TOOL_LAND) {
                 client->buy_land(mouse_down_tile, mouse_up_tile);

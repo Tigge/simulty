@@ -21,9 +21,11 @@ class building {
   // Operations
   public:
     building (  );
-    ~building (  );
-    void render (  );
-    void update (  );
+    virtual ~building (  );
+    
+    virtual void render (  );
+    virtual void update (  );
+
 };
 
 #endif

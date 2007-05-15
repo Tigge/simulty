@@ -164,57 +164,52 @@ void game_client::update (  )
 }
 
 
-bool game_client::cam_move_step(int dir, int step = 1)
-{
+void game_client::buy_land(Point from, Point to) {
 
-         if(dir == DIR_UP    && cam.y - step >= 0       ) { cam.y -= step; return true; }
-    else if(dir == DIR_RIGHT && cam.x + step < m->width * TILE_W ) { cam.x += step; return true; }
-    else if(dir == DIR_DOWN  && cam.y + step < m->height * TILE_H ) { cam.y += step; return true; }
-    else if(dir == DIR_LEFT  && cam.x - step >= 0       ) { cam.x -= step; return true; }
-
-    return false;
-}
-
-bool game_client::cam_move_jump(int x, int y)
-{
-
-    return true;
-}
-
-void game_client::buy_land(point from, point to) {
-
-    std::cout << "buy from " << from.x << ", " << from.y << " to "
-              << to.x << ", " << to.y << std::endl;
+    std::cout << "buy from " 
+              << from.getX() << ", " << from.getY() << " to "
+              << to.getX() << ", "   << to.getY() << std::endl;
 
     NPacket landpak(NPACKET_TYPE_SIMULTY_LAND_BUY);
-    landpak << (NL_INT32)from.x << (NL_INT32)from.y 
-            << (NL_INT32)to.x   << (NL_INT32)to.y;
+    landpak << (NL_INT32)from.getX() << (NL_INT32)from.getY() 
+            << (NL_INT32)to.getX()   << (NL_INT32)to.getY();
+            
     net_client->packet_put(landpak);
 }
 
-void game_client::buy_road(point from, point to) {
+void game_client::buy_road(Point from, Point to) {
 
-    if(!m->get(to.x, to.y).road)
+    if(!m->get(to.getX(), to.getY()).road)
     {
         NPacket roadpak(NPACKET_TYPE_SIMULTY_ROAD_BUILD);
-        roadpak << (NL_INT32)to.x << (NL_INT32)to.y;
+        roadpak << (NL_INT32)to.getX() << (NL_INT32)to.getY();
         net_client->packet_put(roadpak);
     }
 }
 
-void game_client::buy_zone(point from, point to, int type) {
+void game_client::buy_zone(Point from, Point to, int type) {
 
     NPacket zonepak(NPACKET_TYPE_SIMULTY_LAND_ZONE);
 
     zonepak << (NL_INT16)type
-            << (NL_INT32)from.x << (NL_INT32)from.y 
-            << (NL_INT32)to.x   << (NL_INT32)to.y;
+            << (NL_INT32)from.getX() << (NL_INT32)from.getY() 
+            << (NL_INT32)to.getX()   << (NL_INT32)to.getY();
             
     net_client->packet_put(zonepak);     
 
 
     std::cout << (NL_INT16)type
-             << (NL_INT32)from.x << (NL_INT32)from.y 
-             << (NL_INT32)to.x   << (NL_INT32)to.y; 
+             << (NL_INT32)from.getX() << (NL_INT32)from.getY() 
+             << (NL_INT32)to.getX()   << (NL_INT32)to.getY(); 
+
+}
+
+
+void game_client::buy_building(Point where, int type) {
+
+    NPacket buildpak(NPACKET_TYPE_SIMULTY_BUILDING_BUILD);
+    
+    buildpak << (NL_INT16)type 
+             << (NL_INT32)where.getX() << (NL_INT32)where.getY();
 
 }
