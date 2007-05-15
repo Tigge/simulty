@@ -170,9 +170,9 @@ void game_client::buy_land(Point from, Point to) {
               << from.getX() << ", " << from.getY() << " to "
               << to.getX() << ", "   << to.getY() << std::endl;
 
-    NPacket landpak(NPACKET_TYPE_SIMULTY_LAND_BUY);
-    landpak << (NL_INT32)from.getX() << (NL_INT32)from.getY() 
-            << (NL_INT32)to.getX()   << (NL_INT32)to.getY();
+    NLPacket landpak(NPACKET_TYPE_SIMULTY_LAND_BUY);
+    landpak << (NLINT32)from.getX() << (NLINT32)from.getY() 
+            << (NLINT32)to.getX()   << (NLINT32)to.getY();
             
     net_client->packet_put(landpak);
 }
@@ -181,35 +181,35 @@ void game_client::buy_road(Point from, Point to) {
 
     if(!m->get(to.getX(), to.getY()).road)
     {
-        NPacket roadpak(NPACKET_TYPE_SIMULTY_ROAD_BUILD);
-        roadpak << (NL_INT32)to.getX() << (NL_INT32)to.getY();
+        NLPacket roadpak(NPACKET_TYPE_SIMULTY_ROAD_BUILD);
+        roadpak << (NLINT32)to.getX() << (NLINT32)to.getY();
         net_client->packet_put(roadpak);
     }
 }
 
 void game_client::buy_zone(Point from, Point to, int type) {
 
-    NPacket zonepak(NPACKET_TYPE_SIMULTY_LAND_ZONE);
+    NLPacket zonepak(NPACKET_TYPE_SIMULTY_LAND_ZONE);
 
-    zonepak << (NL_INT16)type
-            << (NL_INT32)from.getX() << (NL_INT32)from.getY() 
-            << (NL_INT32)to.getX()   << (NL_INT32)to.getY();
+    zonepak << (NLINT16)type
+            << (NLINT32)from.getX() << (NLINT32)from.getY() 
+            << (NLINT32)to.getX()   << (NLINT32)to.getY();
             
     net_client->packet_put(zonepak);     
 
 
-    std::cout << (NL_INT16)type
-             << (NL_INT32)from.getX() << (NL_INT32)from.getY() 
-             << (NL_INT32)to.getX()   << (NL_INT32)to.getY(); 
+    std::cout << (NLINT16)type
+              << (NLINT32)from.getX() << (NLINT32)from.getY() 
+              << (NLINT32)to.getX()   << (NLINT32)to.getY(); 
 
 }
 
 
 void game_client::buy_building(Point where, int type) {
 
-    NPacket buildpak(NPACKET_TYPE_SIMULTY_BUILDING_BUILD);
+    NLPacket buildpak(NPACKET_TYPE_SIMULTY_BUILDING_BUILD);
     
-    buildpak << (NL_INT16)type 
-             << (NL_INT32)where.getX() << (NL_INT32)where.getY();
+    buildpak << (NLINT16)type 
+             << (NLINT32)where.getX() << (NLINT32)where.getY();
 
 }

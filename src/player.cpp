@@ -1,7 +1,7 @@
-#include "player.h"
+#include "Player.h"
 
 
-player::player(NL_INT32 id_new, NL_INT16 slot_new)
+Player::Player(NL_INT32 id_new, NL_INT16 slot_new)
 {
     id    = id_new;
     slot  = slot_new;
@@ -10,49 +10,49 @@ player::player(NL_INT32 id_new, NL_INT16 slot_new)
 }
 
 /*
-player::player() : player(-1, -1)
+Player::Player() : Player(-1, -1)
 {
     
-    type = PLAYER_TYPE_BASE;
+    type = Player_TYPE_BASE;
     money = 20000;
 }
 */
 
-player::~player()
+Player::~Player()
 {
 
 }
 
-void player::money_set(int m)
+void Player::money_set(int m)
 {
     money = m;
 }
 
 
-int  player::money_get()
+int  Player::money_get()
 {
     return money;
 }
 
 
 
-void player::update()
+void Player::update()
 {
 
 }
 
 
-int  player::id_get() 
+int  Player::id_get() 
 {
     return id;
 }
 
-int  player::slot_get()
+int  Player::slot_get()
 {
     return slot;
 }
 
-int player::type_get()
+int Player::type_get()
 {
     return type;
 }

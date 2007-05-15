@@ -1,6 +1,6 @@
-ADD_LIBRARY(netlib network.cpp socket.cpp functions.cpp packet.cpp)
+ADD_LIBRARY(NL NLNetwork.cpp NLSocket.cpp NLPacket.cpp NLException.cpp)
 
 IF(WIN32)
-TARGET_LINK_LIBRARIES(netlib wsock32)
+  TARGET_LINK_LIBRARIES(NL wsock32)
 ENDIF(WIN32)
 

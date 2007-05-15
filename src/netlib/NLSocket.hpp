@@ -1,14 +1,14 @@
 #ifndef _NLSOCKET_H_
 #define _NLSOCKET_H_
 
-#include "netlib.h"
+#include "NL.hpp"
 
 #include <vector>
 #include <string>
 #include <iostream>
 
-class NLSocket
-{
+class NLSocket {
+
     private:
 
     friend class NLNetwork;
@@ -40,7 +40,7 @@ class NLSocket
     // Packet functions:        
     bool packet_exists();
     NLPacket packet_get(); 
-    bool packet_put(NPacket);
+    bool packet_put(NLPacket);
         
     // Connection functions:
     bool connect_to(std::string addr, int port);

@@ -3,7 +3,7 @@
 
 #include "shared.h"
 
-#include "netlib.h"
+#include "NL.hpp"
 
 #include "player.h"
 #include "player_client_local.h"
@@ -11,30 +11,31 @@
 #include "player_server_network.h"
 #include "player_server_ai.h"
 
-class player_manager
+class PlayerManager
 {
     protected:
     
-    std::vector<player *> list;
+    std::vector<Player *> list;
     std::vector<int>      slots;
     
     public:
     
-    player_manager();
-    virtual ~player_manager();
+    PlayerManager();
+    virtual ~PlayerManager();
     
-    virtual player *get_by_n(unsigned int n);
-    virtual player *get_by_id(NL_INT32 i);
-    virtual player *get_by_slot(NL_INT16 s);
+    virtual Player *get_by_n(unsigned int n);
+    virtual Player *get_by_id(NLINT32 i);
+    virtual Player *get_by_slot(NLINT16 s);
 
-    virtual bool add(player *p);
+    virtual bool add(Player *p);
 
-    virtual bool del_by_p(player* p);
-    virtual bool del_by_id(NL_INT32 i);
-    virtual bool del_by_slot(NL_INT16 s);
+    virtual bool del_by_p(Player* p);
+    virtual bool del_by_id(NLINT32 i);
+    virtual bool del_by_slot(NLINT16 s);
 
     unsigned int count();
     unsigned int count_max();
+    
     bool         full();
     
     virtual void update();

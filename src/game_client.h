@@ -41,12 +41,12 @@ class game_client {
 
     BITMAP *buffer;
     
-    NNetwork net;
+    NLNetwork net;
 
 
   public:
 
-    player_manager pman;
+    PlayerManager pman;
     player_client_local *player_me;
 
     building_manager bman;
@@ -74,7 +74,7 @@ class game_client {
 
     Point cam;
 
-    NSocket *net_client;
+    NLSocket *net_client;
     gui *g;
 
   // Operations
@@ -89,7 +89,7 @@ class game_client {
     void render (  );
     void update (  );
 
-    void packet_handle(NPacket p);
+    void packet_handle(NLPacket p);
     
     void buy_land(Point from, Point to);
     void buy_road(Point from, Point to);

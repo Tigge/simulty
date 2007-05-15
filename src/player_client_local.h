@@ -5,12 +5,12 @@
 
 const int PLAYER_TYPE_CLIENT_LOCAL = 1;
 
-class player_client_local: public player {
+class player_client_local: public Player {
   // Associations
   // Attributes
   // Operations
   public:
-    player_client_local(NL_INT32, NL_INT16);
+    player_client_local(NLINT32, NLINT16);
     //player_client_local();
     virtual ~player_client_local();
     void update();

@@ -1,7 +1,7 @@
 #ifndef _NEXCEPTION_H_
 #define _NEXCEPTION_H_
 
-#include "netlib.h"
+#include "NL.hpp"
 
 #include <iostream>
 #include <exception>

@@ -1,14 +1,14 @@
 #ifndef _NLNETWORK_H_
 #define _NLNETWORK_H_
 
-#include "socket.h"
-#include "netlib.h"
+#include "NLSocket.hpp"
+#include "NL.hpp"
 
 #include <vector>
 #include <iostream>
 
-class NLNetwork
-{
+class NLNetwork {
+
  private:
  
  static bool init;         
@@ -25,7 +25,7 @@ class NLNetwork
  public:
         
  NLNetwork();
- virtual ~NNetwork();  
+ virtual ~NLNetwork();  
 
  NLSocket *get_by_id(unsigned int n);
  NLSocket *get_by_n(unsigned int n);
@@ -35,7 +35,7 @@ class NLNetwork
  virtual bool update(int uwait); 
 
  virtual NLSocket *add();
- virtual NLSocket *add(NSocket *);
+ virtual NLSocket *add(NLSocket *);
  
  virtual bool del_by_n(unsigned int n);
  virtual bool del_by_id(unsigned int n);

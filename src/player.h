@@ -2,11 +2,11 @@
 #define PLAYER_H
 
 #include <string>
-#include "netlib.h"
+#include "NL.hpp"
 
 const int PLAYER_TYPE_BASE = 0;
 
-class player {
+class Player {
   // Associations
   // Attributes
   protected:
@@ -38,8 +38,8 @@ class player {
 
     virtual void update();
 
-    player(NL_INT32, NL_INT16);
-    virtual ~player ();
+    Player(NLINT32, NLINT16);
+    virtual ~Player ();
 
 
 };

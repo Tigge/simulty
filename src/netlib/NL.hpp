@@ -19,7 +19,7 @@
   #include <arpa/inet.h>
 #endif
 
-#include "NLExeption.hpp"
+#include "NLException.hpp"
 #include "NLPacket.hpp"
 #include "NLSocket.hpp"
 #include "NLNetwork.hpp"

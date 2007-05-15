@@ -2,7 +2,7 @@
 #ifndef _NLPACKET_H_
 #define _NLPACKET_H_
 
-#include "netlib.h"
+#include "NL.hpp"
 
 #include <iostream>
 #include <vector>

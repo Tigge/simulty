@@ -1,7 +1,7 @@
-#include "player_manager.h"
+#include "PlayerManager.hpp"
 
 
-player_manager::player_manager()
+PlayerManager::PlayerManager()
 {
     // Set up all slots:
     slots.insert(slots.begin(), SIMULTY_MAX_PLAYERS, 0);
@@ -10,20 +10,20 @@ player_manager::player_manager()
     list.reserve(SIMULTY_MAX_PLAYERS);
 }
 
-player_manager::~player_manager()
+PlayerManager::~PlayerManager()
 {
 
 
 
 }
-player *player_manager::get_by_n(unsigned int n)
+Player *PlayerManager::get_by_n(unsigned int n)
 {
     if(n >= 0 && n < count())return list[n];
     return NULL;
 }
 
     
-player *player_manager::get_by_id(NL_INT32 i)
+Player *PlayerManager::get_by_id(NL_INT32 i)
 {
     for(unsigned int l = 0; l < count(); l++)
         if(list[l]->id_get() == i)return list[l];
@@ -31,7 +31,7 @@ player *player_manager::get_by_id(NL_INT32 i)
     return NULL;
 }
 
-player *player_manager::get_by_slot(NL_INT16 s)
+Player *PlayerManager::get_by_slot(NL_INT16 s)
 {
     for(unsigned int l = 0; l < count(); l++)
         if(list[l]->slot_get() == s)return list[l];
@@ -39,7 +39,7 @@ player *player_manager::get_by_slot(NL_INT16 s)
     return NULL;
 }
 
-bool player_manager::add(player *p)
+bool PlayerManager::add(Player *p)
 {
     if(count() == count_max()) return false;    
     
@@ -48,7 +48,7 @@ bool player_manager::add(player *p)
 }
 
 
-bool player_manager::del_by_p(player* p)
+bool PlayerManager::del_by_p(Player* p)
 {
     // Fidn, todo, use STL
     int n = -1;
@@ -60,7 +60,7 @@ bool player_manager::del_by_p(player* p)
     if(n == -1) return false;
     
 
-    std::cerr << "* Removing player" << std::endl;
+    std::cerr << "* Removing Player" << std::endl;
 
     // Empty slot:
     slots[p->slot_get()] = 0;
@@ -68,15 +68,15 @@ bool player_manager::del_by_p(player* p)
     // Delete memory and run deconstructor:
     if(p->type_get() == PLAYER_TYPE_SERVER_NETWORK)
     {
-        player_server_network *play = (player_server_network *)p;
+        Player_server_network *play = (Player_server_network *)p;
         std::cerr << "  - Was connected from " << play->socket->get_ip() << ":" << play->socket->get_port() << std::endl;
 
-        delete (player_server_network *)p;
+        delete (Player_server_network *)p;
     }
     else if(p->type_get() == PLAYER_TYPE_SERVER_AI)
     {
         
-        delete (player_server_ai *)p;
+        delete (Player_server_ai *)p;
         std::cerr << "  - Was an AI that runned on the server" << std::endl;
     }
 
@@ -88,7 +88,7 @@ bool player_manager::del_by_p(player* p)
     return true;
 }
 
-bool player_manager::del_by_id(NL_INT32 i)
+bool PlayerManager::del_by_id(NL_INT32 i)
 {
     for(unsigned int l = 0; l < count(); l++)
         if(list[l]->id_get() == i)return del_by_p(list[l]);
@@ -96,7 +96,7 @@ bool player_manager::del_by_id(NL_INT32 i)
     return false;
 }
 
-bool player_manager::del_by_slot(NL_INT16 s)
+bool PlayerManager::del_by_slot(NL_INT16 s)
 {
     for(unsigned int l = 0; l < count(); l++)
         if(list[l]->slot_get() == s)return del_by_p(list[l]);
@@ -105,17 +105,17 @@ bool player_manager::del_by_slot(NL_INT16 s)
 }
 
 
-unsigned int  player_manager::count()
+unsigned int  PlayerManager::count()
 {
     return list.size();
 
 }
-unsigned int  player_manager::count_max()
+unsigned int  PlayerManager::count_max()
 {
     return SIMULTY_MAX_PLAYERS;
 }
     
-void player_manager::update()
+void PlayerManager::update()
 {
     for(unsigned int i = 0; i < count(); i++)
     {
@@ -124,7 +124,7 @@ void player_manager::update()
 }
 
 
-bool player_manager::full()
+bool PlayerManager::full()
 {
     return count() == count_max();
 }
