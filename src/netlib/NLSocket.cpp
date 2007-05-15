@@ -1,6 +1,6 @@
 #include "netlib.h"
 
-NSocket::NSocket()
+NLSocket::NLSocket()
 {
     //buffer = "";     
     connected = false;
@@ -10,10 +10,10 @@ NSocket::NSocket()
     ip = "";
     port = -1;
              
-    DEBUG(cout << "NSocket: Constructor" << endl;)
+    DEBUG(cout << "NLSocket: Constructor" << endl;)
 }
 
-NSocket::NSocket(int socketid_new)
+NLSocket::NLSocket(int socketid_new)
 {
     //buffer = "";  
     socketid = socketid_new;
@@ -22,26 +22,26 @@ NSocket::NSocket(int socketid_new)
     connected = true;
     gotsome   = false;
 
-    DEBUG(cout << "NSocket: Constructor (from id)" << endl;)
+    DEBUG(cout << "NLSocket: Constructor (from id)" << endl;)
 }
 
-std::string NSocket::get_ip()
+std::string NLSocket::get_ip()
 {
 	return ip;
 }
 
-int NSocket::get_port()
+int NLSocket::get_port()
 {
 	return port;
 }
 
-NSocket::~NSocket()
+NLSocket::~NLSocket()
 {
-    DEBUG(cout << "NSocket: Destructor" << endl;)
+    DEBUG(cout << "NLSocket: Destructor" << endl;)
 }
-bool NSocket::connect_to(std::string addr, int prt)
+bool NLSocket::connect_to(std::string addr, int prt)
 {
-    DEBUG(cout << "NSocket: Connect to " << addr << ":" << prt << endl;)
+    DEBUG(cout << "NLSocket: Connect to " << addr << ":" << prt << endl;)
     
     addr = NNetwork::host_to_address(addr);
 
@@ -57,11 +57,11 @@ bool NSocket::connect_to(std::string addr, int prt)
     // don't forget to error check the connect()
     if(connect(socketid, (struct sockaddr *)&theirstuff, sizeof(struct sockaddr)) == -1)
     {
-        DEBUG(cout << "NSocket: Connect to, failed to do connect" << endl;)
+        DEBUG(cout << "NLSocket: Connect to, failed to do connect" << endl;)
         return false;
     }
 
-    DEBUG(cout << "NSocket: Connect to " << addr << ":" << prt << ", done!" << endl;)
+    DEBUG(cout << "NLSocket: Connect to " << addr << ":" << prt << ", done!" << endl;)
 
     connected = true;
  
@@ -72,11 +72,11 @@ bool NSocket::connect_to(std::string addr, int prt)
 }
 
 
-bool NSocket::listen_on(int prt)
+bool NLSocket::listen_on(int prt)
 {
-    DEBUG(cout << "NSocket: Listen on, port " << prt << endl;)
+    DEBUG(cout << "NLSocket: Listen on, port " << prt << endl;)
 
-    DEBUG(cout << "NSocket: Listen, socket is " << socketid << endl;)
+    DEBUG(cout << "NLSocket: Listen, socket is " << socketid << endl;)
 
     struct sockaddr_in mystuff;
 
@@ -87,19 +87,19 @@ bool NSocket::listen_on(int prt)
 
     if(bind(this->socketid, (struct sockaddr *)&mystuff, sizeof(struct sockaddr_in)) == -1)
     {
-        DEBUG(cout << "NSocket: Listen, bind on socket " << socketid << " failed - " << h_errno << " " << errno << endl;)
+        DEBUG(cout << "NLSocket: Listen, bind on socket " << socketid << " failed - " << h_errno << " " << errno << endl;)
         return false;
     }
 
-    DEBUG(cout << "NSocket: Listen on, bind done" << endl;)
+    DEBUG(cout << "NLSocket: Listen on, bind done" << endl;)
 
     if(listen(socketid, 10) == -1)
     {
-        DEBUG(cout << "NSocket: Listen, listen on socket " << socketid << " failed" << endl;)
+        DEBUG(cout << "NLSocket: Listen, listen on socket " << socketid << " failed" << endl;)
         return false;
     }
 
-    DEBUG(cout << "NSocket: Listen on, listen done" << endl;)
+    DEBUG(cout << "NLSocket: Listen on, listen done" << endl;)
 
     listening = true;
  
@@ -110,18 +110,18 @@ bool NSocket::listen_on(int prt)
  return true;
 }
 
-bool NSocket::packet_exists()
+bool NLSocket::packet_exists()
 {
     if(buffer_in.size() > 4)
     {
-        DEBUG(cout << "NSocket: packet_exists, checking" << endl;)
+        DEBUG(cout << "NLSocket: packet_exists, checking" << endl;)
 
         unsigned char h[4]; for(int i = 0; i < 4; i++)h[i] = buffer_in[i];
 
         //INT16 type   = (int)h[0];
         NL_INT32 length = ntohl( *((NL_INT32 *)h) & 0xFF000000 );
         /*
-       cout << "NSocket: packet_exists, header is: ";
+       cout << "NLSocket: packet_exists, header is: ";
         for(int i = 0; i < 4; i++)
            cout << (int)h[i] << " ";
        cout << endl;
@@ -131,20 +131,20 @@ bool NSocket::packet_exists()
         */
         if(buffer_in.size() >= (unsigned int)length + 4)
         {
-            DEBUG(cout << "NSocket: packet_exists, got one!" << endl;)
+            DEBUG(cout << "NLSocket: packet_exists, got one!" << endl;)
             return true;
         }
     }
     return false;
 }
 
-NPacket NSocket::packet_get()
+NPacket NLSocket::packet_get()
 {
-    DEBUG(cout << "NSocket: packet_get, checking" << endl;)
+    DEBUG(cout << "NLSocket: packet_get, checking" << endl;)
 
     if(packet_exists())
     {
-        DEBUG(cout << "NSocket: packet_get, got one!" << endl;)
+        DEBUG(cout << "NLSocket: packet_get, got one!" << endl;)
 
         unsigned char h[4]; for(int i = 0; i < 4; i++)h[i] = buffer_in[i];
 
@@ -182,18 +182,18 @@ NPacket NSocket::packet_get()
    
     }
 
-    DEBUG(cout << "NSocket: packet_get, no packet exists..." << endl;)
+    DEBUG(cout << "NLSocket: packet_get, no packet exists..." << endl;)
 
     NPacket p;
     return p;
 }
 
 
-bool NSocket::packet_put(NPacket p)
+bool NLSocket::packet_put(NPacket p)
 {
 
 
-    DEBUG(cout << "NSocket: packet_put, putting package" << endl;)
+    DEBUG(cout << "NLSocket: packet_put, putting package" << endl;)
     if(connected)
     {
         // Generate header:
@@ -204,7 +204,7 @@ bool NSocket::packet_put(NPacket p)
         h[0]          = (unsigned char)p.getType();
 
 
-        DEBUG(cout << "NSocket: packet_put, header is: ";)
+        DEBUG(cout << "NLSocket: packet_put, header is: ";)
         DEBUG(for(int i = 0; i < 4; i++))
         DEBUG(    cout << (int)h[i] << " ";)
         DEBUG(cout << endl;)
@@ -215,13 +215,13 @@ bool NSocket::packet_put(NPacket p)
         // Put contents in outgoing buffer:
         buffer_out.insert(buffer_out.end(), p.buffer.begin(), p.buffer.end());
 
-        DEBUG(cout << "NSocket: packet_put, successfull, header: " << h << ", new buffer is " << buffer_out.size() << " long" << endl;)
+        DEBUG(cout << "NLSocket: packet_put, successfull, header: " << h << ", new buffer is " << buffer_out.size() << " long" << endl;)
 
         return true;
     }
     else
     {
-        DEBUG(cout << "NSocket: packet_put, socket was not connected" << endl;)
+        DEBUG(cout << "NLSocket: packet_put, socket was not connected" << endl;)
         return false;
     }
 }

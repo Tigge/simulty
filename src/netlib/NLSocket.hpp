@@ -1,5 +1,5 @@
-#ifndef _NSOCKET_H_
-#define _NSOCKET_H_
+#ifndef _NLSOCKET_H_
+#define _NLSOCKET_H_
 
 #include "netlib.h"
 
@@ -7,11 +7,11 @@
 #include <string>
 #include <iostream>
 
-class NSocket
+class NLSocket
 {
     private:
 
-    friend class NNetwork;
+    friend class NLNetwork;
          
     // Id:
     unsigned int socketid;
@@ -33,13 +33,13 @@ class NSocket
     public:
 
     // Constructor and destructor:
-    NSocket();
-    NSocket(int);
-    ~NSocket();
+    NLSocket();
+    NLSocket(int);
+    ~NLSocket();
 
     // Packet functions:        
     bool packet_exists();
-    NPacket packet_get(); 
+    NLPacket packet_get(); 
     bool packet_put(NPacket);
         
     // Connection functions:
