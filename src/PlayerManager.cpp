@@ -23,7 +23,7 @@ Player *PlayerManager::get_by_n(unsigned int n)
 }
 
     
-Player *PlayerManager::get_by_id(NL_INT32 i)
+Player *PlayerManager::get_by_id(NLINT32 i)
 {
     for(unsigned int l = 0; l < count(); l++)
         if(list[l]->id_get() == i)return list[l];
@@ -31,7 +31,7 @@ Player *PlayerManager::get_by_id(NL_INT32 i)
     return NULL;
 }
 
-Player *PlayerManager::get_by_slot(NL_INT16 s)
+Player *PlayerManager::get_by_slot(NLINT16 s)
 {
     for(unsigned int l = 0; l < count(); l++)
         if(list[l]->slot_get() == s)return list[l];
@@ -68,15 +68,15 @@ bool PlayerManager::del_by_p(Player* p)
     // Delete memory and run deconstructor:
     if(p->type_get() == PLAYER_TYPE_SERVER_NETWORK)
     {
-        Player_server_network *play = (Player_server_network *)p;
+        player_server_network *play = (player_server_network *)p;
         std::cerr << "  - Was connected from " << play->socket->get_ip() << ":" << play->socket->get_port() << std::endl;
 
-        delete (Player_server_network *)p;
+        delete (player_server_network *)p;
     }
     else if(p->type_get() == PLAYER_TYPE_SERVER_AI)
     {
         
-        delete (Player_server_ai *)p;
+        delete (player_server_ai *)p;
         std::cerr << "  - Was an AI that runned on the server" << std::endl;
     }
 
@@ -88,7 +88,7 @@ bool PlayerManager::del_by_p(Player* p)
     return true;
 }
 
-bool PlayerManager::del_by_id(NL_INT32 i)
+bool PlayerManager::del_by_id(NLINT32 i)
 {
     for(unsigned int l = 0; l < count(); l++)
         if(list[l]->id_get() == i)return del_by_p(list[l]);
@@ -96,7 +96,7 @@ bool PlayerManager::del_by_id(NL_INT32 i)
     return false;
 }
 
-bool PlayerManager::del_by_slot(NL_INT16 s)
+bool PlayerManager::del_by_slot(NLINT16 s)
 {
     for(unsigned int l = 0; l < count(); l++)
         if(list[l]->slot_get() == s)return del_by_p(list[l]);

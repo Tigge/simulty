@@ -15,7 +15,7 @@ LINK_DIRECTORIES(${Simulty_BINARY_DIR}/src/NL ${Simulty_BINARY_DIR}/src/error /u
 
 # Server:
 ###############################################################################
-ADD_EXECUTABLE(../simulty-server server.cpp game_server.cpp game_server_player.cpp game_server_packet.cpp Point.cpp map_base.cpp PlayerManager.cpp player_manager_server.cpp Player.cpp player_server_network.cpp player_server_ai.cpp Building.cpp BuildingManager.cpp Tile.cpp)
+ADD_EXECUTABLE(../simulty-server server.cpp game_server.cpp game_server_player.cpp game_server_packet.cpp Point.cpp Map.cpp PlayerManager.cpp player_manager_server.cpp Player.cpp player_server_network.cpp player_server_ai.cpp Building.cpp BuildingManager.cpp Tile.cpp)
 
 IF(WIN32)
   TARGET_LINK_LIBRARIES(../simulty-server NL elog alleg wsock32)
@@ -25,7 +25,7 @@ ENDIF(WIN32)
 
 # Client:
 ###############################################################################
-ADD_EXECUTABLE(../simulty-client Client.cpp game_client_packet.cpp Point.cpp map_base.cpp map.cpp Tile.cpp PlayerManager.cpp Player.cpp player_client_local.cpp player_client_remote.cpp Building.cpp BuildingManager.cpp gui.cpp Mouse.cpp Camera.cpp)
+ADD_EXECUTABLE(../simulty-client Client.cpp Point.cpp Map.cpp GUIMap.cpp Tile.cpp PlayerManager.cpp Player.cpp player_client_local.cpp player_client_remote.cpp Building.cpp BuildingManager.cpp GUI.cpp Mouse.cpp Camera.cpp)
 
 IF(WIN32)
   TARGET_LINK_LIBRARIES(../simulty-client NL elog alleg wsock32)

@@ -26,7 +26,7 @@ const unsigned char SIMULTY_CLIENT_TOOL_BUILD_POLICE   = 50;
 const unsigned char SIMULTY_CLIENT_TOOL_BUILD_HOSPITAL = 51;
 const unsigned char SIMULTY_CLIENT_TOOL_BUILD_FIRE     = 52;
 
-class gui {
+class GUI {
   private:
 
     BITMAP *menu_background;
@@ -54,8 +54,8 @@ class gui {
   
     void console_log(std::string s);
   
-    gui (  );
-    ~gui (  );
+    GUI();
+    ~GUI();
     void render( BITMAP * );
     void update();
 };

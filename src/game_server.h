@@ -21,6 +21,8 @@
 
 #include "Point.hpp"
 
+extern Server *server;
+
 
 const unsigned char SIMULTY_SERVER_STATE_LOBBY      = 1;
 

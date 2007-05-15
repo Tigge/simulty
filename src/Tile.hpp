@@ -17,11 +17,17 @@ class Tile {
     virtual ~Tile (  );
         
     virtual char getOwner();
-    virtual char getTerrain();
+    virtual void setOwner(char owner);
+    
+    virtual char getTerrain();    
+    
     virtual char getZone();
+    virtual void setZone(unsigned char zone);
+    
     virtual char getHouse();
     
     virtual bool isRoad();
+    virtual void setRoad(bool road);
 };
 
 #endif

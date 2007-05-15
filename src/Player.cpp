@@ -1,7 +1,7 @@
-#include "Player.h"
+#include "Player.hpp"
 
 
-Player::Player(NL_INT32 id_new, NL_INT16 slot_new)
+Player::Player(NLINT32 id_new, NLINT16 slot_new)
 {
     id    = id_new;
     slot  = slot_new;

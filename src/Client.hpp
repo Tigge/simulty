@@ -18,10 +18,10 @@
 #include "BuildingManager.hpp"
 
 
-#include "map_base.h"
-#include "map.h"
+#include "Map.hpp"
+#include "GUIMap.hpp"
 
-#include "gui.h"
+#include "GUI.hpp"
 
 const unsigned char SIMULTY_CLIENT_STATE_GAME_NONE  = 0;
 
@@ -56,7 +56,7 @@ class Client {
 
   public:
 
-    map *m;
+    GUIMap *map;
     
     bool state_running;
     
@@ -75,7 +75,7 @@ class Client {
     Point cam;
 
     NLSocket *net_client;
-    gui *g;
+    GUI *gui;
 
   // Operations
   public:

@@ -3,7 +3,7 @@
 #define _BUILDING_MANAGER_H_
 
 #include <vector>
-#include "map.h"
+#include "Map.hpp"
 #include "Building.hpp"
 
 
@@ -16,11 +16,11 @@ class BuildingManager {
   
   public:
   
-    int thrive_value_connection_get(map *m, char slot, int x, int y);
-    int thrive_value_electricity_get(map *m, char slot, int x, int y);
+    int thrive_value_connection_get(Map *m, char slot, int x, int y);
+    int thrive_value_electricity_get(Map *m, char slot, int x, int y);
     int thrive_value_taxes_get(char slot);
   
-    int thrive_value_get(map *m, char slot, int x, int y);
+    int thrive_value_get(Map *m, char slot, int x, int y);
 
 };
 

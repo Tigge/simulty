@@ -1,9 +1,8 @@
-#include "gui.h"
-#include "client.h"
-#include "allegro.h"
+#include "GUI.hpp"
+#include "Client.hpp"
 
 
-gui::gui (  ){
+GUI::GUI (  ){
 
 
     menu_background = load_bitmap("img/menubg.pcx", NULL);
@@ -28,11 +27,11 @@ gui::gui (  ){
     tool = 0;
 }
 
-gui::~gui (  ){
+GUI::~GUI (  ){
 
 }
 
-void gui::render ( BITMAP *buffer ){
+void GUI::render ( BITMAP *buffer ){
 
     if(client->state_menu)
     {
@@ -49,15 +48,15 @@ void gui::render ( BITMAP *buffer ){
     else if(client->state_game)
     {
     
-        client->m->render(buffer, camera);
+        client->map->render(buffer, camera);
       
     
-        Point pos = client->m->val2tile(Point(mouse_x + client->cam.getX(), mouse_y + client->cam.getY()));            
-        Point ral = client->m->val2tile_real(Point(mouse_x + client->cam.getX(), mouse_y + client->cam.getY()));
+        Point pos = client->map->val2tile(Point(mouse_x + client->cam.getX(), mouse_y + client->cam.getY()));            
+        Point ral = client->map->val2tile_real(Point(mouse_x + client->cam.getX(), mouse_y + client->cam.getY()));
 
 
-        Point xpos = client->m->tile2val(pos);
-        Point xral = client->m->tile2val(ral);
+        Point xpos = client->map->tile2val(pos);
+        Point xral = client->map->tile2val(ral);
       
         if(mouse.getLeftButtonState() == STATE_PRESS) {
         
@@ -76,10 +75,10 @@ void gui::render ( BITMAP *buffer ){
             Point c2 = Point(c3.getX(), c1.getY());
             Point c4 = Point(c1.getX(), c3.getY());
 
-            c1 = client->m->tile2val(c1); c2 = client->m->tile2val(c2); 
-            c3 = client->m->tile2val(c3); c4 = client->m->tile2val(c4);
+            c1 = client->map->tile2val(c1); c2 = client->map->tile2val(c2); 
+            c3 = client->map->tile2val(c3); c4 = client->map->tile2val(c4);
 
-            //Point mt = client->m->val2tile_real(Point(mouse_x + client->cam.x, client->mouse_y + cam.y));
+            //Point mt = client->map->val2tile_real(Point(mouse_x + client->cam.x, client->mapouse_y + cam.y));
 
             int points[8] = { c1.getX() - cam.getX() + TILE_W / 2, c1.getY() - cam.getY() + TILE_H / 2,
                               c2.getX() - cam.getX() + TILE_W / 2, c2.getY() - cam.getY() + TILE_H / 2,
@@ -88,7 +87,7 @@ void gui::render ( BITMAP *buffer ){
 
             polygon(buffer, 4, points, makecol(255, 255, 255));
 
-            //Point pos = client->m->tile2val(client->m->val2tile_real(Point(mouse_x + cam.x, mouse_y + cam.y)));
+            //Point pos = client->map->tile2val(client->map->val2tile_real(Point(mouse_x + cam.x, mouse_y + cam.y)));
 
             masked_blit(mouse_block, buffer, 0, 0, pos.getX() - cam.getX(), pos.getY() - cam.getY(), mouse_block->w, mouse_block->h);
 
@@ -114,13 +113,13 @@ void gui::render ( BITMAP *buffer ){
 
         Point cam = client->cam;
         Point realpos  = Point(mouse.getPosition().getX() + cam.getX(), mouse.getPosition().getY() + cam.getY());
-        Point realtile = client->m->val2tile_real(realpos);
+        Point realtile = client->map->val2tile_real(realpos);
 
 
         textprintf_ex(buffer, font, 200, SCREEN_H - 30, makecol(0, 0, 0), -1, "Mouse: %i, %i", realtile.getX(), realtile.getY()); 
 
         if(realtile.getX() > 5 && realtile.getY() > 5)
-        textprintf_ex(buffer, font, 300, SCREEN_H - 30, makecol(0, 0, 0), -1, "Thrive: %i", client->bman.thrive_value_get(client->m, client->player_me->slot_get(), realtile.getX(), realtile.getY()));
+        textprintf_ex(buffer, font, 300, SCREEN_H - 30, makecol(0, 0, 0), -1, "Thrive: %i", client->bman.thrive_value_get(client->map, client->player_me->slot_get(), realtile.getX(), realtile.getY()));
 
         // Draw console:
         if(console_show)
@@ -142,7 +141,7 @@ void gui::render ( BITMAP *buffer ){
 }
 
 
-void gui::update()
+void GUI::update()
 {
 
     mouse.update();    
@@ -158,7 +157,7 @@ void gui::update()
         
             mouse_down_tile = mouse.getPressPosition();
             mouse_down_tile.translate(client->cam);
-            mouse_down_tile = client->m->val2tile_real(mouse_down_tile);
+            mouse_down_tile = client->map->val2tile_real(mouse_down_tile);
                     
             std::cout << "mouse press event" << std::endl;
             
@@ -167,7 +166,7 @@ void gui::update()
         
             mouse_up_tile = mouse.getPressPosition();
             mouse_up_tile.translate(client->cam);
-            mouse_up_tile = client->m->val2tile_real(mouse_up_tile);        
+            mouse_up_tile = client->map->val2tile_real(mouse_up_tile);        
             std::cout << "mouse release event" << std::endl;
              
             Point::fix_points(mouse_down_tile, mouse_up_tile);
@@ -188,10 +187,10 @@ void gui::update()
                 
         }
 
-        if(key[KEY_UP]    || mouse_y < 15           )camera.step(DIR_UP,    3, client->m->width * TILE_W / 2, client->m->height * TILE_H / 2);        
-        if(key[KEY_RIGHT] || mouse_x > SCREEN_W - 15)camera.step(DIR_RIGHT, 3, client->m->width * TILE_W / 2, client->m->height * TILE_H / 2);
-        if(key[KEY_DOWN]  || mouse_y > SCREEN_H - 15)camera.step(DIR_DOWN,  3, client->m->width * TILE_W / 2, client->m->height * TILE_H / 2);
-        if(key[KEY_LEFT]  || mouse_x < 15           )camera.step(DIR_LEFT,  3, client->m->width * TILE_W / 2, client->m->height * TILE_H / 2);
+        if(key[KEY_UP]    || mouse_y < 15           )camera.step(DIR_UP,    3, client->map->getWidth() * TILE_W / 2, client->map->getHeight() * TILE_H / 2);        
+        if(key[KEY_RIGHT] || mouse_x > SCREEN_W - 15)camera.step(DIR_RIGHT, 3, client->map->getWidth() * TILE_W / 2, client->map->getHeight() * TILE_H / 2);
+        if(key[KEY_DOWN]  || mouse_y > SCREEN_H - 15)camera.step(DIR_DOWN,  3, client->map->getWidth() * TILE_W / 2, client->map->getHeight() * TILE_H / 2);
+        if(key[KEY_LEFT]  || mouse_x < 15           )camera.step(DIR_LEFT,  3, client->map->getWidth() * TILE_W / 2, client->map->getHeight() * TILE_H / 2);
     
         if(keypressed()) {
             if(key[KEY_ESC])client->state_running = false;
@@ -214,7 +213,7 @@ void gui::update()
 }
 
 
-void gui::console_log(std::string s)
+void GUI::console_log(std::string s)
 {
     console_data.push_back(s);
 }

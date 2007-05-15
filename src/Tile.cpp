@@ -1,4 +1,4 @@
-#include "Tile.h"
+#include "Tile.hpp"
 
 Tile::Tile (  ){
 
@@ -16,8 +16,14 @@ Tile::~Tile (  ){
 }
 
 
+
+
 char Tile::getOwner() {
     return owner;
+}
+
+void Tile::setOwner(char owner) {
+    this->owner = owner;
 }
 
 char Tile::getTerrain() {
@@ -25,6 +31,9 @@ char Tile::getTerrain() {
 }
 char Tile::getZone() {
     return zone;
+}
+void Tile::setZone(unsigned char zone) {
+    this->zone = zone;
 }
 
 char Tile::getHouse() {
@@ -35,4 +44,7 @@ bool Tile::isRoad() {
     return road;
 }
 
+void Tile::setRoad(bool road) {
+    this->road = road;
+}
 

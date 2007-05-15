@@ -34,6 +34,25 @@
 #include "player_server_network.h"
 #include "player_server_ai.h"
 
+Server *server;
+
+int main(int argc, char *argv[])
+{
+
+    server = new Server;
+
+    while(true)
+    {
+        server->update();
+        rest(0);
+    }
+
+
+    delete server;
+
+}
+END_OF_MAIN()
+
 
 // Constructor, inits the server and starts listening after connections
 // =====================================================================
