@@ -6,7 +6,7 @@
 
   const char* NExeption::what()
   {
-    return "General NetLib error occured";
+    return "General NL error occured";
   }
 
 
