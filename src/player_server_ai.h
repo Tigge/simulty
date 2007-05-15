@@ -1,7 +1,7 @@
 #ifndef PLAYER_SERVER_AI_H
 #define PLAYER_SERVER_AI_H
 
-#include "player.h"
+#include "Player.hpp"
 
 const int PLAYER_TYPE_SERVER_AI = 10;
 

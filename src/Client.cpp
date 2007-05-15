@@ -3,13 +3,6 @@
 
 #include "Client.hpp"
 
-#include "map_base.h"
-#include "map.h"
-
-#include "player.h"
-#include "player_client_local.h"
-#include "player_client_remote.h"
-
 #define err std::cerr
 
 Client *client;
@@ -18,7 +11,7 @@ Client *client;
 int main(int argc, char *argv[])
 {
     std::cerr << "Starting..." << std::endl;    
-    client = new game_client;
+    client = new Client;
     std::cerr << "New game client" << std::endl;
 
     while(client->running())

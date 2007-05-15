@@ -5,7 +5,7 @@
 
 #include "NL.hpp"
 
-#include "player.h"
+#include "Player.hpp"
 #include "player_client_local.h"
 #include "player_client_remote.h"
 #include "player_server_network.h"

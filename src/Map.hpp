@@ -23,7 +23,7 @@
 
 
 
-class map : public map_base {
+class GUIMap : public Map {
 
   private:
 
@@ -55,8 +55,8 @@ class map : public map_base {
     Point pos_to_tile(Point pos, Point cam);
     Point tile_to_pos(Point tile, int dir, Point cam);
 
-    map (  );
-    ~map (  );
+    GUIMap (  );
+    ~GUIMap (  );
     void render (BITMAP *b, Camera cam);
 };
 

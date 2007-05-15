@@ -4,22 +4,21 @@
 
 #include <vector>
 #include "map.h"
-#include "building.h"
+#include "Building.hpp"
 
 
-class building_manager {
+class BuildingManager {
 
   private:
 
-    std::vector<building *> zone_buildings;
-    std::vector<building *> special_buildings;
+    std::vector<Building *> zone_buildings;
+    std::vector<Building *> special_buildings;
   
   public:
   
     int thrive_value_connection_get(map *m, char slot, int x, int y);
     int thrive_value_electricity_get(map *m, char slot, int x, int y);
     int thrive_value_taxes_get(char slot);
-  
   
     int thrive_value_get(map *m, char slot, int x, int y);
 

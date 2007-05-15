@@ -1,30 +1,36 @@
 
-#include "map.h"
-#include "tile.h"
+#include "Map.hpp"
+#include "Tile.hpp"
 
 
-tile map_base::get(int x, int y) {
+Tile Map::getTile(int x, int y) {
 
   return tiles[y * width + x];
 
 }
 
-map_base::map_base (  ){
+int Map::getWidth() {
+    return width;
+}
+int Map::getHeight() {
+    return height;
+}
 
-    width  = 30;
-    height = 30;
+Map::Map(int height, int width) {
+
+    this->width  = height;
+    this->height = width;
 
     for(int x = 0; x < width; x++)
         for(int y = 0; y < height; y++)
         {
-            tile tmp; 
-            //if(y % 2)tmp.road = true;
-            tiles.push_back(tmp);
+            Tile tile;
+            tiles.push_back(tile);
         }
 
 }
 
-map_base::~map_base()
+Map::~Map()
 {
 
 

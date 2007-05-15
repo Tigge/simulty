@@ -9,13 +9,13 @@
   #include "winalleg.h"
 #endif
 
-#include "player_manager.h"
+#include "PlayerManager.hpp"
 
-#include "player.h"
+#include "Player.hpp"
 #include "player_client_local.h"
 #include "player_client_remote.h"
 
-#include "building_manager.h"
+#include "BuildingManager.hpp"
 
 
 #include "map_base.h"
@@ -49,7 +49,7 @@ class Client {
     PlayerManager pman;
     player_client_local *player_me;
 
-    building_manager bman;
+    BuildingManager bman;
 
     bool cam_move_step(int dir, int step);
     bool cam_move_jump(int x, int y);

@@ -1,14 +1,14 @@
 #include "building.h"
 
-building::building (  ){
+Building::Building (  ){
 }
 
-building::~building (  ){
+Building::~Building (  ){
 }
 
-void building::render (  ){
+void Building::render (  ){
 }
 
-void building::update (  ){
+void Building::update (  ){
 }
 

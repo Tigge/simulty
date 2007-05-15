@@ -1,10 +1,9 @@
-#ifndef BUILDING_H
-#define BUILDING_H
+#ifndef _BUILDING_HPP_
+#define _BUILDING_HPP_
 
 #include <string>
 
-
-class building {
+class Building {
   // Associations
   // Attributes
   public:
@@ -20,8 +19,8 @@ class building {
     int pos_y;
   // Operations
   public:
-    building (  );
-    virtual ~building (  );
+    Building (  );
+    virtual ~Building (  );
     
     virtual void render (  );
     virtual void update (  );

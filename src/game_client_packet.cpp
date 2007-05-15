@@ -1,13 +1,13 @@
 #include "allegro.h"
 
 
-#include "client.h"
+#include "Client.hpp"
 #include "shared.h"
-#include "game_client.h"
 
 
 
-void game_client::packet_handle(NLPacket p)
+
+void Client::packet_handle(NLPacket p)
 {
     switch(p.getType())
         {

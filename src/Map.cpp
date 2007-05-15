@@ -1,10 +1,10 @@
 
-#include "client.h"
+#include "Client.hpp"
 
-#include "map.h"
-#include "tile.h"
+#include "GUIMap.hpp"
+#include "Tile.hpp"
 
-map::map() {
+GUIMap::GUIMap() {
     t_zone_res     = load_bitmap("img/terrain_zone_res.pcx",  NULL);
     t_zone_com     = load_bitmap("img/terrain_zone_com.pcx",  NULL);
     t_zone_ind     = load_bitmap("img/terrain_zone_ind.pcx",  NULL);
@@ -75,7 +75,7 @@ map::map() {
 
 }
 
-map::~map()
+GUIMap::~GUIMap()
 {
 
 for(int i = 0; i < 1; i++)
@@ -92,7 +92,7 @@ delete [] t_roads;
 
 
 
-BITMAP *map::road_tile(int x, int y)
+BITMAP *GUIMap::road_tile(int x, int y)
 {
 
     int n = 1 * (int)tiles[y * width + (x - 1)].road;
@@ -106,7 +106,7 @@ BITMAP *map::road_tile(int x, int y)
 
 
 
-void map::clean_bitmap(BITMAP *b)
+void GUIMap::clean_bitmap(BITMAP *b)
 {
 
     if(b)
@@ -124,7 +124,7 @@ void map::clean_bitmap(BITMAP *b)
 }
 
 
-Point map::val2tile(Point input)
+Point GUIMap::val2tile(Point input)
 {
     Point output;    
 
@@ -134,7 +134,7 @@ Point map::val2tile(Point input)
     return output;
 }
 
-Point map::val2tile_real(Point input)
+Point GUIMap::val2tile_real(Point input)
 {
     Point base = val2tile(input);
     Point pos  = tile2val(base);
@@ -150,7 +150,7 @@ Point map::val2tile_real(Point input)
 }
 
 
-Point map::tile2val(Point input)
+Point GUIMap::tile2val(Point input)
 {
     Point output;
 
@@ -162,7 +162,7 @@ Point map::tile2val(Point input)
 
 
 
-void map::render (BITMAP *b, Camera cam)
+void GUIMap::render (BITMAP *b, Camera cam)
 {
     Point start, end;
 

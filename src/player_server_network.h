@@ -3,7 +3,7 @@
 
 #include "shared.h"
 #include "NL.hpp"
-#include "player.h"
+#include "Player.hpp"
 
 const int PLAYER_TYPE_SERVER_NETWORK = 3;
 

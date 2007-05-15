@@ -1,7 +1,7 @@
 #ifndef PLAYER_CLIENT_REMOTE_H
 #define PLAYER_CLIENT_REMOTE_H
 
-#include "player.h"
+#include "Player.hpp"
 
 #include "NL.hpp"
 

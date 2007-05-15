@@ -1,29 +1,32 @@
-#ifndef _MAP_BASE_H_
-#define _MAP_BASE_H_
+#ifndef _MAP_HPP_
+#define _MAP_HPP_
 
 #define TILE_W 64
 #define TILE_H 32
 
-#include "tile.h"
+#include "Tile.hpp"
 
 #include <vector>
 
 
-class map_base {
+class Map {
   // Attributes
-  public:
+  private:
     int width;
     int height;
 
-    std::vector<tile> tiles;
+    std::vector<Tile> tiles;
 
   // Operations
   public:
   
-    tile get(int x, int y);
-  
-    map_base (  );
-    ~map_base (  );
+    Map(int width, int height);
+    virtual ~Map();
+
+    virtual Tile getTile(int x, int y);    
+    
+    virtual int getWidth();
+    virtual int getHeight();
 };
 
 #endif

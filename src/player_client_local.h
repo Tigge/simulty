@@ -1,7 +1,7 @@
 #ifndef PLAYER_CLIENT_LOCAL_H
 #define PLAYER_CLIENT_LOCAL_H
 
-#include "player.h"
+#include "Player.hpp"
 
 const int PLAYER_TYPE_CLIENT_LOCAL = 1;
 
