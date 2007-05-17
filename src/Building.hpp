@@ -3,14 +3,19 @@
 
 #include <string>
 
-const unsigned char SIMULTY_BUILDING_POLICE           = 0;
-const unsigned char SIMULTY_BUILDING_FIRE             = 1;
-const unsigned char SIMULTY_BUILDING_HOSPITAL         = 2;
 
+#include "Point.hpp"
 
 class Building {
   // Associations
   // Attributes
+  
+  public:
+  
+    static const unsigned char TYPE_POLICE      = 0;
+    static const unsigned char TYPE_FIRE        = 1;
+    static const unsigned char TYPE_HOSPITAL    = 2;
+  
   public:
     std::string name;
     int owner;
@@ -20,13 +25,19 @@ class Building {
     int expence;
     unsigned char width;
     unsigned char height;
-    int x;
-    int y;
+    
+    Point position;
   // Operations
   public:
   
-    Building(int x, int y);
+    Building(Point position);
     virtual ~Building();
+    
+    virtual Point getPosition();
+    
+    virtual unsigned char getType() = 0;
+    virtual unsigned char getWidth();
+    virtual unsigned char getHeight();
     
     virtual void render();
     virtual void update();

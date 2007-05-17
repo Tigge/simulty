@@ -267,13 +267,13 @@ void GUIMap::render (BITMAP *b, Camera cam)
                 // Draw borders:
                 if(tile->getOwner() != -1) {
                 
-                  if(getTile(x, y - 1)->getOwner() != getTile(x, y)->getOwner())
+                  if(y > 0 && getTile(x, y - 1)->getOwner() != getTile(x, y)->getOwner())
                       masked_blit(t_border[DIR_LEFT], b, 1, 1, pos.getX(), pos.getY(), TILE_W, TILE_H);                
-                  if(getTile(x + 1, y)->getOwner() != getTile(x, y)->getOwner())
+                  if(x < getWidth() - 1 && getTile(x + 1, y)->getOwner() != getTile(x, y)->getOwner())
                       masked_blit(t_border[DIR_DOWN], b, 1, 1, pos.getX(), pos.getY(), TILE_W, TILE_H);                
-                  if(getTile(x, y + 1)->getOwner() != getTile(x, y)->getOwner())
+                  if(y < getHeight() - 1 && getTile(x, y + 1)->getOwner() != getTile(x, y)->getOwner())
                       masked_blit(t_border[DIR_RIGHT], b, 1, 1, pos.getX(), pos.getY(), TILE_W, TILE_H);                
-                  if(getTile(x - 1, y)->getOwner() != getTile(x, y)->getOwner())
+                  if(x > 0 && getTile(x - 1, y)->getOwner() != getTile(x, y)->getOwner())
                       masked_blit(t_border[DIR_UP], b, 1, 1, pos.getX(), pos.getY(), TILE_W, TILE_H);   
                                                                                                
                   //textprintf_ex(b, font, place.x + 20 - cam.x, place.y + 10 - cam.y, makecol(0, 0, 0), -1, "O");

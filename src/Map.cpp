@@ -5,7 +5,10 @@
 
 Tile *Map::getTile(int x, int y) {
 
-  return &tiles[y * width + x];
+  if(x < 0 || y < 0 || x >= getWidth() || y >= getHeight())
+    return NULL;
+  else
+    return &tiles[y * width + x];
 
 }
 

@@ -201,11 +201,13 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
             NLINT32 startx, starty, endx, endy;
             pack >> startx >> starty >> endx >> endy;   
 
+            if(startx < 0 || starty < 0)break;
+
             // Calculate cost:                     
-            int cost = 0;
+            int cost = 0;           
             
-            for(int x = startx; x <= endx; x++)
-                for(int y = starty; y <= endy; y++)
+            for(int x = startx; x <= endx && x < map->getWidth(); x++)
+                for(int y = starty; y <= endy && y < map->getHeight(); y++)
                     if(map->getTile(x, y)->getOwner() == -1)
                     {
                         cost += SIMULTY_COST_LAND;                                    
@@ -216,10 +218,9 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
             {
                 from->money_set(from->money_get() - cost);
 
-                for(int x = startx; x <= endx; x++)
-                    for(int y = starty; y <= endy; y++)
-                        if(map->getTile(x, y)->getOwner() == -1)
-                        {
+                for(int x = startx; x <= endx && x < map->getWidth(); x++)
+                    for(int y = starty; y <= endy && y < map->getHeight(); y++)
+                        if(map->getTile(x, y)->getOwner() == -1) {
                             map->getTile(x, y)->setOwner(from->slot_get());
                         }
 
@@ -277,8 +278,7 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
             
             for(int x = startx; x <= endx; x++)
                 for(int y = starty; y <= endy; y++)
-                    if(map->getTile(x, y)->getZone() == 0)
-                    {
+                    if(map->getTile(x, y)->getZone() == 0) {
                         cost += SIMULTY_COST_ZONE_IND;
                     }
                     
@@ -286,11 +286,8 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
                 
                 for(int x = startx; x <= endx; x++)
                     for(int y = starty; y <= endy; y++)
-                        if(map->getTile(x, y)->getZone() == 0)
-                        {
-                            map->getTile(x, y)->setZone(type);
-                            
-                            
+                        if(map->getTile(x, y)->getZone() == 0) {
+                            map->getTile(x, y)->setZone(type);                            
                         }    
                         
                 NLPacket zonepak(NPACKET_TYPE_SIMULTY_LAND_ZONE);
@@ -312,14 +309,18 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
             NLINT16 buildingType; NLINT32 x, y;            
             pack >> buildingType >> x >> y;
         
-            Building *b = BuildingFactory::getBuilding(buildingType, x, y);
+            std::cerr << "B: " << Point(x, y) << " - " << buildingType << std::endl;
+        
+            Building *b = BuildingFactory::getBuilding(buildingType, Point(x, y));
             bman.addSpecialBuilding(b);         
             
             NLPacket buildingPack(NPACKET_TYPE_SIMULTY_BUILDING_BUILD);            
             buildingPack << (NLINT16)from->slot_get() << buildingType << x << y;            
             packet_send_to_all(buildingPack);           
             
+            std::cerr << "Building!" << std::endl;
             
+            break;
         
         } default: {
             std::cerr << "** Got uknown message with id " 

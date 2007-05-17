@@ -3,15 +3,20 @@
 #define _BUILDING_FACTORY_HPP_
 
 #include <vector>
+
+#include "Point.hpp"
+
 #include "Map.hpp"
+
 #include "Building.hpp"
+#include "BuildingPolice.hpp"
 
 
 class BuildingFactory {
 
     public:
 
-    static Building *getBuilding(int buildingType, int x, int y);
+    static Building *getBuilding(int buildingType, Point position);
 
 };
 

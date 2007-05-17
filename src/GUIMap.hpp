@@ -1,5 +1,5 @@
-#ifndef _MAP_H_
-#define _MAP_H_
+#ifndef _GUIMAP_HPP_
+#define _GUIMAP_HPP_
 
 #define TILE_W 64
 #define TILE_H 32

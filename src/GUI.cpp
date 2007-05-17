@@ -18,6 +18,8 @@ GUI::GUI (  ){
     icon_road       = load_bitmap("img/menu_icon_road.pcx", NULL);
     icon_land       = load_bitmap("img/menu_icon_land.pcx", NULL);
 
+    icon_police     = load_bitmap("img/menu_icon_police.pcx", NULL);
+    
     console_show = false;
     
     if(!mouse_pointer || !mouse_block || !menu_background || !gui_background)
@@ -52,8 +54,9 @@ void GUI::render ( BITMAP *buffer ){
         // Render map:
         client->map->render(buffer, camera);      
     
-        client->map->toTileCoord(mouse.getPosition() + camera);
-        client->map->toTileCoord(mouse.getPosition() + camera);
+        // Render buildings:
+        
+        br.render(buffer, client->map, camera, &client->bman);
     
         /*
         Point pos = client->map->val2tile(Point(mouse_x + client->cam.getX(), mouse_y + client->cam.getY()));            
@@ -106,11 +109,12 @@ void GUI::render ( BITMAP *buffer ){
         
         masked_blit(gui_background, buffer, 0, 0, 0, 0, gui_background->w, gui_background->h);
         
-        blit(icon_com,  buffer, 0, 0, SCREEN_W - 37, 5,  32, 32);
-        blit(icon_res,  buffer, 0, 0, SCREEN_W - 74, 5,  32, 32);
-        blit(icon_ind,  buffer, 0, 0, SCREEN_W - 37, 42, 32, 32);
-        blit(icon_road, buffer, 0, 0, SCREEN_W - 74, 42, 32, 32);
-        blit(icon_land, buffer, 0, 0, SCREEN_W - 37, 79, 32, 32);
+        blit(icon_com,    buffer, 0, 0, SCREEN_W - 37, 5,  32, 32);
+        blit(icon_res,    buffer, 0, 0, SCREEN_W - 74, 5,  32, 32);
+        blit(icon_ind,    buffer, 0, 0, SCREEN_W - 37, 42, 32, 32);
+        blit(icon_road,   buffer, 0, 0, SCREEN_W - 74, 42, 32, 32);
+        blit(icon_land,   buffer, 0, 0, SCREEN_W - 37, 79, 32, 32);
+        blit(icon_police, buffer, 0, 0, SCREEN_W - 74, 79, 32, 32);
 
         textprintf_ex(buffer, font, 20, SCREEN_H - 40, makecol(0, 0, 0), -1, "Money: %i", client->money); 
         textprintf_ex(buffer, font, 20, SCREEN_H - 30, makecol(0, 0, 0), -1, "Time: %i", client->time); 
@@ -130,6 +134,7 @@ void GUI::render ( BITMAP *buffer ){
 
 
         textprintf_ex(buffer, font, 600, SCREEN_H - 30, makecol(0, 0, 0), -1, "MD: %i, %i MU: %i, %i", mouse_down_tile.getX(), mouse_down_tile.getY(), mouse_up_tile.getX(), mouse_up_tile.getY());
+        textprintf_ex(buffer, font, 600, SCREEN_H - 60, makecol(0, 0, 0), -1, "SB: %i", client->bman.getSpecialBuildingCount());        
 
         // Draw console:
         if(console_show)
@@ -139,7 +144,7 @@ void GUI::render ( BITMAP *buffer ){
             for(int i = 1; i <= 5; i++)
             {
                 if(console_data.size() - i >= 0 && console_data.size() - i < console_data.size())
-                    textprintf_ex(buffer, font, 10, 15*i, makecol(255, 255, 255), -1, "> %s", console_data[console_data.size() - i].c_str()); 
+                    textprintf_ex(buffer, font, 10, 90 - 15*i, makecol(255, 255, 255), -1, "> %s", console_data[console_data.size() - i].c_str()); 
             }
         }
 
@@ -177,6 +182,8 @@ void GUI::update()
                 tool = SIMULTY_CLIENT_TOOL_ROAD;
             } else if(Point::inArea(mouse.getPosition(), Point(SCREEN_W - 37, 79), 32, 32)) {
                 tool = SIMULTY_CLIENT_TOOL_LAND;
+            } else if(Point::inArea(mouse.getPosition(), Point(SCREEN_W - 74, 79), 32, 32)) {
+                tool = SIMULTY_CLIENT_TOOL_BUILD_POLICE;
             }
             
             std::cout << "mouse press event" << std::endl;
@@ -204,6 +211,8 @@ void GUI::update()
                     tool == SIMULTY_CLIENT_TOOL_ZONE_IND) {
                 // zone 
                 client->buy_zone(mouse_down_tile, mouse_up_tile, tool);
+            } else if(tool == SIMULTY_CLIENT_TOOL_BUILD_POLICE) {
+                client->buy_building(mouse_down_tile, tool);
             }
             
                 

@@ -40,3 +40,10 @@ void BuildingManager::addSpecialBuilding(Building *b) {
 
 }
 
+Building *BuildingManager::getSpecialBuilding(int i) {
+    return special_buildings[i];
+}
+int BuildingManager::getSpecialBuildingCount() {
+    return special_buildings.size();
+}
+

@@ -236,10 +236,15 @@ void Client::buy_zone(Point from, Point to, int type) {
 void Client::buy_building(Point where, int type) {
 
     NLPacket buildpak(NPACKET_TYPE_SIMULTY_BUILDING_BUILD);
-    
-    buildpak << (NLINT16)type 
+        
+    buildpak << (NLINT16)Building::TYPE_POLICE 
              << (NLINT32)where.getX() << (NLINT32)where.getY();
 
+    std::cerr << "B: " << where << " - " << type << std::endl;
+
+    net_client->packet_put(buildpak); 
+
+    client->gui->console_log("Built building (request)");
 }
 
 void Client::packet_handle(NLPacket p)
@@ -288,6 +293,8 @@ void Client::packet_handle(NLPacket p)
         {
             NLINT32 x, y; p >> x >> y;
             map->getTile(x, y)->setRoad(true);
+            
+            client->gui->console_log("Built road");
             break;
         }
 
@@ -304,6 +311,7 @@ void Client::packet_handle(NLPacket p)
             NLINT16 player_affected; NLINT32 money_new;
             p >> player_affected >> money_new;
             
+            client->gui->console_log("Money changed");
             
             break;
         }
@@ -323,6 +331,9 @@ void Client::packet_handle(NLPacket p)
                         map->getTile(x, y)->setOwner(pl_slot);
                     }
                 }
+                
+            client->gui->console_log("Bought land");
+            
             break;
         }
         
@@ -354,10 +365,8 @@ void Client::packet_handle(NLPacket p)
             client->gui->console_log("Player joined");                
         
             break;
-        }
-        
-        case NPACKET_TYPE_SIMULTY_PLAYER_LEFT:
-        {
+            
+        } case NPACKET_TYPE_SIMULTY_PLAYER_LEFT: {
             NLINT32 id;
             p >> id;
             
@@ -368,16 +377,18 @@ void Client::packet_handle(NLPacket p)
         } case NPACKET_TYPE_SIMULTY_BUILDING_BUILD: {
                     
             NLINT16 buildingType, slot; NLINT32 x, y;            
-            p >> buildingType >> x >> y;
+            p >> slot >> buildingType >> x >> y;
         
-            Building *b = BuildingFactory::getBuilding(buildingType, x, y);
+            std::cerr << "BC: " << buildingType << " " << Point(x, y) << std::endl;
+        
+            Building *b = BuildingFactory::getBuilding(buildingType, Point(x, y));
             bman.addSpecialBuilding(b);
            
-        
-        } 
-
-        default:
-        {
+            client->gui->console_log("Built building");
+            
+            break;
+            
+        } default: {
             std::cerr << "** Got uknown message with id " << p.getType() << std::endl;
             p.print();
             break;

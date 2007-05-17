@@ -25,6 +25,9 @@ class BuildingManager {
 
 
     void addSpecialBuilding(Building *);
+    
+    Building *getSpecialBuilding(int i);    
+    int  getSpecialBuildingCount();
 };
 
 #endif

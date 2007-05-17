@@ -1,26 +1,22 @@
 
 #include "BuildingFactory.hpp"
 
-#include "Building.hpp"
-#include "BuildingPolice.hpp"
 
-
-Building *BuildingFactory::getBuilding(int type, int x, int y) {
+Building *BuildingFactory::getBuilding(int type, Point position) {
 
 
     switch(type) {
     
-        case SIMULTY_BUILDING_POLICE: {
-            return new BuildingPolice(x, y);
-            break;
+        case Building::TYPE_POLICE: {
+            return new BuildingPolice(position);
         }
         
-        case SIMULTY_BUILDING_FIRE: {
+        case Building::TYPE_FIRE: {
         
             break;
         } 
         
-        case SIMULTY_BUILDING_HOSPITAL: {
+        case Building::TYPE_HOSPITAL: {
         
             break;
         }

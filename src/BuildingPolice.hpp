@@ -7,7 +7,11 @@ class BuildingPolice: public Building {
 
     public:
 
-    BuildingPolice(int x, int y);
+    BuildingPolice(Point position);
+    
+    virtual unsigned char getType();
+    virtual unsigned char getWidth();
+    virtual unsigned char getHeight();    
   // Associations
   // Attributes
   // Operations

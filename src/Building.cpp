@@ -1,14 +1,28 @@
 #include "Building.hpp"
 
+#include <iostream>
 
-Building::Building(int x, int y) {
+Building::Building(Point position) {
 
-   this->x = x;
-   this->y = y;
+    this->position = position;
 
+    std::cerr << "Pos is: " << getPosition() << std::endl;
 }
 
+
+
 Building::~Building (  ){
+}
+
+Point Building::getPosition() {
+    return this->position;
+}
+
+unsigned char Building::getWidth() {
+    return width;
+}
+unsigned char Building::getHeight() {
+    return height;
 }
 
 void Building::render (  ){

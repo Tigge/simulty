@@ -14,6 +14,8 @@
 #include "Camera.hpp"
 #include "Mouse.hpp"
 
+#include "BuildingRender.hpp"
+
 const unsigned char SIMULTY_CLIENT_TOOL_NONE           = 0;
 const unsigned char SIMULTY_CLIENT_TOOL_LAND           = 1;
 const unsigned char SIMULTY_CLIENT_TOOL_ROAD           = 2;
@@ -42,11 +44,15 @@ class GUI {
     BITMAP *icon_road;
     BITMAP *icon_land;
     
+    BITMAP *icon_police;
+    
     bool                    console_show;
     std::vector<std::string> console_data;
         
     Mouse mouse;
     Camera camera;
+    
+    BuildingRender br;
     
     Point mouse_down_tile;
     Point mouse_up_tile;
