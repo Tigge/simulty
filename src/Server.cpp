@@ -34,6 +34,8 @@
 #include "player_server_network.h"
 #include "player_server_ai.h"
 
+#include "BuildingFactory.hpp"
+
 Server *server;
 
 int main(int argc, char *argv[])
@@ -303,15 +305,26 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
               std::cerr << "Zone: Didn't build: " << std::endl;
             }
             
-            
-            
             break;
-        }
-
-
-        default:
-        {
-            std::cerr << "** Got uknown message with id " << NPACKET_TYPE_SIMULTY_LAND_ZONE << " " << pack.getType() << std::endl;
+            
+        } case NPACKET_TYPE_SIMULTY_BUILDING_BUILD: {
+                    
+            NLINT16 buildingType; NLINT32 x, y;            
+            pack >> buildingType >> x >> y;
+        
+            Building *b = BuildingFactory::getBuilding(buildingType, x, y);
+            bman.addSpecialBuilding(b);         
+            
+            NLPacket buildingPack(NPACKET_TYPE_SIMULTY_BUILDING_BUILD);            
+            buildingPack << (NLINT16)from->slot_get() << buildingType << x << y;            
+            packet_send_to_all(buildingPack);           
+            
+            
+        
+        } default: {
+            std::cerr << "** Got uknown message with id " 
+                    << NPACKET_TYPE_SIMULTY_LAND_ZONE << " " 
+                    << pack.getType() << std::endl;
             pack.print();
             
             return false;

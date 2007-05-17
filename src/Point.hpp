@@ -45,7 +45,8 @@ class Point {
     void move(Point p);
 
     // TODO: rename!
-    static void fix_points(Point &a, Point &b);
+    static void fixOrder(Point &a, Point &b);
+    static bool inArea(Point p, Point a, int w, int h);
     
     // For output in streams:
     friend std::ostream& operator<<(std::ostream& output, const Point& p);

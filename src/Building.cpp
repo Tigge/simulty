@@ -1,6 +1,11 @@
 #include "Building.hpp"
 
-Building::Building (  ){
+
+Building::Building(int x, int y) {
+
+   this->x = x;
+   this->y = y;
+
 }
 
 Building::~Building (  ){

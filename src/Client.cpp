@@ -364,7 +364,17 @@ void Client::packet_handle(NLPacket p)
             client->gui->console_log("Player left");
                         
             break;
-        }
+            
+        } case NPACKET_TYPE_SIMULTY_BUILDING_BUILD: {
+                    
+            NLINT16 buildingType, slot; NLINT32 x, y;            
+            p >> buildingType >> x >> y;
+        
+            Building *b = BuildingFactory::getBuilding(buildingType, x, y);
+            bman.addSpecialBuilding(b);
+           
+        
+        } 
 
         default:
         {

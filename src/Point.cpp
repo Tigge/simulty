@@ -51,7 +51,7 @@ void Point::move(Point p) {
     move(p.getX(), p.getY());
 }
     
-void Point::fix_points(Point &a, Point &b) {
+void Point::fixOrder(Point &a, Point &b) {
 
     if(a.getX() > b.getX()) {
         int tmp = a.getX();
@@ -62,6 +62,16 @@ void Point::fix_points(Point &a, Point &b) {
         a.setY(b.getY());
         b.setY(tmp);
     }
+}
+
+bool Point::inArea(Point p, Point a, int w, int h) {
+
+    if(p.getX() >= a.getX() && p.getX() <= a.getX() + w
+            && p.getY() >= a.getY() && p.getY() <= a.getY() + h) 
+        return true;
+    else
+        return false;
+
 }
 
 

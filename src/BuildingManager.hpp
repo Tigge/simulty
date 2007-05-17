@@ -16,12 +16,15 @@ class BuildingManager {
   
   public:
   
+  
     int thrive_value_connection_get(Map *m, char slot, int x, int y);
     int thrive_value_electricity_get(Map *m, char slot, int x, int y);
     int thrive_value_taxes_get(char slot);
   
     int thrive_value_get(Map *m, char slot, int x, int y);
 
+
+    void addSpecialBuilding(Building *);
 };
 
 #endif

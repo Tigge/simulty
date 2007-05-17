@@ -33,3 +33,10 @@ int BuildingManager::thrive_value_get(Map *map, char slot, int x, int y) {
 
 }
 
+
+void BuildingManager::addSpecialBuilding(Building *b) {
+
+    special_buildings.push_back(b);
+
+}
+

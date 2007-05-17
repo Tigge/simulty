@@ -37,7 +37,10 @@ class GUI {
     
     BITMAP *icon_ind;
     BITMAP *icon_res;
-    BITMAP *icon_com;    
+    BITMAP *icon_com;
+    
+    BITMAP *icon_road;
+    BITMAP *icon_land;
     
     bool                    console_show;
     std::vector<std::string> console_data;
@@ -53,6 +56,8 @@ class GUI {
   public:
   
     void console_log(std::string s);
+    
+    bool pointInArea(Point p, Point a, Point b);
   
     GUI();
     ~GUI();

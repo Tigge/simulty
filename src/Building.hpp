@@ -3,6 +3,11 @@
 
 #include <string>
 
+const unsigned char SIMULTY_BUILDING_POLICE           = 0;
+const unsigned char SIMULTY_BUILDING_FIRE             = 1;
+const unsigned char SIMULTY_BUILDING_HOSPITAL         = 2;
+
+
 class Building {
   // Associations
   // Attributes
@@ -13,17 +18,18 @@ class Building {
     int maintenace;
     int income;
     int expence;
-    unsigned char size_x;
-    unsigned char size_y;
-    int pos_x;
-    int pos_y;
+    unsigned char width;
+    unsigned char height;
+    int x;
+    int y;
   // Operations
   public:
-    Building (  );
-    virtual ~Building (  );
+  
+    Building(int x, int y);
+    virtual ~Building();
     
-    virtual void render (  );
-    virtual void update (  );
+    virtual void render();
+    virtual void update();
 
 };
 

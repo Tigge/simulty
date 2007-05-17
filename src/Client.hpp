@@ -16,6 +16,7 @@
 #include "player_client_remote.h"
 
 #include "BuildingManager.hpp"
+#include "BuildingFactory.hpp"
 
 
 #include "Map.hpp"

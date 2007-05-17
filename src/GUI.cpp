@@ -13,7 +13,10 @@ GUI::GUI (  ){
     
     icon_ind        = load_bitmap("img/menu_icon_ind.pcx", NULL);
     icon_res        = load_bitmap("img/menu_icon_res.pcx", NULL);
-    icon_com        = load_bitmap("img/menu_icon_com.pcx", NULL);        
+    icon_com        = load_bitmap("img/menu_icon_com.pcx", NULL);
+    
+    icon_road       = load_bitmap("img/menu_icon_road.pcx", NULL);
+    icon_land       = load_bitmap("img/menu_icon_land.pcx", NULL);
 
     console_show = false;
     
@@ -64,6 +67,7 @@ void GUI::render ( BITMAP *buffer ){
         if(mouse.getLeftButtonState() == STATE_PRESS) {
         
 
+
         
         } if(mouse.getLeftButtonState() == STATE_HOLD) {
         
@@ -71,7 +75,7 @@ void GUI::render ( BITMAP *buffer ){
             Point c1 = mouse_down_tile;
             Point c3 = mouse_up_tile;
             
-            Point::fix_points(c1, c3);
+            Point::fixOrder(c1, c3);
 
             Point c2 = Point(c3.getX(), c1.getY());
             Point c4 = Point(c1.getX(), c3.getY());
@@ -102,9 +106,11 @@ void GUI::render ( BITMAP *buffer ){
         
         masked_blit(gui_background, buffer, 0, 0, 0, 0, gui_background->w, gui_background->h);
         
-        blit(icon_com, buffer, 0, 0, SCREEN_W - 37, 5,  32, 32);
-        blit(icon_res, buffer, 0, 0, SCREEN_W - 74, 5,  32, 32);
-        blit(icon_ind, buffer, 0, 0, SCREEN_W - 37, 42, 32, 32);
+        blit(icon_com,  buffer, 0, 0, SCREEN_W - 37, 5,  32, 32);
+        blit(icon_res,  buffer, 0, 0, SCREEN_W - 74, 5,  32, 32);
+        blit(icon_ind,  buffer, 0, 0, SCREEN_W - 37, 42, 32, 32);
+        blit(icon_road, buffer, 0, 0, SCREEN_W - 74, 42, 32, 32);
+        blit(icon_land, buffer, 0, 0, SCREEN_W - 37, 79, 32, 32);
 
         textprintf_ex(buffer, font, 20, SCREEN_H - 40, makecol(0, 0, 0), -1, "Money: %i", client->money); 
         textprintf_ex(buffer, font, 20, SCREEN_H - 30, makecol(0, 0, 0), -1, "Time: %i", client->time); 
@@ -119,8 +125,8 @@ void GUI::render ( BITMAP *buffer ){
 
         textprintf_ex(buffer, font, 200, SCREEN_H - 30, makecol(0, 0, 0), -1, "Mouse: %i, %i", realtile.getX(), realtile.getY()); 
 
-        if(realtile.getX() > 5 && realtile.getY() > 5)
-        textprintf_ex(buffer, font, 300, SCREEN_H - 30, makecol(0, 0, 0), -1, "Thrive: %i", client->bman.thrive_value_get(client->map, client->player_me->slot_get(), realtile.getX(), realtile.getY()));
+        //if(realtile.getX() > 5 && realtile.getY() > 5)
+        //textprintf_ex(buffer, font, 300, SCREEN_H - 30, makecol(0, 0, 0), -1, "Thrive: %i", client->bman.thrive_value_get(client->map, client->player_me->slot_get(), realtile.getX(), realtile.getY()));
 
 
         textprintf_ex(buffer, font, 600, SCREEN_H - 30, makecol(0, 0, 0), -1, "MD: %i, %i MU: %i, %i", mouse_down_tile.getX(), mouse_down_tile.getY(), mouse_up_tile.getX(), mouse_up_tile.getY());
@@ -160,7 +166,19 @@ void GUI::update()
         if(mouse.getLeftButtonState() == STATE_PRESS) {
         
             mouse_down_tile = client->map->toTileCoord(mouse.getPressPosition(), camera);
-                    
+                            
+            if(Point::inArea(mouse.getPosition(), Point(SCREEN_W - 37, 5), 32, 32)) {
+                tool = SIMULTY_CLIENT_TOOL_ZONE_COM;
+            } else if(Point::inArea(mouse.getPosition(), Point(SCREEN_W - 74, 5), 32, 32)) {
+                tool = SIMULTY_CLIENT_TOOL_ZONE_RES;
+            } else if(Point::inArea(mouse.getPosition(), Point(SCREEN_W - 37, 42), 32, 32)) {
+                tool = SIMULTY_CLIENT_TOOL_ZONE_IND;
+            } else if(Point::inArea(mouse.getPosition(), Point(SCREEN_W - 74, 42), 32, 32)) {
+                tool = SIMULTY_CLIENT_TOOL_ROAD;
+            } else if(Point::inArea(mouse.getPosition(), Point(SCREEN_W - 37, 79), 32, 32)) {
+                tool = SIMULTY_CLIENT_TOOL_LAND;
+            }
+            
             std::cout << "mouse press event" << std::endl;
             
         } else if(mouse.getLeftButtonState() == STATE_HOLD) {
@@ -173,7 +191,7 @@ void GUI::update()
         
             std::cout << "mouse release event" << std::endl;
              
-            Point::fix_points(mouse_down_tile, mouse_up_tile);
+            Point::fixOrder(mouse_down_tile, mouse_up_tile);
             
             if(tool == SIMULTY_CLIENT_TOOL_LAND) {
                 client->buy_land(mouse_down_tile, mouse_up_tile);
@@ -217,3 +235,6 @@ void GUI::console_log(std::string s)
 {
     console_data.push_back(s);
 }
+
+
+
