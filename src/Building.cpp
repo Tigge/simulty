@@ -31,3 +31,7 @@ void Building::render (  ){
 void Building::update (  ){
 }
 
+
+int Building::getZ() {
+    return getPosition().getX() + getPosition().getY();
+}

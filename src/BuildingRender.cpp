@@ -35,14 +35,15 @@ void BuildingRender::renderBuilding(BITMAP *r, Building *b, Point where) {
     
 void BuildingRender::render(BITMAP *r, GUIMap *m, Camera cam, BuildingManager *bm) {
 
-    for(int i = 0; i < bm->getSpecialBuildingCount(); i++) {
+    //Render depth by Z depth
+    for(int d = 0; d < (m->getWidth() + m->getHeight()); d++) {
 
-      Building *b = bm->getSpecialBuilding(i);       
-      //std::cout << b->getPosition() << " " << m->toScreenCoord(b->getPosition(), cam) << std::endl;
- 
-      renderBuilding(r, b, m->toScreenCoord(b->getPosition(), cam)); 
-        
-    }
-    
+        for(int i = 0; i < bm->getSpecialBuildingCount(); i++) {
+
+            Building *b = bm->getSpecialBuilding(i);       
+            if(b->getZ() == d)
+                renderBuilding(r, b, m->toScreenCoord(b->getPosition(), cam)); 
+        }  
+    }    
 
 }

@@ -39,6 +39,8 @@ class Building {
     virtual unsigned char getWidth();
     virtual unsigned char getHeight();
     
+    virtual int getZ();
+    
     virtual void render();
     virtual void update();
 
