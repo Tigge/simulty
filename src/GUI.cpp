@@ -54,8 +54,7 @@ void GUI::render ( BITMAP *buffer ){
         // Render map:
         client->map->render(buffer, camera);      
     
-        // Render buildings:
-        
+        // Render buildings:        
         br.render(buffer, client->map, camera, &client->bman);
     
         /*
@@ -107,6 +106,14 @@ void GUI::render ( BITMAP *buffer ){
         }
         //blit(mouse_hint, buffer, 0, 0, (mouse_x / TILE_W) * TILE_W, (mouse_y / TILE_H) * TILE_H, mouse_hint->w, mouse_hint->h);    
         
+        
+        Point realtile = client->map->toTileCoord(mouse.getPosition(), camera);
+        Point realscrn = client->map->toScreenCoord(realtile, camera);
+                
+        // Redner mouse block
+        masked_blit(mouse_block, buffer, 0, 0, realscrn.getX(), realscrn.getY(), mouse_block->w, mouse_block->h);
+                
+        // Render GUI:
         masked_blit(gui_background, buffer, 0, 0, 0, 0, gui_background->w, gui_background->h);
         
         blit(icon_com,    buffer, 0, 0, SCREEN_W - 37, 5,  32, 32);
@@ -122,15 +129,14 @@ void GUI::render ( BITMAP *buffer ){
 
         textprintf_ex(buffer, font, 200, SCREEN_H - 20, makecol(0, 0, 0), -1, "FPS: %i", client->fps); 
 
-        Point realtile = client->map->toTileCoord(mouse.getPosition(), camera);
-        Point realscrn = client->map->toScreenCoord(realtile, camera);
+
         
-        masked_blit(mouse_block, buffer, 0, 0, realscrn.getX(), realscrn.getY(), mouse_block->w, mouse_block->h);
+
 
         textprintf_ex(buffer, font, 200, SCREEN_H - 30, makecol(0, 0, 0), -1, "Mouse: %i, %i", realtile.getX(), realtile.getY()); 
 
-        //if(realtile.getX() > 5 && realtile.getY() > 5)
-        //textprintf_ex(buffer, font, 300, SCREEN_H - 30, makecol(0, 0, 0), -1, "Thrive: %i", client->bman.thrive_value_get(client->map, client->player_me->slot_get(), realtile.getX(), realtile.getY()));
+        if(realtile.getX() > 5 && realtile.getY() > 5 && realtile.getX() < 25 && realtile.getY() < 25)
+          textprintf_ex(buffer, font, 300, SCREEN_H - 30, makecol(0, 0, 0), -1, "Thrive: %i", client->bman.getThriveValue(client->map, client->player_me->slot_get(), realtile));
 
 
         textprintf_ex(buffer, font, 600, SCREEN_H - 30, makecol(0, 0, 0), -1, "MD: %i, %i MU: %i, %i", mouse_down_tile.getX(), mouse_down_tile.getY(), mouse_up_tile.getX(), mouse_up_tile.getY());
@@ -200,21 +206,24 @@ void GUI::update()
              
             Point::fixOrder(mouse_down_tile, mouse_up_tile);
             
-            if(tool == SIMULTY_CLIENT_TOOL_LAND) {
-                client->buy_land(mouse_down_tile, mouse_up_tile);
-                // buy land
-            } else if(tool == SIMULTY_CLIENT_TOOL_ROAD) {
-                // draw road
-                client->buy_road(mouse_down_tile, mouse_up_tile);
-            } else if(tool == SIMULTY_CLIENT_TOOL_ZONE_RES || 
-                    tool == SIMULTY_CLIENT_TOOL_ZONE_COM || 
-                    tool == SIMULTY_CLIENT_TOOL_ZONE_IND) {
-                // zone 
-                client->buy_zone(mouse_down_tile, mouse_up_tile, tool);
-            } else if(tool == SIMULTY_CLIENT_TOOL_BUILD_POLICE) {
-                client->buy_building(mouse_down_tile, tool);
-            }
+            if(mouse.getPosition().getX() < 720) {
             
+              if(tool == SIMULTY_CLIENT_TOOL_LAND) {
+                  client->buy_land(mouse_down_tile, mouse_up_tile);
+                  // buy land
+              } else if(tool == SIMULTY_CLIENT_TOOL_ROAD) {
+                  // draw road
+                  client->buy_road(mouse_down_tile, mouse_up_tile);
+              } else if(tool == SIMULTY_CLIENT_TOOL_ZONE_RES || 
+                      tool == SIMULTY_CLIENT_TOOL_ZONE_COM || 
+                      tool == SIMULTY_CLIENT_TOOL_ZONE_IND) {
+                  // zone 
+                  client->buy_zone(mouse_down_tile, mouse_up_tile, tool);
+              } else if(tool == SIMULTY_CLIENT_TOOL_BUILD_POLICE) {
+                  client->buy_building(mouse_down_tile, tool);
+              }
+              
+            }
                 
         }
 

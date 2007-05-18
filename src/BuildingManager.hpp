@@ -16,14 +16,16 @@ class BuildingManager {
   
   public:
   
+    // Thrive values:
+    int getThriveValueForCrime(Map *m, char slot, Point where);  
+    int getThriveValueForConnection(Map *m, char slot, Point where);
+    int getThriveValueForElectricity(Map *m, char slot, Point where);
+    int getThriveValueForTaxes(char slot);
   
-    int thrive_value_connection_get(Map *m, char slot, int x, int y);
-    int thrive_value_electricity_get(Map *m, char slot, int x, int y);
-    int thrive_value_taxes_get(char slot);
-  
-    int thrive_value_get(Map *m, char slot, int x, int y);
+    int getThriveValue(Map *m, char slot, Point where);
 
 
+    // Buildings:
     void addSpecialBuilding(Building *);
     
     Building *getSpecialBuilding(int i);    

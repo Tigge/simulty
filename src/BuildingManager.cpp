@@ -2,34 +2,79 @@
 #include "Client.hpp"
 
 
-int BuildingManager::thrive_value_connection_get(Map *map, char slot, int x, int y) {
+int BuildingManager::getThriveValueForCrime(Map *m, char slot, Point where) {
 
-    for(int xv = x - 3; xv <= x + 3; xv++)
-        for(int yv = y - 3; yv <= y + 3; yv++)
-            if(map->getTile(xv, yv)->getOwner() == slot 
-                    && map->getTile(xv, yv)->isRoad())return 20;
+  // Out of bounds:
+  if(where.getX() < 0 || where.getY() < 0 || where.getX() >= m->getWidth() 
+      || where.getY() >= m->getHeight()) 
+    return 0;
+
+  int distance = 100;
+
+  for(int i = 0; i < getSpecialBuildingCount(); i++) {
+    
+    if(getSpecialBuilding(i)->getType() == Building::TYPE_POLICE) {
+        
+      for(int x = 0; x < getSpecialBuilding(i)->getWidth(); x++) 
+        for(int y = 0; y < getSpecialBuilding(i)->getHeight(); y++) {
+          
+          int d = Point::distance(where, 
+              getSpecialBuilding(i)->getPosition() + Point(x, y));
+                
+          if(d < distance ) {
+                distance = d;
+           
+          }                
+      }      
+    }
+  }
+  
+  
+
+  if(distance < 15)
+    return 20;
+  else if(distance < 30)
+    return 10;
+  else  
+    return 0;  
+}
+
+
+int BuildingManager::getThriveValueForConnection(Map *map, char slot, Point where) {
+
+    // Out of bounds:
+    if(where.getX() < 0 || where.getY() < 0 || where.getX() >= map->getWidth() 
+            || where.getY() >= map->getHeight()) 
+        return 0;
+    
+
+    for(int x = where.getX() - 3; x <= where.getX() + 3; x++)
+        for(int y = where.getY() - 3; y <= where.getY() + 3; y++)
+            if(map->getTile(x, y)->getOwner() == slot 
+                    && map->getTile(x, y)->isRoad())return 20;
 
     return 0;
 
 }
 
-int BuildingManager::thrive_value_electricity_get(Map *map, char slot, int x, int y) {
+int BuildingManager::getThriveValueForElectricity(Map *map, char slot, Point where) {
 
     return 0;
 
 }
 
-int BuildingManager::thrive_value_taxes_get(char slot) {
+int BuildingManager::getThriveValueForTaxes(char slot) {
 
     return 0;
 
 }
 
-int BuildingManager::thrive_value_get(Map *map, char slot, int x, int y) {
+int BuildingManager::getThriveValue(Map *map, char slot, Point where) {
 
-    return thrive_value_connection_get(map, slot, x, y)
-            + thrive_value_electricity_get(map, slot, x, y)
-            + thrive_value_taxes_get(slot);
+    return getThriveValueForConnection(map, slot, where)
+            + getThriveValueForElectricity(map, slot, where)
+            + getThriveValueForTaxes(slot) 
+            + getThriveValueForCrime(map, slot, where);
 
 }
 

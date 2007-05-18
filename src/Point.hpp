@@ -2,6 +2,7 @@
 #define _POINT_HPP_
 
 #include <ostream>
+#include <cmath>
 
 /** 
  * Simple class representation of a point. 
@@ -44,7 +45,8 @@ class Point {
     void move(int x, int y);
     void move(Point p);
 
-    // TODO: rename!
+    static int  distance(Point a, Point b);
+    
     static void fixOrder(Point &a, Point &b);
     static bool inArea(Point p, Point a, int w, int h);
     
