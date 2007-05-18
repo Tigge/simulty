@@ -205,12 +205,16 @@ void Client::buy_land(Point from, Point to) {
 
 void Client::buy_road(Point from, Point to) {
 
-    if(!map->getTile(to.getX(), to.getY())->isRoad())
-    {
+    // Only straight lines (for now):
+    if(from.getX() == to.getX() || from.getY() == to.getY()) {
+
         NLPacket roadpak(NPACKET_TYPE_SIMULTY_ROAD_BUILD);
-        roadpak << (NLINT32)to.getX() << (NLINT32)to.getY();
-        net_client->packet_put(roadpak);
+        roadpak << (NLINT32)from.getX() << (NLINT32)from.getY()
+                << (NLINT32)to.getX()   << (NLINT32)to.getY();
+        net_client->packet_put(roadpak);    
+    
     }
+
 }
 
 void Client::buy_zone(Point from, Point to, int type) {

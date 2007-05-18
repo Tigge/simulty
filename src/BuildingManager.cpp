@@ -93,3 +93,21 @@ int BuildingManager::getSpecialBuildingCount() {
     return special_buildings.size();
 }
 
+bool BuildingManager::canBuildSpecialBuilding(Building *b, Point at, unsigned char slot, Map *m) {
+
+  bool canBuild = true;
+  
+  for(int x = at.getX(); x < at.getX() + b->getWidth(); x++)
+    for(int y = at.getX(); y < at.getX() + b->getHeight(); y++) {
+    
+      Tile *t = m->getTile(x, y);    
+      if(t->getOwner() != slot || t->isRoad()) {
+        canBuild = false; break;
+      }
+    
+    }
+  
+  return canBuild;
+
+}
+

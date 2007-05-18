@@ -1,12 +1,15 @@
 #include "GUI.hpp"
 #include "Client.hpp"
 
+#include "ImageLoader.hpp"
 
 GUI::GUI (  ){
 
+    ImageLoader::getImage("img/menubg.pcx");
 
-    menu_background = load_bitmap("img/menubg.pcx", NULL);
-    gui_background  = load_bitmap("img/guibg.pcx", NULL);
+
+    menu_background = ImageLoader::getImage("img/menubg.pcx");
+    gui_background  = ImageLoader::getImage("img/guibg.pcx");
 
     mouse_pointer   = load_bitmap("img/cursor.pcx", NULL);
     mouse_block     = load_bitmap("img/mouse_block.pcx", NULL);

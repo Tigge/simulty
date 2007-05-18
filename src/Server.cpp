@@ -238,35 +238,52 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
         // Buy road:
         case NPACKET_TYPE_SIMULTY_ROAD_BUILD:
         {
-            NLINT32 roadx; NLINT32 roady; NLPacket roadp = pack;
-            roadp >> roadx >> roady;
+          NLINT32 fromX, fromY, toX, toY; NLPacket roadp = pack;
+          roadp >> fromX >> fromY >> toX >> toY;
 
-            std::cerr << "** Got road build command" << std::endl;
-            if(from->money_get() > SIMULTY_COST_ROAD 
-                && !map->getTile(roadx, roady)->isRoad() 
-                && map->getTile(roadx, roady)->getOwner() == from->slot_get())
-            {
-                map->getTile(roadx, roady)->setRoad(true);
-                /*
-                NLPacket mupd(NPACKET_TYPE_SIMULTY_MONEY_CHANGE);
-                from->money -= 20; mupd << from->money;
-                from->socket->packet_put(mupd);
-                */
-                
-                from->money_set(from->money_get() - SIMULTY_COST_ROAD);
+          std::cerr << "** Got road build command" << std::endl;
+          
+          int cost = 0;
+          
+          for(int x = fromX; x <= toX && x < map->getWidth(); x++) {
+            for(int y = fromY; y <= toY && y < map->getHeight(); y++) {
+            
+              if(!map->getTile(x, y)->isRoad() 
+                  && map->getTile(x, y)->getOwner() == from->slot_get()) {
+                  
+                  cost += SIMULTY_COST_ROAD;
+                  
+              }             
+            }
+          }
+          if(from->money_get() > SIMULTY_COST_ROAD) {
+            
+            for(int x = fromX; x <= toX && x < map->getWidth(); x++) {
+              for(int y = fromY; y <= toY && y < map->getHeight(); y++) {
+              
+                if(!map->getTile(x, y)->isRoad() 
+                    && map->getTile(x, y)->getOwner() == from->slot_get()) {    
 
-                packet_send_to_all(pack);
-            }
-            else
-            {
-                std::cerr << "Road: Didn't build: money: " << from->money_get() 
-                        << " owner: " 
-                        << (int)(map->getTile(roadx, roady)->getOwner()) 
-                        << " road: "
-                        << (int)(map->getTile(roadx, roady)->isRoad()) 
-                        << std::endl;
-            }
-            break;
+                  map->getTile(x, y)->setRoad(true);
+                  
+                  NLPacket p(NPACKET_TYPE_SIMULTY_ROAD_BUILD);
+                  p << x << y;
+                  packet_send_to_all(p);
+                }
+              }
+            }        
+
+            /*
+            NLPacket mupd(NPACKET_TYPE_SIMULTY_MONEY_CHANGE);
+            from->money -= 20; mupd << from->money;
+            from->socket->packet_put(mupd);
+            */
+            
+            from->money_set(from->money_get() - SIMULTY_COST_ROAD);
+
+            //packet_send_to_all(pack);
+          } 
+          break;
         }
         
         case NPACKET_TYPE_SIMULTY_LAND_ZONE:
@@ -312,14 +329,19 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
             std::cerr << "B: " << Point(x, y) << " - " << buildingType << std::endl;
         
             Building *b = BuildingFactory::getBuilding(buildingType, Point(x, y), from->slot_get());
-            bman.addSpecialBuilding(b);         
             
-            NLPacket buildingPack(NPACKET_TYPE_SIMULTY_BUILDING_BUILD);            
-            buildingPack << (NLINT16)from->slot_get() << buildingType << x << y;            
-            packet_send_to_all(buildingPack);           
-            
-            std::cerr << "Building!" << std::endl;
-            
+            if(bman.canBuildSpecialBuilding(b, Point(x, y), from->slot_get(), map)) {
+              bman.addSpecialBuilding(b);         
+              
+              NLPacket buildingPack(NPACKET_TYPE_SIMULTY_BUILDING_BUILD);            
+              buildingPack << (NLINT16)from->slot_get() << buildingType << x << y;            
+              packet_send_to_all(buildingPack);           
+              
+              std::cerr << "Building!" << std::endl;                          
+            } else {
+              delete b;
+            }
+                        
             break;
         
         } default: {

@@ -27,6 +27,7 @@ class Map {
     
     virtual int getWidth();
     virtual int getHeight();
+
 };
 
 #endif

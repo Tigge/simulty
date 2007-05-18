@@ -30,6 +30,8 @@ class BuildingManager {
     
     Building *getSpecialBuilding(int i);    
     int  getSpecialBuildingCount();
+    
+    bool canBuildSpecialBuilding(Building *b, Point at, unsigned char slot, Map *m);
 };
 
 #endif
