@@ -381,7 +381,7 @@ void Client::packet_handle(NLPacket p)
         
             std::cerr << "BC: " << buildingType << " " << Point(x, y) << std::endl;
         
-            Building *b = BuildingFactory::getBuilding(buildingType, Point(x, y));
+            Building *b = BuildingFactory::getBuilding(buildingType, Point(x, y), slot);
             bman.addSpecialBuilding(b);
            
             client->gui->console_log("Built building");

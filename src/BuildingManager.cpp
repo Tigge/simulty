@@ -13,7 +13,8 @@ int BuildingManager::getThriveValueForCrime(Map *m, char slot, Point where) {
 
   for(int i = 0; i < getSpecialBuildingCount(); i++) {
     
-    if(getSpecialBuilding(i)->getType() == Building::TYPE_POLICE) {
+    if(getSpecialBuilding(i)->getType() == Building::TYPE_POLICE
+        && getSpecialBuilding(i)->getOwner() == slot) {
         
       for(int x = 0; x < getSpecialBuilding(i)->getWidth(); x++) 
         for(int y = 0; y < getSpecialBuilding(i)->getHeight(); y++) {

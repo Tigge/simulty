@@ -30,7 +30,7 @@ class Building {
   // Operations
   public:
   
-    Building(Point position);
+    Building(Point position, int owner);
     virtual ~Building();
     
     virtual Point getPosition();
@@ -38,6 +38,7 @@ class Building {
     virtual unsigned char getType() = 0;
     virtual unsigned char getWidth();
     virtual unsigned char getHeight();
+    virtual int getOwner();
     
     virtual int getZ();
     

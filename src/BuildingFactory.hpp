@@ -16,7 +16,7 @@ class BuildingFactory {
 
     public:
 
-    static Building *getBuilding(int buildingType, Point position);
+    static Building *getBuilding(int buildingType, Point position, int owner);
 
 };
 

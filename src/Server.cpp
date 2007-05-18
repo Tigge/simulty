@@ -311,7 +311,7 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
         
             std::cerr << "B: " << Point(x, y) << " - " << buildingType << std::endl;
         
-            Building *b = BuildingFactory::getBuilding(buildingType, Point(x, y));
+            Building *b = BuildingFactory::getBuilding(buildingType, Point(x, y), from->slot_get());
             bman.addSpecialBuilding(b);         
             
             NLPacket buildingPack(NPACKET_TYPE_SIMULTY_BUILDING_BUILD);            

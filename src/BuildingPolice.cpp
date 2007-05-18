@@ -1,6 +1,7 @@
 #include "BuildingPolice.hpp"
 
-BuildingPolice::BuildingPolice(Point position) : Building(position) {
+BuildingPolice::BuildingPolice(Point position, int owner) 
+    : Building(position, owner) {
 
     width  = 3;
     height = 3;
