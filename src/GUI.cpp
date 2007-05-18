@@ -5,34 +5,32 @@
 
 GUI::GUI (  ){
 
-    ImageLoader::getImage("img/menubg.pcx");
-
+  
+  try {
 
     menu_background = ImageLoader::getImage("img/menubg.pcx");
     gui_background  = ImageLoader::getImage("img/guibg.pcx");
 
-    mouse_pointer   = load_bitmap("img/cursor.pcx", NULL);
-    mouse_block     = load_bitmap("img/mouse_block.pcx", NULL);
+    mouse_pointer   = ImageLoader::getImage("img/cursor.pcx");
+    mouse_block     = ImageLoader::getImage("img/mouse_block.pcx");
     
-    icon_ind        = load_bitmap("img/menu_icon_ind.pcx", NULL);
-    icon_res        = load_bitmap("img/menu_icon_res.pcx", NULL);
-    icon_com        = load_bitmap("img/menu_icon_com.pcx", NULL);
+    icon_ind        = ImageLoader::getImage("img/menu_icon_ind.pcx");
+    icon_res        = ImageLoader::getImage("img/menu_icon_res.pcx");
+    icon_com        = ImageLoader::getImage("img/menu_icon_com.pcx");
     
-    icon_road       = load_bitmap("img/menu_icon_road.pcx", NULL);
-    icon_land       = load_bitmap("img/menu_icon_land.pcx", NULL);
+    icon_road       = ImageLoader::getImage("img/menu_icon_road.pcx");
+    icon_land       = ImageLoader::getImage("img/menu_icon_land.pcx");
 
-    icon_police     = load_bitmap("img/menu_icon_police.pcx", NULL);
+    icon_police     = ImageLoader::getImage("img/menu_icon_police.pcx");
     
-    console_show = false;
-    
-    if(!mouse_pointer || !mouse_block || !menu_background || !gui_background)
-    {
-        allegro_message("Couldn't load / create some images");
-        exit(1);
-    }    
+  } catch(int error) {
+    allegro_message("Couldn't load / create some images");
+    exit(1);  
+  }
+  
+  console_show = false;
 
-
-    tool = 0;
+  tool = 0;
 }
 
 GUI::~GUI (  ){

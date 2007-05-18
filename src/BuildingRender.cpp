@@ -5,9 +5,16 @@
     
 BuildingRender::BuildingRender() {
 
+  try {
+
     buildingPolice   = load_bitmap("img/special/police.pcx",   NULL);
     buildingFire     = load_bitmap("img/special/fire.pcx",     NULL);
     buildingHospital = load_bitmap("img/special/hospital.pcx", NULL);    
+    
+  } catch(int error) {
+    allegro_message("Couldn't load some of the images");
+    exit(1);    
+  }
     
 }
 

@@ -98,10 +98,11 @@ bool BuildingManager::canBuildSpecialBuilding(Building *b, Point at, unsigned ch
   bool canBuild = true;
   
   for(int x = at.getX(); x < at.getX() + b->getWidth(); x++)
-    for(int y = at.getX(); y < at.getX() + b->getHeight(); y++) {
+    for(int y = at.getY(); y < at.getY() + b->getHeight(); y++) {
     
-      Tile *t = m->getTile(x, y);    
+      Tile *t = m->getTile(x, y);
       if(t->getOwner() != slot || t->isRoad()) {
+        std::cerr << "The tile " << x << ", " << y << " is not owned by player " << slot << " or have a road on it" << std::endl;
         canBuild = false; break;
       }
     
