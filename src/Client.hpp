@@ -18,10 +18,9 @@
 #include "BuildingManager.hpp"
 #include "BuildingFactory.hpp"
 
+#include "Calendar.hpp"
 
 #include "Map.hpp"
-#include "GUIMap.hpp"
-
 #include "GUI.hpp"
 
 const unsigned char SIMULTY_CLIENT_STATE_GAME_NONE  = 0;
@@ -45,6 +44,8 @@ class Client {
 
   public:
 
+    Calendar      cal;
+
     PlayerManager pman;
     player_client_local *player_me;
 
@@ -55,7 +56,7 @@ class Client {
 
   public:
 
-    GUIMap *map;
+    Map *map;
     
     bool state_running;
     
@@ -95,6 +96,6 @@ class Client {
     
 };
 
-extern Client *client;
+//extern Client *client;
 
 #endif

@@ -84,7 +84,7 @@ Server::Server() {
 
     std::cerr << std::endl;
 
-    map = new Map(30, 30);
+    map = new Map(50, 50);
 
     time_advance = false;
     
@@ -116,7 +116,7 @@ END_OF_FUNCTION()
 void Server::update (  ){
 
     // Wait for network updates (max 250 ms, then move on)
-    net.update(250);
+    net.update(50);
 
 
     // New stuff happening: (TODO: move to function)

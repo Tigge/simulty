@@ -14,6 +14,7 @@
 #include "Camera.hpp"
 #include "Mouse.hpp"
 
+#include "MapRender.hpp"
 #include "BuildingRender.hpp"
 
 const unsigned char SIMULTY_CLIENT_TOOL_NONE           = 0;
@@ -27,6 +28,8 @@ const unsigned char SIMULTY_CLIENT_TOOL_ZONE_IND       = 12;
 const unsigned char SIMULTY_CLIENT_TOOL_BUILD_POLICE   = 50;
 const unsigned char SIMULTY_CLIENT_TOOL_BUILD_HOSPITAL = 51;
 const unsigned char SIMULTY_CLIENT_TOOL_BUILD_FIRE     = 52;
+
+class Client;
 
 class GUI {
   private:
@@ -52,6 +55,9 @@ class GUI {
     Mouse mouse;
     Camera camera;
     
+    Client         *client;
+    
+    MapRender      mr;
     BuildingRender br;
     
     Point mouse_down_tile;
@@ -65,7 +71,7 @@ class GUI {
     
     bool pointInArea(Point p, Point a, Point b);
   
-    GUI();
+    GUI(Client *client);
     ~GUI();
     void render( BITMAP * );
     void update();

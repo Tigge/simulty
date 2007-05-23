@@ -34,7 +34,12 @@ void Building::update (  ){
 
 
 int Building::getZ() {
-    return getPosition().getX() + getPosition().getY();
+
+  int base = getPosition().getX() + getPosition().getY();
+  if(getWidth() > getHeight())
+    return base - 1 + getWidth();
+  else 
+    return base - 1 + getHeight();
 }
 int Building::getOwner() {
     return owner;

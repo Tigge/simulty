@@ -1,13 +1,13 @@
-#ifndef _BUILDINGPOLICE_HPP_
-#define _BUILDINGPOLICE_HPP_
+#ifndef _BUILDINGFIRE_HPP_
+#define _BUILDINGFIRE_HPP_
 
 #include "Building.hpp"
 
-class BuildingPolice: public Building {
+class BuildingFire: public Building {
 
     public:
 
-    BuildingPolice(Point position, int owner);
+    BuildingFire(Point position, int owner);
     
     virtual unsigned char getType();
     virtual unsigned char getWidth();

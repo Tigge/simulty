@@ -12,7 +12,7 @@
 #include "Point.hpp"
 #include "Camera.hpp"
 
-#include "GUIMap.hpp"
+#include "MapRender.hpp"
 
 class BuildingRender {
 
@@ -29,7 +29,7 @@ class BuildingRender {
     BuildingRender();    
     
     void renderBuilding(BITMAP *r, Building *b, Point where);
-    void render(BITMAP *r, GUIMap *m, Camera cam, BuildingManager *bm);
+    void render(BITMAP *r, MapRender *m, Camera cam, BuildingManager *bm);
 
 
 };

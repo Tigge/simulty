@@ -94,12 +94,10 @@ GUIMap::~GUIMap()
 
 BITMAP *GUIMap::road_tile(int x, int y)
 {
-
     int n = 1 * (int)getTile(x - 1, y)->isRoad();
     int e = 2 * (int)getTile(x, y + 1)->isRoad();
     int s = 4 * (int)getTile(x + 1, y)->isRoad();
     int w = 8 * (int)getTile(x, y - 1)->isRoad();
-
     return t_roads[n + e + s + w];
 
 }

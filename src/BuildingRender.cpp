@@ -40,16 +40,16 @@ void BuildingRender::renderBuilding(BITMAP *r, Building *b, Point where) {
 }
 
     
-void BuildingRender::render(BITMAP *r, GUIMap *m, Camera cam, BuildingManager *bm) {
+void BuildingRender::render(BITMAP *r, MapRender *mr, Camera cam, BuildingManager *bm) {
 
-    //Render depth by Z depth
-    for(int d = 0; d < (m->getWidth() + m->getHeight()); d++) {
+    //Render depth by Z depth (TODO, render only visible)
+    for(int d = 0; d < (mr->getMap()->getWidth() + mr->getMap()->getHeight()); d++) {
 
         for(int i = 0; i < bm->getSpecialBuildingCount(); i++) {
 
             Building *b = bm->getSpecialBuilding(i);       
             if(b->getZ() == d)
-                renderBuilding(r, b, m->toScreenCoord(b->getPosition(), cam)); 
+                renderBuilding(r, b, mr->toScreenCoord(b->getPosition(), cam)); 
         }  
     }    
 
