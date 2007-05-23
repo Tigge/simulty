@@ -61,11 +61,19 @@ Client::Client()
 {
 
     // Initializing allegro (and some sub elements)
-    allegro_init();
-
-    install_keyboard();
-    install_timer();
-    install_mouse();
+    if(install_allegro(SYSTEM_AUTODETECT, &errno, atexit) != 0) {
+      allegro_message("* Allegro could not be inited:\n  %s", allegro_error);
+      exit(0);
+    } else if(install_timer() != 0) {
+      allegro_message("* Timers could not be inited:\n  %s", allegro_error);
+      exit(0);
+    } else if(install_keyboard() != 0) {
+      allegro_message("* Keyboard could not be inited:\n  %s", allegro_error);
+      exit(0);
+    } else if(install_mouse() == -1) {
+      allegro_message("* Mouse could not be inited:\n  %s", allegro_error);
+      exit(0);
+    }
 
     // Locking variables and functions
     LOCK_VARIABLE(fps);
@@ -79,16 +87,16 @@ Client::Client()
     std::cout << "Allegro inited..." << std::endl;
 
     set_color_depth(16);
-    set_gfx_mode(GFX_AUTODETECT_WINDOWED, 800, 600, 0, 0);
+    if(set_gfx_mode(GFX_AUTODETECT_WINDOWED, 800, 600, 0, 0) != 0) {
+      allegro_message("* Graphics could not be inited:\n  %s", allegro_error);
+      exit(0);
+    }
     set_color_conversion(COLORCONV_TOTAL | COLORCONV_KEEP_TRANS);
 
     // Create double buffer
     buffer = create_bitmap(800, 600);
 
-
-
-    if(!buffer)
-    {
+    if(!buffer) {
         allegro_message("Couldn't load / create some images");
         exit(1);
     }

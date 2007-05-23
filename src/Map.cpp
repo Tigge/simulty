@@ -6,7 +6,7 @@
 Tile *Map::getTile(int x, int y) {
 
   if(x < 0 || y < 0 || x >= getWidth() || y >= getHeight())
-    return NULL;
+    throw y * width + x;
   else
     return &tiles[y * width + x];
 

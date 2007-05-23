@@ -9,6 +9,8 @@ class Camera : public Point {
 
     public:
 
+    Camera();
+
     void step(const unsigned char direction, int steps, int width, int height);
 
 };

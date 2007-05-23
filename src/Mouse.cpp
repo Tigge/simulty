@@ -1,8 +1,9 @@
 #include "Mouse.hpp"
 
+#include <iostream>
+#include "allegro.h"
+Mouse::Mouse() {
 
-Mouse::Mouse()
-{
     position.setX(mouse_x);
     position.setY(mouse_y);
 
@@ -27,8 +28,7 @@ unsigned char Mouse::getLeftButtonState() {
     return leftButton;
 }
 
-void Mouse::update()
-{
+void Mouse::update() {
 
     position.setX(mouse_x);
     position.setY(mouse_y);
@@ -48,6 +48,5 @@ void Mouse::update()
         leftButton = STATE_RELEASE;
         releasePosition = position;
     }
-
 
 }

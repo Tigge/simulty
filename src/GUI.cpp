@@ -76,6 +76,7 @@ void GUI::render ( BITMAP *buffer ){
 
         } if(mouse.getLeftButtonState() == STATE_HOLD) {
 
+/*
             //Point ms = m->val2tile_real();
             Point c1 = mouse_down_tile;
             Point c3 = mouse_up_tile;
@@ -105,10 +106,9 @@ void GUI::render ( BITMAP *buffer ){
 
 
             //rect(buffer, mouse_down_tile_x * TILE_W, , mouse_to_tile_x() * TILE_W, mouse_to_tile_y() * TILE_H / 2, makecol(255, 0, 0));
-
+*/
         }
         //blit(mouse_hint, buffer, 0, 0, (mouse_x / TILE_W) * TILE_W, (mouse_y / TILE_H) * TILE_H, mouse_hint->w, mouse_hint->h);
-
 
         Point realtile = mr.toTileCoord(mouse.getPosition(), camera);
         Point realscrn = mr.toScreenCoord(realtile, camera);

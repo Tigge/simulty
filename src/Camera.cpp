@@ -2,6 +2,10 @@
 #include "shared.h"
 #include "Camera.hpp"
 
+Camera::Camera() : Point(0, 0) {
+
+}
+
 
 void Camera::step(const unsigned char direction, int steps, int width, int height) {
 

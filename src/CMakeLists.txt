@@ -9,6 +9,9 @@ ELSE(WIN32)
   SET(CMAKE_CXX_FLAGS_DEBUG "-g -Wall")
 ENDIF(WIN32)
 
+
+FIND_LIBRARY(ALLEGRO NAMES alld-4.2.1 alleg-4.2.1 alleg-4.2.0 alleg)
+
 INCLUDE_DIRECTORIES(${Simulty_SOURCE_DIR}/src/NL ${Simulty_SOURCE_DIR}/src/error /usr/local/include)
 
 LINK_DIRECTORIES(${Simulty_BINARY_DIR}/src/NL ${Simulty_BINARY_DIR}/src/error /usr/local/lib L/usr/X11R6/lib)
@@ -18,9 +21,9 @@ LINK_DIRECTORIES(${Simulty_BINARY_DIR}/src/NL ${Simulty_BINARY_DIR}/src/error /u
 ADD_EXECUTABLE(../simulty-server Server.cpp Point.cpp Map.cpp PlayerManager.cpp PlayerManagerServer.cpp Player.cpp player_server_network.cpp player_server_ai.cpp Building.cpp BuildingPolice.cpp BuildingManager.cpp BuildingFactory.cpp Tile.cpp)
 
 IF(WIN32)
-  TARGET_LINK_LIBRARIES(../simulty-server NL elog alleg wsock32)
+  TARGET_LINK_LIBRARIES(../simulty-server NL elog ${ALLEGRO} wsock32)
 ELSE(WIN32)
-  TARGET_LINK_LIBRARIES(../simulty-server NL elog alleg-4.2.0)
+  TARGET_LINK_LIBRARIES(../simulty-server NL elog ${ALLEGRO} alleg_unsharable)
 ENDIF(WIN32)
 
 # Client:
@@ -28,9 +31,9 @@ ENDIF(WIN32)
 ADD_EXECUTABLE(../simulty-client Client.cpp Point.cpp Map.cpp MapRender.cpp Tile.cpp PlayerManager.cpp Player.cpp player_client_local.cpp player_client_remote.cpp Building.cpp BuildingPolice.cpp BuildingManager.cpp BuildingFactory.cpp BuildingRender.cpp GUI.cpp Mouse.cpp Camera.cpp)
 
 IF(WIN32)
-  TARGET_LINK_LIBRARIES(../simulty-client NL elog alleg wsock32)
+  TARGET_LINK_LIBRARIES(../simulty-client NL elog ${ALLEGRO} wsock32)
 ELSE(WIN32)
-  TARGET_LINK_LIBRARIES(../simulty-client NL elog alleg-4.2.0)
+  TARGET_LINK_LIBRARIES(../simulty-client NL elog ${ALLEGRO} alld_unsharable)
 ENDIF(WIN32)
 
 

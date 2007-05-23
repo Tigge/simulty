@@ -57,11 +57,11 @@ class GUI {
     
     Client         *client;
     
-    MapRender      mr;
-    BuildingRender br;
+    MapRender       mr;
+    BuildingRender  br;
     
-    Point mouse_down_tile;
-    Point mouse_up_tile;
+    Point           mouse_down_tile;
+    Point           mouse_up_tile;
     
     int tool;    
         
