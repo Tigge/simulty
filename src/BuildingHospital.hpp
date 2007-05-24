@@ -1,9 +1,17 @@
-#ifndef BUILDING_HOSPITAL_H
-#define BUILDING_HOSPITAL_H
+#ifndef _BUILDINGHOSPITAL_HPP_
+#define _BUILDINGHOSPITAL_HPP_
 
-#include "building.h"
+#include "Building.hpp"
 
-class building_hospital: public building {
+class BuildingHospital: public Building {
+
+    public:
+
+    BuildingHospital(Point position, int owner);
+    
+    virtual unsigned char getType();
+    virtual unsigned char getWidth();
+    virtual unsigned char getHeight();    
   // Associations
   // Attributes
   // Operations

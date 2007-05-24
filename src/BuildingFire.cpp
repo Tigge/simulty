@@ -1,4 +1,4 @@
-#include "BuildingPolice.hpp"
+#include "BuildingFire.hpp"
 
 BuildingFire::BuildingFire(Point position, int owner) 
     : Building(position, owner) {

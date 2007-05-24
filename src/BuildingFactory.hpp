@@ -9,7 +9,6 @@
 #include "Map.hpp"
 
 #include "Building.hpp"
-#include "BuildingPolice.hpp"
 
 
 class BuildingFactory {

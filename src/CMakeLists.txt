@@ -18,7 +18,10 @@ LINK_DIRECTORIES(${Simulty_BINARY_DIR}/src/NL ${Simulty_BINARY_DIR}/src/error /u
 
 # Server:
 ###############################################################################
-ADD_EXECUTABLE(../simulty-server Server.cpp Point.cpp Map.cpp PlayerManager.cpp PlayerManagerServer.cpp Player.cpp player_server_network.cpp player_server_ai.cpp Building.cpp BuildingPolice.cpp BuildingManager.cpp BuildingFactory.cpp Tile.cpp)
+ADD_EXECUTABLE(../simulty-server Server.cpp Point.cpp Map.cpp PlayerManager.cpp 
+    PlayerManagerServer.cpp Player.cpp player_server_network.cpp 
+    player_server_ai.cpp Building.cpp BuildingPolice.cpp BuildingFire.cpp
+    BuildingHospital.cpp BuildingManager.cpp BuildingFactory.cpp Tile.cpp)
 
 IF(WIN32)
   TARGET_LINK_LIBRARIES(../simulty-server NL elog ${ALLEGRO} wsock32)
@@ -28,7 +31,11 @@ ENDIF(WIN32)
 
 # Client:
 ###############################################################################
-ADD_EXECUTABLE(../simulty-client Client.cpp Point.cpp Map.cpp MapRender.cpp Tile.cpp PlayerManager.cpp Player.cpp player_client_local.cpp player_client_remote.cpp Building.cpp BuildingPolice.cpp BuildingManager.cpp BuildingFactory.cpp BuildingRender.cpp GUI.cpp Mouse.cpp Camera.cpp)
+ADD_EXECUTABLE(../simulty-client Client.cpp Point.cpp Map.cpp MapRender.cpp 
+    Tile.cpp PlayerManager.cpp Player.cpp player_client_local.cpp 
+    player_client_remote.cpp Building.cpp BuildingPolice.cpp BuildingFire.cpp
+    BuildingHospital.cpp BuildingManager.cpp BuildingFactory.cpp 
+    BuildingRender.cpp GUI.cpp Mouse.cpp Camera.cpp)
 
 IF(WIN32)
   TARGET_LINK_LIBRARIES(../simulty-client NL elog ${ALLEGRO} wsock32)

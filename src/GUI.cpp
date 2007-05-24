@@ -24,9 +24,11 @@ GUI::GUI(Client *client) {
     icon_land       = ImageLoader::getImage("img/menu_icon_land.pcx");
 
     icon_police     = ImageLoader::getImage("img/menu_icon_police.pcx");
+    icon_fire       = ImageLoader::getImage("img/menu_icon_fire.pcx");
+    icon_hospital   = ImageLoader::getImage("img/menu_icon_hospital.pcx");
 
-  } catch(int error) {
-    allegro_message("Couldn't load / create some images");
+  } catch(ImageLoaderException e) {
+    allegro_message("Error: %s", e.what());
     exit(1);
   }
 
@@ -119,12 +121,14 @@ void GUI::render ( BITMAP *buffer ){
         // Render GUI:
         masked_blit(gui_background, buffer, 0, 0, 0, 0, gui_background->w, gui_background->h);
 
-        blit(icon_com,    buffer, 0, 0, SCREEN_W - 37, 5,  32, 32);
-        blit(icon_res,    buffer, 0, 0, SCREEN_W - 74, 5,  32, 32);
-        blit(icon_ind,    buffer, 0, 0, SCREEN_W - 37, 42, 32, 32);
-        blit(icon_road,   buffer, 0, 0, SCREEN_W - 74, 42, 32, 32);
-        blit(icon_land,   buffer, 0, 0, SCREEN_W - 37, 79, 32, 32);
-        blit(icon_police, buffer, 0, 0, SCREEN_W - 74, 79, 32, 32);
+        blit(icon_com,      buffer, 0, 0, SCREEN_W - 37,  5,  32, 32);
+        blit(icon_res,      buffer, 0, 0, SCREEN_W - 74,  5,  32, 32);
+        blit(icon_ind,      buffer, 0, 0, SCREEN_W - 37,  42, 32, 32);
+        blit(icon_road,     buffer, 0, 0, SCREEN_W - 74,  42, 32, 32);
+        blit(icon_land,     buffer, 0, 0, SCREEN_W - 37,  79, 32, 32);
+        blit(icon_police,   buffer, 0, 0, SCREEN_W - 74,  79, 32, 32);
+        blit(icon_fire,     buffer, 0, 0, SCREEN_W - 37, 106, 32, 32);
+        blit(icon_hospital, buffer, 0, 0, SCREEN_W - 74, 106, 32, 32);
 
         textprintf_ex(buffer, font, 20, SCREEN_H - 40, makecol(0, 0, 0), -1, "Money: %i", client->money);
         textprintf_ex(buffer, font, 20, SCREEN_H - 30, makecol(0, 0, 0), -1, "Time: %i %s %i",
@@ -192,19 +196,23 @@ void GUI::update()
                 tool = SIMULTY_CLIENT_TOOL_LAND;
             } else if(Point::inArea(mouse.getPosition(), Point(SCREEN_W - 74, 79), 32, 32)) {
                 tool = SIMULTY_CLIENT_TOOL_BUILD_POLICE;
+            } else if(Point::inArea(mouse.getPosition(), Point(SCREEN_W - 39, 106), 32, 32)) {
+                tool = SIMULTY_CLIENT_TOOL_BUILD_FIRE;
+            } else if(Point::inArea(mouse.getPosition(), Point(SCREEN_W - 74, 106), 32, 32)) {
+                tool = SIMULTY_CLIENT_TOOL_BUILD_HOSPITAL;
             }
 
-            std::cout << "mouse press event" << std::endl;
+            //std::cout << "mouse press event" << std::endl;
 
         } else if(mouse.getLeftButtonState() == STATE_HOLD) {
 
             mouse_up_tile = mr.toTileCoord(mouse.getPosition(), camera);
 
-            std::cout << "mouse hold event" << std::endl;
+            //std::cout << "mouse hold event" << std::endl;
 
         } else if(mouse.getLeftButtonState() == STATE_RELEASE) {
 
-            std::cout << "mouse release event" << std::endl;
+            //std::cout << "mouse release event" << std::endl;
 
             Point::fixOrder(mouse_down_tile, mouse_up_tile);
 

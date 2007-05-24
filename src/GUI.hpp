@@ -48,6 +48,8 @@ class GUI {
     BITMAP *icon_land;
     
     BITMAP *icon_police;
+    BITMAP *icon_fire;
+    BITMAP *icon_hospital;
     
     bool                    console_show;
     std::vector<std::string> console_data;

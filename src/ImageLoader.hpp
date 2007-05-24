@@ -7,6 +7,8 @@
   #include "winalleg.h"
 #endif
 
+#include "ImageLoaderException.hpp"
+
 class ImageLoader {
 
   public:
@@ -16,7 +18,7 @@ class ImageLoader {
     
     // Error:
     if(b == NULL) {
-      throw 0;
+      throw ImageLoaderException(file);
       
     // Success:
     } else {

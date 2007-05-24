@@ -11,9 +11,9 @@ BuildingRender::BuildingRender() {
     buildingFire     = load_bitmap("img/special/fire.pcx",     NULL);
     buildingHospital = load_bitmap("img/special/hospital.pcx", NULL);    
     
-  } catch(int error) {
-    allegro_message("Couldn't load some of the images");
-    exit(1);    
+  } catch(ImageLoaderException e) {
+    allegro_message("Error: %s", e.what());
+    exit(1);
   }
     
 }
@@ -24,8 +24,10 @@ void BuildingRender::renderBuilding(BITMAP *r, Building *b, Point where) {
     
     switch(b->getType()) {
     
-        case Building::TYPE_POLICE: image = buildingPolice; break;
-        default: image = buildingPolice; break;
+        case Building::TYPE_POLICE:   image = buildingPolice;   break;
+        case Building::TYPE_FIRE:     image = buildingFire;     break;
+        case Building::TYPE_HOSPITAL: image = buildingHospital; break;
+        default: throw -1;
     }
   
     

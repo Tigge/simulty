@@ -1,6 +1,9 @@
 
 #include "BuildingFactory.hpp"
 
+#include "BuildingPolice.hpp"
+#include "BuildingFire.hpp"
+#include "BuildingHospital.hpp"
 
 Building *BuildingFactory::getBuilding(int type, Point position, int owner) {
 
@@ -12,17 +15,17 @@ Building *BuildingFactory::getBuilding(int type, Point position, int owner) {
         }
         
         case Building::TYPE_FIRE: {
-        
+            return new BuildingFire(position, owner);
             break;
         } 
         
         case Building::TYPE_HOSPITAL: {
-        
+            return new BuildingHospital(position, owner);
             break;
         }
-    
+
     }
 
-    return NULL; // Throw!
+    throw -1;
 }
 
