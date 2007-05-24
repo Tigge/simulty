@@ -97,13 +97,16 @@ Client::Client()
     buffer = create_bitmap(800, 600);
 
     if(!buffer) {
-        allegro_message("Couldn't load / create some images");
-        exit(1);
+      allegro_message("Couldn't load / create some images");
+      exit(1);
     }
 
     // Add local socket and connect it to server (TODO: move later)
     net_client = net.add();
-    net_client->connect_to("home.tigge.org", 5557);
+    if(!net_client->connect_to("home.tigge.org", 5557)) {
+      allegro_message(" * Could not connect to server");
+      exit(0);
+    }
 
     install_param_int_ex(speedhandler, this, BPS_TO_TIMER(60));
     install_param_int_ex(fpshandler, this, BPS_TO_TIMER(1));
@@ -181,7 +184,7 @@ void Client::update (  )
 
     if(state_menu) {
 
-        if(mouse_b & 1) { state_menu = false; state_game = SIMULTY_CLIENT_STATE_GAME_ON; }
+        if(mouse_b & 1) { state_menu = false; state_game = SIMULTY_CLIENT_STATE_GAME_START; }
 
     } else if(state_game) {
 
@@ -297,6 +300,8 @@ void Client::packet_handle(NLPacket p)
 
             // Set the player to our local player:
             player_me = pl;
+            
+            state_game = SIMULTY_CLIENT_STATE_GAME_ON;
 
             std::cerr << "*** ID is " << id_new << " and slot is " << slot_new << std::endl;
 

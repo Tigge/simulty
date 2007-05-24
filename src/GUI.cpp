@@ -52,7 +52,7 @@ void GUI::render ( BITMAP *buffer ){
         textprintf_ex(buffer, font, SCREEN_W - 200, SCREEN_H - 200, makecol(0, 0, 0), -1, "Quit");
 
 
-    } else if(client->state_game) {
+    } else if(client->state_game == SIMULTY_CLIENT_STATE_GAME_ON) {
 
         // Render map:
         mr.render(buffer, camera);
@@ -136,6 +136,7 @@ void GUI::render ( BITMAP *buffer ){
         //textprintf_ex(buffer, font, 200, SCREEN_H - 50, makecol(0, 0, 0), -1, "Camera: %i, %i", camera.getX(), camera.getY());
         textprintf_ex(buffer, font, 200, SCREEN_H - 30, makecol(0, 0, 0), -1, "Mouse: %i, %i", realtile.getX(), realtile.getY());
 
+
         if(realtile.getX() > 5 && realtile.getY() > 5 && realtile.getX() < 25 && realtile.getY() < 25)
           textprintf_ex(buffer, font, 300, SCREEN_H - 30, makecol(0, 0, 0), -1, "Thrive: %i", client->bman.getThriveValue(client->map, client->player_me->slot_get(), realtile));
 
@@ -172,7 +173,7 @@ void GUI::update()
 
 
 
-    } else if(client->state_game) {
+    } else if(client->state_game == SIMULTY_CLIENT_STATE_GAME_ON) {
 
         // Mouse input:
         if(mouse.getLeftButtonState() == STATE_PRESS) {
