@@ -36,6 +36,8 @@
 
 #include "BuildingFactory.hpp"
 
+#include "LoaderSaver.hpp"
+
 Server *server;
 
 int main(int argc, char *argv[])
@@ -184,6 +186,15 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
         case NPACKET_TYPE_SIMULTY_VERSION_CLIENT: 
         {
             std::cerr << "** Got version info from client" << std::endl;
+            
+            
+            NLPacket pgd(NPACKET_TYPE_SIMULTY_GAMEDATA);
+            std::string data = LoaderSaver::saveGame(map, NULL, NULL);
+            pgd << data;
+            //std::cout << "The data is " << data.length() << " chars long and packet is " << pgd.getSize() << std::endl;
+            //pgd.print();
+            from->socket->packet_put(pgd);
+            
             NLPacket pid(NPACKET_TYPE_SIMULTY_ID); 
             pid << (NLINT32)from->id_get() << (NLINT16)from->slot_get();
 

@@ -10,7 +10,7 @@ NLSocket::NLSocket()
     ip = "";
     port = -1;
              
-    DEBUG(cout << "NLSocket: Constructor" << endl;)
+    DEBUG(std::cout << "NLSocket: Constructor" << std::endl;)
 }
 
 NLSocket::NLSocket(int socketid_new)
@@ -22,7 +22,7 @@ NLSocket::NLSocket(int socketid_new)
     connected = true;
     gotsome   = false;
 
-    DEBUG(cout << "NLSocket: Constructor (from id)" << endl;)
+    DEBUG(std::cout << "NLSocket: Constructor (from id)" << std::endl;)
 }
 
 std::string NLSocket::get_ip()
@@ -37,15 +37,15 @@ int NLSocket::get_port()
 
 NLSocket::~NLSocket()
 {
-    DEBUG(cout << "NLSocket: Destructor" << endl;)
+    DEBUG(std::cout << "NLSocket: Destructor" << std::endl;)
 }
 bool NLSocket::connect_to(std::string addr, int prt)
 {
-    DEBUG(cout << "NLSocket: Connect to " << addr << ":" << prt << endl;)
+    DEBUG(std::cout << "NLSocket: Connect to " << addr << ":" << prt << std::endl;)
     
     addr = NLNetwork::host_to_address(addr);
 
-    DEBUG(cout << "Address after lookup: " << addr << endl;)
+    DEBUG(std::cout << "Address after lookup: " << addr << std::endl;)
 
     struct sockaddr_in theirstuff;   // will hold the destination addr
 
@@ -57,11 +57,11 @@ bool NLSocket::connect_to(std::string addr, int prt)
     // don't forget to error check the connect()
     if(connect(socketid, (struct sockaddr *)&theirstuff, sizeof(struct sockaddr)) == -1)
     {
-        DEBUG(cout << "NLSocket: Connect to, failed to do connect" << endl;)
+        DEBUG(std::cout << "NLSocket: Connect to, failed to do connect" << std::endl;)
         return false;
     }
 
-    DEBUG(cout << "NLSocket: Connect to " << addr << ":" << prt << ", done!" << endl;)
+    DEBUG(std::cout << "NLSocket: Connect to " << addr << ":" << prt << ", done!" << std::endl;)
 
     connected = true;
  
@@ -74,9 +74,9 @@ bool NLSocket::connect_to(std::string addr, int prt)
 
 bool NLSocket::listen_on(int prt)
 {
-    DEBUG(cout << "NLSocket: Listen on, port " << prt << endl;)
+    DEBUG(std::cout << "NLSocket: Listen on, port " << prt << std::endl;)
 
-    DEBUG(cout << "NLSocket: Listen, socket is " << socketid << endl;)
+    DEBUG(std::cout << "NLSocket: Listen, socket is " << socketid << std::endl;)
 
     struct sockaddr_in mystuff;
 
@@ -87,19 +87,19 @@ bool NLSocket::listen_on(int prt)
 
     if(bind(this->socketid, (struct sockaddr *)&mystuff, sizeof(struct sockaddr_in)) == -1)
     {
-        DEBUG(cout << "NLSocket: Listen, bind on socket " << socketid << " failed - " << h_errno << " " << errno << endl;)
+        DEBUG(std::cout << "NLSocket: Listen, bind on socket " << socketid << " failed - " << h_errno << " " << errno << std::endl;)
         return false;
     }
 
-    DEBUG(cout << "NLSocket: Listen on, bind done" << endl;)
+    DEBUG(std::cout << "NLSocket: Listen on, bind done" << std::endl;)
 
     if(listen(socketid, 10) == -1)
     {
-        DEBUG(cout << "NLSocket: Listen, listen on socket " << socketid << " failed" << endl;)
+        DEBUG(std::cout << "NLSocket: Listen, listen on socket " << socketid << " failed" << std::endl;)
         return false;
     }
 
-    DEBUG(cout << "NLSocket: Listen on, listen done" << endl;)
+    DEBUG(std::cout << "NLSocket: Listen on, listen done" << std::endl;)
 
     listening = true;
  
@@ -114,12 +114,13 @@ bool NLSocket::packet_exists()
 {
     if(buffer_in.size() > 4)
     {
-        DEBUG(cout << "NLSocket: packet_exists, checking" << endl;)
+        DEBUG(std::cout << "NLSocket: packet_exists, checking" << std::endl;)
 
         unsigned char h[4]; for(int i = 0; i < 4; i++)h[i] = buffer_in[i];
 
-        //INT16 type   = (int)h[0];
-        NLINT32 length = ntohl( *((NLINT32 *)h) & 0xFF000000 );
+        //INT16 type   = (int)h[0]; 
+        h[0] = 0;
+        NLINT32 length = ntohl( *((NLINT32 *)h) );
         /*
        cout << "NLSocket: packet_exists, header is: ";
         for(int i = 0; i < 4; i++)
@@ -131,7 +132,7 @@ bool NLSocket::packet_exists()
         */
         if(buffer_in.size() >= (unsigned int)length + 4)
         {
-            DEBUG(cout << "NLSocket: packet_exists, got one!" << endl;)
+            DEBUG(std::cout << "NLSocket: packet_exists, got one!" << std::endl;)
             return true;
         }
     }
@@ -140,21 +141,21 @@ bool NLSocket::packet_exists()
 
 NLPacket NLSocket::packet_get()
 {
-    DEBUG(cout << "NLSocket: packet_get, checking" << endl;)
+    DEBUG(std::cout << "NLSocket: packet_get, checking" << std::endl;)
 
     if(packet_exists())
     {
-        DEBUG(cout << "NLSocket: packet_get, got one!" << endl;)
+        DEBUG(std::cout << "NLSocket: packet_get, got one!" << std::endl;)
 
         unsigned char h[4]; for(int i = 0; i < 4; i++)h[i] = buffer_in[i];
 
-        NLINT16 type   = (int)h[0];
-        NLINT32 length = ntohl( *((NLINT32 *)h) & 0xFF000000 );
+        NLINT16 type   = (int)h[0]; h[0] = 0;
+        NLINT32 length = ntohl( *((NLINT32 *)h) );
 
         NLPacket p; p.setType(type);
 
-        DEBUG(cout << " - type is:   " << type << endl;)
-        DEBUG(cout << " - length is: " << length << endl;)
+        DEBUG(std::cout << " - type is:   " << type << std::endl;)
+        DEBUG(std::cout << " - length is: " << length << std::endl;)
 
         // Copy buffer from socket buffer to packet buffer:
         for(int i = 4; i < length + 4; i++)
@@ -163,26 +164,26 @@ NLPacket NLSocket::packet_get()
         }
 
         
-        DEBUG(cout << "Buffer contains: '";)
-        DEBUG(for(int i = 0; i < buffer_in.size(); i++))
-        DEBUG(    cout << buffer_in[i];)
-        DEBUG( cout << "' (" << buffer_in.size() << " chars long)" << endl;)
+        DEBUG(std::cout << "Buffer contains: '";)
+        DEBUG(for(unsigned int i = 0; i < buffer_in.size(); i++))
+        DEBUG(    std::cout << buffer_in[i];)
+        DEBUG( std::cout << "' (" << buffer_in.size() << " chars long)" << std::endl;)
   
         // Erase buffert space occupied by the packet:
         buffer_in.erase(buffer_in.begin(), buffer_in.begin() + length + 4);
 	  
 
         
-        DEBUG(cout << "Package contains: '";)
+        DEBUG(std::cout << "Package contains: '";)
         DEBUG(for(int i = 0; i < p.buffer.size(); i++))
-        DEBUG(    cout << p.buffer[i];)
-        DEBUG(cout << "' (" << p.buffer.size() << " chars long)" << endl;)
+        DEBUG(    std::cout << p.buffer[i];)
+        DEBUG(std::cout << "' (" << p.buffer.size() << " chars long)" << std::endl;)
   
         return p;
    
     }
 
-    DEBUG(cout << "NLSocket: packet_get, no packet exists..." << endl;)
+    DEBUG(std::cout << "NLSocket: packet_get, no packet exists..." << std::endl;)
 
     NLPacket p;
     return p;
@@ -193,7 +194,7 @@ bool NLSocket::packet_put(NLPacket p)
 {
 
 
-    DEBUG(cout << "NLSocket: packet_put, putting package" << endl;)
+    DEBUG(std::cout << "NLSocket: packet_put, putting package" << std::endl;)
     if(connected)
     {
         // Generate header:
@@ -204,10 +205,10 @@ bool NLSocket::packet_put(NLPacket p)
         h[0]            = (unsigned char)p.getType();
 
 
-        DEBUG(cout << "NLSocket: packet_put, header is: ";)
+        DEBUG(std::cout << "NLSocket: packet_put, header is: ";)
         DEBUG(for(int i = 0; i < 4; i++))
-        DEBUG(    cout << (int)h[i] << " ";)
-        DEBUG(cout << endl;)
+        DEBUG(    std::cout << (int)h[i] << " ";)
+        DEBUG(std::cout << std::endl;)
 
         // Put header in outgoing buffer:
         buffer_out.insert(buffer_out.end(), h, h + 4);
@@ -215,13 +216,13 @@ bool NLSocket::packet_put(NLPacket p)
         // Put contents in outgoing buffer:
         buffer_out.insert(buffer_out.end(), p.buffer.begin(), p.buffer.end());
 
-        DEBUG(cout << "NLSocket: packet_put, successfull, header: " << h << ", new buffer is " << buffer_out.size() << " long" << endl;)
+        DEBUG(std::cout << "NLSocket: packet_put, successfull, header: " << h << ", new buffer is " << buffer_out.size() << " long" << std::endl;)
 
         return true;
     }
     else
     {
-        DEBUG(cout << "NLSocket: packet_put, socket was not connected" << endl;)
+        DEBUG(std::cout << "NLSocket: packet_put, socket was not connected" << std::endl;)
         return false;
     }
 }

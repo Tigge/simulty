@@ -27,13 +27,10 @@ void BuildingRender::renderBuilding(BITMAP *r, Building *b, Point where) {
         case Building::TYPE_POLICE:   image = buildingPolice;   break;
         case Building::TYPE_FIRE:     image = buildingFire;     break;
         case Building::TYPE_HOSPITAL: image = buildingHospital; break;
-        default: throw -1;
+        default: throw "BuildingRender: No image loaded for building type";
     }
-  
-    
-   // masked_blit(image, r, 0, 0, where.getX(), where.getY(), image->w, image->h);    
 
-    
+    // Calculate position to place image correctly:
     int y = where.getY() - image->h + b->getHeight() * TILE_H;
     int x = where.getX() - (b->getWidth() - 1)  * TILE_W / 2;
       

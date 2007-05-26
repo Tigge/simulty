@@ -3,6 +3,8 @@
 #include "Client.hpp"
 #include "ImageLoader.hpp"
 
+#include "LoaderSaver.hpp"
+
 GUI::GUI(Client *client) {
 
   this->client = client;  
@@ -251,6 +253,16 @@ void GUI::update()
             if(key[KEY_PLUS_PAD])tool++;
             if(key[KEY_MINUS_PAD])tool--;
 
+
+            if(key[KEY_S]) {
+              std::cout << "Saving..." << std::endl;
+              test = LoaderSaver::saveGame(client->map, NULL, NULL);
+              //std::cout << test << std::endl;
+            }
+            if(key[KEY_L]) {
+              std::cout << "Loading..." << std::endl;
+              LoaderSaver::loadGame(test, client->map, NULL, NULL);
+            }
             clear_keybuf();
         }
 

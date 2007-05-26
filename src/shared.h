@@ -32,6 +32,7 @@ const unsigned char NPACKET_TYPE_SIMULTY_VERSION_CLIENT   = 101;
 const unsigned char NPACKET_TYPE_SIMULTY_VERSION_SERVER   = 102;
 
 const unsigned char NPACKET_TYPE_SIMULTY_ID               = 103;
+const unsigned char NPACKET_TYPE_SIMULTY_GAMEDATA         = 104;
 
 const unsigned char NPACKET_TYPE_SIMULTY_PLAYER_JOINED    = 120;
 const unsigned char NPACKET_TYPE_SIMULTY_PLAYER_LEFT      = 121;

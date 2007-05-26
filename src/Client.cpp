@@ -2,6 +2,7 @@
 #include "shared.h"
 
 #include "Client.hpp"
+#include "LoaderSaver.hpp"
 
 #define err std::cerr
 
@@ -284,8 +285,17 @@ void Client::packet_handle(NLPacket p)
             break;
         }
 
-        case NPACKET_TYPE_SIMULTY_ID:
-        {
+        case NPACKET_TYPE_SIMULTY_GAMEDATA: {
+          std::string data;
+          data = p.getData();
+          //p.print();
+          //std::cout << "The data is " << data.length() << " chars long and packet is " << p.getSize() << std::endl;
+          LoaderSaver::loadGame(p.getData(), map, NULL, NULL);
+          break;
+        }
+
+        case NPACKET_TYPE_SIMULTY_ID: {
+          
             std::cerr << "** Got id message (update)" << std::endl;
 
             // Fetch ID and slot from packet:

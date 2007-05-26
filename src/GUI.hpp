@@ -68,7 +68,9 @@ class GUI {
     int tool;    
         
   public:
-  
+
+    std::string test;
+
     void console_log(std::string s);
     
     bool pointInArea(Point p, Point a, Point b);

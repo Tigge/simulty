@@ -61,6 +61,13 @@ class NLPacket {
         for(unsigned int i = 0; i < buffer.size(); i++) std::cout << (int)buffer[i] << " ";
         std::cout << std::endl;
     }
+    
+    std::string getData() {
+      std::string s;
+      for(unsigned int i = 0; i < buffer.size(); i++)
+        s.push_back(buffer[i]);
+      return s;
+    }
 
 
 };
