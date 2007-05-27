@@ -1,0 +1,19 @@
+TODO
+
+* Quick install
+
+You can always find the latest version of Simulty at http://simulty.sf.net .
+
+ To make the project type:
+
+ cmake .
+ make
+
+ And to run:
+
+ ./simulty-client
+
+* Prerequists
+
+* etc.
+
