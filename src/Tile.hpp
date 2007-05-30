@@ -19,12 +19,12 @@ class Tile {
     virtual char getOwner();
     virtual void setOwner(char owner);
     
-    virtual char getTerrain();    
+    virtual unsigned char getTerrain();    
     
-    virtual char getZone();
+    virtual unsigned char getZone();
     virtual void setZone(unsigned char zone);
     
-    virtual char getHouse();
+    virtual unsigned char getHouse();
     
     virtual bool isRoad();
     virtual void setRoad(bool road);

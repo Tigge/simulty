@@ -27,17 +27,17 @@ void Tile::setOwner(char owner) {
     this->owner = owner;
 }
 
-char Tile::getTerrain() {
+unsigned char Tile::getTerrain() {
     return terrain;
 }
-char Tile::getZone() {
+unsigned char Tile::getZone() {
     return zone;
 }
 void Tile::setZone(unsigned char zone) {
     this->zone = zone;
 }
 
-char Tile::getHouse() {
+unsigned char Tile::getHouse() {
     return house;
 }
     
