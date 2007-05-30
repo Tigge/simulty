@@ -301,7 +301,7 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
 
             for(int x = startx; x <= endx; x++)
                 for(int y = starty; y <= endy; y++)
-                    if(map->getTile(x, y)->getZone() == 0) {
+                    if(bman.canBuild(Point(x, y), from->slot_get(), map)) {
                         cost += SIMULTY_COST_ZONE_IND;
                     }
 

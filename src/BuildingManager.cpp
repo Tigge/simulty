@@ -98,22 +98,27 @@ bool BuildingManager::canBuild(Point at, unsigned char slot, Map *m) {
   Tile *t = m->getTile(x, y);
 
   if(t->getOwner() != slot) {
-    std::cerr << "The tile " << x << ", " << y << " is not owned by player " << slot << std::endl;
+    //std::cerr << "The tile " << x << ", " << y << " is not owned by player " << slot << std::endl;
     return false;
   }
   if(t->isRoad()) {
-    std::cerr << "The tile " << x << ", " << y << " has a road on it" << std::endl;
+    //std::cerr << "The tile " << x << ", " << y << " has a road on it" << std::endl;
     return false;
   }
   if(t->getHouse() != 0) {
-    std::cerr << "The tile " << x << ", " << y << " has a building on it" << std::endl;
+    //std::cerr << "The tile " << x << ", " << y << " has a building on it" << std::endl;
     return false;
   }
+  if(t->getZone() != 0) {
+    //std::cerr << "The tile " << x << ", " << y << " is zoned" << std::endl;
+    return false;
+  }
+
 
   for(unsigned int i = 0; i < special_buildings.size(); i++) {
     if(x >= special_buildings[i]->position.getX() && x < special_buildings[i]->position.getX() + special_buildings[i]->getWidth()
     && y >= special_buildings[i]->position.getY() && y < special_buildings[i]->position.getY() + special_buildings[i]->getHeight()) {
-      std::cerr << "The tile " << x << ", " << y << " has a special building on it" << std::endl;
+      //std::cerr << "The tile " << x << ", " << y << " has a special building on it" << std::endl;
       return false;
     }
   }
@@ -125,16 +130,11 @@ bool BuildingManager::canBuildSpecialBuilding(Building *b, unsigned char slot, M
 
   for(int x = b->getPosition().getX(); x < b->getPosition().getX() + b->getWidth(); x++)
     for(int y = b->getPosition().getY(); y < b->getPosition().getY() + b->getHeight(); y++)
-    {
-
       if(!canBuild(Point(x, y), slot, m))
       {
-        std::cerr << "The tile " << x << ", " << y << " is not buildable" << std::endl;
+        //std::cerr << "Unable to build at " << x << ", " << y << std::endl;
         return false;
-      } else {
-        std::cerr << "The tile " << x << ", " << y << " is buildable" << std::endl;
       }
-    }
 
   return true;
 }
