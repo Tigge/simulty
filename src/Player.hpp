@@ -28,13 +28,13 @@ class Player {
 
   // Operations
   public:
-  
-    virtual int id_get();  
-    virtual int slot_get();
-    virtual int type_get();
 
-    virtual int  money_get();
-    virtual void money_set(int m);
+    virtual int getId();
+    virtual int getSlot();
+    virtual int getType();
+
+    virtual int  getMoney();
+    virtual void setMoney(int m);
 
     virtual void update();
 

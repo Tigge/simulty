@@ -16,18 +16,18 @@
 
 class BuildingRender {
 
-
     private:
-    
+
     BITMAP *buildingPolice;
     BITMAP *buildingFire;
     BITMAP *buildingHospital;
+    BITMAP *buildingResidential;
 
-    
+
     public:
-    
-    BuildingRender();    
-    
+
+    BuildingRender();
+
     void renderBuilding(BITMAP *r, Building *b, Point where);
     void render(BITMAP *r, MapRender *m, Camera cam, BuildingManager *bm);
 

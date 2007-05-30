@@ -17,10 +17,10 @@ void player_server_network::money_set(int money_new)
 
     // Update remote money:
     NLPacket money_update(NPACKET_TYPE_SIMULTY_MONEY_CHANGE);
-    money_update << id_get() << money_new;
+    money_update << getId() << money_new;
     socket->packet_put(money_update);
-    
-    
+
+
 }
 
 void player_server_network::update (  ){

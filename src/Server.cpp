@@ -150,7 +150,7 @@ void Server::update () {
         {
             player_server_network *plr = (player_server_network *)pman.get_by_n(i);
 
-            if(plr->type_get() == PLAYER_TYPE_SERVER_NETWORK)
+            if(plr->getType() == PLAYER_TYPE_SERVER_NETWORK)
             {
                 NLPacket p(NPACKET_TYPE_SIMULTY_TIME_INCR);
                 plr->socket->packet_put(p);
@@ -170,7 +170,7 @@ void Server::update () {
     for(unsigned int i = 0; i < pman.count(); i++)
     {
         // Do only remote players (TODO: Better idea to make ai and remote players work kinda like the same
-        if(pman.get_by_n(i)->type_get() == PLAYER_TYPE_SERVER_NETWORK)
+        if(pman.get_by_n(i)->getType() == PLAYER_TYPE_SERVER_NETWORK)
         {
             player_server_network *pl = (player_server_network *)pman.get_by_n(i);
 
@@ -201,7 +201,7 @@ void Server::update () {
 
 bool Server::packet_handle(player_server_network *from, NLPacket pack)
 {
-
+  std::cerr << "Player has " << from->getMoney() << " money!";
     switch(pack.getType())
     {
         // Version type:
@@ -218,7 +218,7 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
             from->socket->packet_put(pgd);
 
             NLPacket pid(NPACKET_TYPE_SIMULTY_ID);
-            pid << (NLINT32)from->id_get() << (NLINT16)from->slot_get();
+            pid << (NLINT32)from->getId() << (NLINT16)from->getSlot();
 
             from->socket->packet_put(pid);
 
@@ -247,21 +247,21 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
                     }
 
             // If player has enough money, do the change:
-            if(from->money_get() > cost)
+            if(from->getMoney() > cost)
             {
-                from->money_set(from->money_get() - cost);
+                from->money_set(from->getMoney() - cost);
 
                 for(int x = startx; x <= endx && x < map->getWidth(); x++)
                     for(int y = starty; y <= endy && y < map->getHeight(); y++)
                         if(map->getTile(x, y)->getOwner() == -1) {
-                            map->getTile(x, y)->setOwner(from->slot_get());
+                            map->getTile(x, y)->setOwner(from->getSlot());
                         }
 
 
                 // Send change to everyone else:
 
                 NLPacket landp(NPACKET_TYPE_SIMULTY_LAND_BUY);
-                landp << (NLINT16)from->slot_get() << startx << starty << endx << endy;
+                landp << (NLINT16)from->getSlot() << startx << starty << endx << endy;
 
                 packet_send_to_all(landp);
             }
@@ -280,17 +280,17 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
 
           for(int x = fromX; x <= toX && x < map->getWidth(); x++) {
             for(int y = fromY; y <= toY && y < map->getHeight(); y++) {
-              if(bman.canBuild(Point(x, y), from->slot_get(), map)) {
+              if(bman.canBuild(Point(x, y), from->getSlot(), map)) {
                   cost += SIMULTY_COST_ROAD;
               }
             }
           }
-          if(from->money_get() > SIMULTY_COST_ROAD) {
+          if(from->getMoney() > SIMULTY_COST_ROAD) {
 
             for(int x = fromX; x <= toX && x < map->getWidth(); x++) {
               for(int y = fromY; y <= toY && y < map->getHeight(); y++) {
 
-                if(bman.canBuild(Point(x, y), from->slot_get(), map)) {
+                if(bman.canBuild(Point(x, y), from->getSlot(), map)) {
 
                   map->getTile(x, y)->setRoad(true);
 
@@ -307,7 +307,7 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
             from->socket->packet_put(mupd);
             */
 
-            from->money_set(from->money_get() - SIMULTY_COST_ROAD);
+            from->setMoney(from->getMoney() - SIMULTY_COST_ROAD);
 
             //packet_send_to_all(pack);
           }
@@ -323,11 +323,11 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
 
             for(int x = startx; x <= endx; x++)
                 for(int y = starty; y <= endy; y++)
-                    if(bman.canBuild(Point(x, y), from->slot_get(), map)) {
+                    if(bman.canBuild(Point(x, y), from->getSlot(), map)) {
                         cost += SIMULTY_COST_ZONE_IND;
                     }
 
-            if(cost < from->money_get()) {
+            if(cost < from->getMoney()) {
 
                 for(int x = startx; x <= endx; x++)
                     for(int y = starty; y <= endy; y++)
@@ -336,7 +336,7 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
                         }
 
                 NLPacket zonepak(NPACKET_TYPE_SIMULTY_LAND_ZONE);
-                zonepak << (NLINT16)from->slot_get() << type << startx << starty << endx << endy;
+                zonepak << (NLINT16)from->getSlot() << type << startx << starty << endx << endy;
 
                 packet_send_to_all(zonepak);
 
@@ -356,13 +356,13 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
             if( x > 0 && y > 0) {
                 std::cerr << "B: " << Point(x, y) << " - " << buildingType << std::endl;
 
-                Building *b = BuildingFactory::getBuilding(buildingType, Point(x, y), from->slot_get());
+                Building *b = BuildingFactory::getBuilding(buildingType, Point(x, y), from->getSlot());
 
-                if(bman.canBuildSpecialBuilding(b, from->slot_get(), map)) {
+                if(bman.canBuildSpecialBuilding(b, from->getSlot(), map)) {
                   bman.addSpecialBuilding(b);
 
                   NLPacket buildingPack(NPACKET_TYPE_SIMULTY_BUILDING_BUILD);
-                  buildingPack << (NLINT16)from->slot_get() << buildingType << x << y;
+                  buildingPack << (NLINT16)from->getSlot() << buildingType << x << y;
                   packet_send_to_all(buildingPack);
 
                   std::cerr << "Building!" << std::endl;
@@ -390,7 +390,7 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
 
 void Server::packet_send(player_server_network *to, NLPacket pack)
 {
-    if(to->type_get() == PLAYER_TYPE_SERVER_NETWORK)
+    if(to->getType() == PLAYER_TYPE_SERVER_NETWORK)
     {
         to->socket->packet_put(pack);
     }
@@ -404,7 +404,7 @@ void Server::packet_send_to_all(NLPacket pack)
     for(unsigned int i = 0; i < pman.count(); i++)
     {
         player_server_network *to = (player_server_network *)pman.get_by_n(i);
-        if(to->type_get() == PLAYER_TYPE_SERVER_NETWORK)
+        if(to->getType() == PLAYER_TYPE_SERVER_NETWORK)
         {
             to->socket->packet_put(pack);
         }
@@ -492,14 +492,14 @@ bool Server::player_add(unsigned char type)
     }
 
     // Write info
-    std::cerr << "  - Gave player the id " << player_tmp->id_get() << " and assigned to slot " << player_tmp->slot_get() << std::endl << std::endl;
+    std::cerr << "  - Gave player the id " << player_tmp->getId() << " and assigned to slot " << player_tmp->getSlot() << std::endl << std::endl;
 
     // Add player to the list
     pman.add(player_tmp);
 
     std::string nick = "player";
     NLPacket joined(NPACKET_TYPE_SIMULTY_PLAYER_JOINED);
-    joined << player_tmp->id_get() << player_tmp->slot_get() << nick;
+    joined << player_tmp->getId() << player_tmp->getSlot() << nick;
 
     packet_send_to_all(joined);
 
@@ -512,11 +512,11 @@ bool Server::player_add(unsigned char type)
 bool Server::player_remove(Player *pl)
 {
     std::cerr << "* Player left" << std::endl;
-    std::cerr << "  - Had the the id " << pl->id_get() << " and was assigned to slot " << pl->slot_get() << std::endl;
+    std::cerr << "  - Had the the id " << pl->getId() << " and was assigned to slot " << pl->getSlot() << std::endl;
 
 
     NLPacket left(NPACKET_TYPE_SIMULTY_PLAYER_LEFT);
-    left << pl->id_get();
+    left << pl->getId();
 
     packet_send_to_all(left);
 

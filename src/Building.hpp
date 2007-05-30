@@ -15,6 +15,7 @@ class Building {
     static const unsigned char TYPE_POLICE      = 0;
     static const unsigned char TYPE_FIRE        = 1;
     static const unsigned char TYPE_HOSPITAL    = 2;
+    static const unsigned char TYPE_RESIDENTIAL = 3;
 
   public:
     std::string name;

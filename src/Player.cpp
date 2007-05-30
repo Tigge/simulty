@@ -12,7 +12,7 @@ Player::Player(NLINT32 id_new, NLINT16 slot_new)
 /*
 Player::Player() : Player(-1, -1)
 {
-    
+
     type = Player_TYPE_BASE;
     money = 20000;
 }
@@ -23,13 +23,13 @@ Player::~Player()
 
 }
 
-void Player::money_set(int m)
+void Player::setMoney(int m)
 {
     money = m;
 }
 
 
-int  Player::money_get()
+int  Player::getMoney()
 {
     return money;
 }
@@ -42,17 +42,17 @@ void Player::update()
 }
 
 
-int  Player::id_get() 
+int  Player::getId()
 {
     return id;
 }
 
-int  Player::slot_get()
+int  Player::getSlot()
 {
     return slot;
 }
 
-int Player::type_get()
+int Player::getType()
 {
     return type;
 }
