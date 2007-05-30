@@ -9,13 +9,13 @@
 class Building {
   // Associations
   // Attributes
-  
+
   public:
-  
+
     static const unsigned char TYPE_POLICE      = 0;
     static const unsigned char TYPE_FIRE        = 1;
     static const unsigned char TYPE_HOSPITAL    = 2;
-  
+
   public:
     std::string name;
     int owner;
@@ -25,23 +25,23 @@ class Building {
     int expence;
     unsigned char width;
     unsigned char height;
-    
+
     Point position;
   // Operations
   public:
-  
+
     Building(Point position, int owner);
     virtual ~Building();
-    
+
     virtual Point getPosition();
-    
+
     virtual unsigned char getType() = 0;
     virtual unsigned char getWidth();
     virtual unsigned char getHeight();
     virtual int getOwner();
-    
+
     virtual int getZ();
-    
+
     virtual void render();
     virtual void update();
 

@@ -1,9 +1,9 @@
 #ifndef BUILDING_SCHOOL_H
 #define BUILDING_SCHOOL_H
 
-#include "building.h"
+#include "Building.hpp"
 
-class building_school: public building {
+class BuildingSchool: public Building {
   // Associations
   // Attributes
   // Operations

@@ -26,7 +26,7 @@ ADD_EXECUTABLE(../simulty-server Server.cpp Point.cpp Map.cpp PlayerManager.cpp
 IF(WIN32)
   TARGET_LINK_LIBRARIES(../simulty-server NL elog ${ALLEGRO} wsock32)
 ELSE(WIN32)
-  TARGET_LINK_LIBRARIES(../simulty-server NL elog ${ALLEGRO} alleg_unsharable)
+  TARGET_LINK_LIBRARIES(../simulty-server NL elog ${ALLEGRO} )
 ENDIF(WIN32)
 
 # Client:
@@ -40,7 +40,7 @@ ADD_EXECUTABLE(../simulty-client Client.cpp Point.cpp Map.cpp MapRender.cpp
 IF(WIN32)
   TARGET_LINK_LIBRARIES(../simulty-client NL elog ${ALLEGRO} wsock32)
 ELSE(WIN32)
-  TARGET_LINK_LIBRARIES(../simulty-client NL elog ${ALLEGRO} alld_unsharable)
+  TARGET_LINK_LIBRARIES(../simulty-client NL elog ${ALLEGRO} )
 ENDIF(WIN32)
 
 

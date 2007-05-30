@@ -1,9 +1,9 @@
 #ifndef BUILDING_POWERPLANT_H
 #define BUILDING_POWERPLANT_H
 
-#include "building.h"
+#include "Building.hpp"
 
-class building_powerplant: public building {
+class BuildingPowerplant: public Building {
   // Associations
   // Attributes
   // Operations

@@ -1,12 +1,11 @@
 #include "BuildingPolice.hpp"
 
-BuildingPolice::BuildingPolice(Point position, int owner) 
+BuildingPolice::BuildingPolice(Point position, int owner)
     : Building(position, owner) {
 
     width  = 3;
     height = 3;
 }
-
 
 unsigned char BuildingPolice::getType() {
     return Building::TYPE_POLICE;

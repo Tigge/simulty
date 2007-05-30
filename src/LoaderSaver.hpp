@@ -10,7 +10,7 @@ class LoaderSaver {
 
   static NLINT32 readInt32(std::string from, unsigned int pos) {
 
-    
+
     if(from.length() >= pos + 4) {
       unsigned char b[4]; for(int i = 0; i < 4; i++)b[i] = from[pos + i];
       return ntohl( *((NLINT32 *)b) );
@@ -20,10 +20,10 @@ class LoaderSaver {
   }
 
   static std::string writeInt32(std::string to, NLINT32 i) {
-    
+
     std::string toNew(to);
     unsigned char b[4]; *((NLINT32 *)b) = htonl(i);
-    for(int i = 0; i < 4; i++)toNew.push_back((char)b[i]); 
+    for(int i = 0; i < 4; i++)toNew.push_back((char)b[i]);
     return toNew;
   }
 
@@ -31,7 +31,7 @@ class LoaderSaver {
   static std::string readString(std::string from, unsigned int pos) {
 
     std::string s;
-    for(int i = 0; i < from.length() - pos && from[pos + i] != '\0'; i++) {
+    for(unsigned int i = 0; i < from.length() - pos && from[pos + i] != '\0'; i++) {
       s.push_back(from[pos + i]);
     }
     return s;
@@ -68,10 +68,10 @@ class LoaderSaver {
 
 
   static void loadGame(std::string s, Map *m, PlayerManager *pm, BuildingManager *bm) {
-  
+
     //std::cout << "loading from string (length " << s.length() << "): " << s << std::endl;
-    
-    int i = 0; 
+
+    int i = 0;
     int w = readInt32(s, i); i += 4;
     int h = readInt32(s, i); i += 4;
     delete m;

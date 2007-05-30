@@ -104,7 +104,7 @@ Client::Client()
 
     // Add local socket and connect it to server (TODO: move later)
     net_client = net.add();
-    if(!net_client->connect_to("home.tigge.org", 5557)) {
+    if(!net_client->connect_to("localhost", 5557)) {
       allegro_message(" * Could not connect to server");
       exit(0);
     }
@@ -266,8 +266,6 @@ void Client::buy_building(Point where, int type) {
 
 void Client::packet_handle(NLPacket p)
 {
-
-
     switch(p.getType()) {
 
         case NPACKET_TYPE_SIMULTY_WELCOME:
@@ -295,7 +293,7 @@ void Client::packet_handle(NLPacket p)
         }
 
         case NPACKET_TYPE_SIMULTY_ID: {
-          
+
             std::cerr << "** Got id message (update)" << std::endl;
 
             // Fetch ID and slot from packet:
@@ -310,7 +308,7 @@ void Client::packet_handle(NLPacket p)
 
             // Set the player to our local player:
             player_me = pl;
-            
+
             state_game = SIMULTY_CLIENT_STATE_GAME_ON;
 
             std::cerr << "*** ID is " << id_new << " and slot is " << slot_new << std::endl;
