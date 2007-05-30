@@ -86,7 +86,7 @@ Server::Server() {
     map = new Map(50, 50);
 
     time_advance = false;
-    
+
     // Set initial speed:
     setSpeed(1);
 
@@ -201,7 +201,7 @@ void Server::update () {
 
 bool Server::packet_handle(player_server_network *from, NLPacket pack)
 {
-  std::cerr << "Player has " << from->getMoney() << " money!";
+  std::cerr << "Player has " << from->getMoney() << " money!" << std::endl;
     switch(pack.getType())
     {
         // Version type:
@@ -228,8 +228,6 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
         // Buy land:
         case NPACKET_TYPE_SIMULTY_LAND_BUY:
         {
-            std::cerr << "LAND!!" << std::endl;
-
             // Read values from packet:
             NLINT32 startx, starty, endx, endy;
             pack >> startx >> starty >> endx >> endy;
@@ -249,7 +247,7 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
             // If player has enough money, do the change:
             if(from->getMoney() > cost)
             {
-                from->money_set(from->getMoney() - cost);
+                from->setMoney(from->getMoney() - cost);
 
                 for(int x = startx; x <= endx && x < map->getWidth(); x++)
                     for(int y = starty; y <= endy && y < map->getHeight(); y++)
@@ -273,8 +271,6 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
         {
           NLINT32 fromX, fromY, toX, toY; NLPacket roadp = pack;
           roadp >> fromX >> fromY >> toX >> toY;
-
-          std::cerr << "** Got road build command" << std::endl;
 
           int cost = 0;
 
@@ -307,7 +303,7 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
             from->socket->packet_put(mupd);
             */
 
-            from->setMoney(from->getMoney() - SIMULTY_COST_ROAD);
+            from->setMoney(from->getMoney() - cost);
 
             //packet_send_to_all(pack);
           }
@@ -316,38 +312,52 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
 
         case NPACKET_TYPE_SIMULTY_LAND_ZONE:
         {
-            NLINT32 startx, starty, endx, endy; NLINT16 type;
-            pack >> type >> startx >> starty >> endx >> endy;
+          NLINT32 startx, starty, endx, endy; NLINT16 type;
+          pack >> type >> startx >> starty >> endx >> endy;
 
-            int cost = 0;
+          int cost = 0;
+          int cost_per_tile;
+
+          switch(type)
+          {
+            case SIMULTY_ZONE_COM:
+              cost_per_tile = SIMULTY_COST_ZONE_COM;
+              break;
+            case SIMULTY_ZONE_IND:
+              cost_per_tile = SIMULTY_COST_ZONE_IND;
+              break;
+            case SIMULTY_ZONE_RES:
+              cost_per_tile = SIMULTY_COST_ZONE_RES;
+              break;
+            default:
+              cost_per_tile = 0xffff; // Shouldn't end up here, but just in case - make 'em pay!
+              break;
+          }
+
+
+
+          for(int x = startx; x <= endx; x++)
+            for(int y = starty; y <= endy; y++)
+              if(bman.canBuild(Point(x, y), from->getSlot(), map))
+                cost += cost_per_tile;
+
+          if(cost < from->getMoney()) {
 
             for(int x = startx; x <= endx; x++)
-                for(int y = starty; y <= endy; y++)
-                    if(bman.canBuild(Point(x, y), from->getSlot(), map)) {
-                        cost += SIMULTY_COST_ZONE_IND;
-                    }
+              for(int y = starty; y <= endy; y++)
+                if(bman.canBuild(Point(x, y), from->getSlot(), map))
+                  map->getTile(x, y)->setZone(type);
 
-            if(cost < from->getMoney()) {
 
-                for(int x = startx; x <= endx; x++)
-                    for(int y = starty; y <= endy; y++)
-                        if(map->getTile(x, y)->getZone() == 0) {
-                            map->getTile(x, y)->setZone(type);
-                        }
+            NLPacket zonepak(NPACKET_TYPE_SIMULTY_LAND_ZONE);
+            zonepak << (NLINT16)from->getSlot() << type << startx << starty << endx << endy;
 
-                NLPacket zonepak(NPACKET_TYPE_SIMULTY_LAND_ZONE);
-                zonepak << (NLINT16)from->getSlot() << type << startx << starty << endx << endy;
+            packet_send_to_all(zonepak);
 
-                packet_send_to_all(zonepak);
+            from->setMoney(from->getMoney() - cost);
+          }
 
-                std::cerr << "Zone: Built: " << std::endl;
-            }
-            else
-            {
-              std::cerr << "Zone: Didn't build: " << std::endl;
-            }
-
-            break;
+          break;
 
         } case NPACKET_TYPE_SIMULTY_BUILDING_BUILD: {
             NLINT16 buildingType; NLINT32 x, y;

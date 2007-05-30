@@ -10,7 +10,7 @@ player_server_network::~player_server_network()
 
 }
 
-void player_server_network::money_set(int money_new)
+void player_server_network::setMoney(int money_new)
 {
     // Update money locally:
     money = money_new;
