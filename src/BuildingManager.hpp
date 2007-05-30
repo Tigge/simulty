@@ -13,25 +13,26 @@ class BuildingManager {
 
     std::vector<Building *> zone_buildings;
     std::vector<Building *> special_buildings;
-  
+
   public:
-  
+
     // Thrive values:
-    int getThriveValueForCrime(Map *m, char slot, Point where);  
+    int getThriveValueForCrime(Map *m, char slot, Point where);
     int getThriveValueForConnection(Map *m, char slot, Point where);
     int getThriveValueForElectricity(Map *m, char slot, Point where);
     int getThriveValueForTaxes(char slot);
-  
+
     int getThriveValue(Map *m, char slot, Point where);
 
 
     // Buildings:
     void addSpecialBuilding(Building *);
-    
-    Building *getSpecialBuilding(int i);    
+
+    Building *getSpecialBuilding(int i);
     int  getSpecialBuildingCount();
-    
-    bool canBuildSpecialBuilding(Building *b, Point at, unsigned char slot, Map *m);
+
+    bool canBuildSpecialBuilding(Building *b, unsigned char slot, Map *m);
+    bool canBuild(Point at, unsigned char slot, Map *m);
 };
 
 #endif

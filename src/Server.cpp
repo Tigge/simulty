@@ -258,12 +258,8 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
 
           for(int x = fromX; x <= toX && x < map->getWidth(); x++) {
             for(int y = fromY; y <= toY && y < map->getHeight(); y++) {
-
-              if(!map->getTile(x, y)->isRoad()
-                  && map->getTile(x, y)->getOwner() == from->slot_get()) {
-
+              if(bman.canBuild(Point(x, y), from->slot_get(), map)) {
                   cost += SIMULTY_COST_ROAD;
-
               }
             }
           }
@@ -272,8 +268,7 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
             for(int x = fromX; x <= toX && x < map->getWidth(); x++) {
               for(int y = fromY; y <= toY && y < map->getHeight(); y++) {
 
-                if(!map->getTile(x, y)->isRoad()
-                    && map->getTile(x, y)->getOwner() == from->slot_get()) {
+                if(bman.canBuild(Point(x, y), from->slot_get(), map)) {
 
                   map->getTile(x, y)->setRoad(true);
 
@@ -341,7 +336,7 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
 
                 Building *b = BuildingFactory::getBuilding(buildingType, Point(x, y), from->slot_get());
 
-                if(bman.canBuildSpecialBuilding(b, Point(x, y), from->slot_get(), map)) {
+                if(bman.canBuildSpecialBuilding(b, from->slot_get(), map)) {
                   bman.addSpecialBuilding(b);
 
                   NLPacket buildingPack(NPACKET_TYPE_SIMULTY_BUILDING_BUILD);
