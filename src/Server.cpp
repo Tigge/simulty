@@ -40,8 +40,7 @@
 
 Server *server;
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
 
     server = new Server;
 
@@ -66,8 +65,6 @@ Server::Server() {
 
     install_timer();
 
-    install_param_int_ex(Server::time_increment, this, BPS_TO_TIMER(1));
-
     net_server = net.add();
     net_server->listen_on(5557);
 
@@ -89,6 +86,9 @@ Server::Server() {
     map = new Map(50, 50);
 
     time_advance = false;
+    
+    // Set initial speed:
+    setSpeed(1);
 
 
 }
@@ -107,18 +107,40 @@ Server::~Server() {
 
 // Timer called once every second: TODO, make static!
 // =====================================================================
-void Server::time_increment(void *object)
-{
+void Server::time_increment(void *object) {
     ((Server *)object)->time_advance = true;
 }
 END_OF_FUNCTION()
 
+
+void Server::setSpeed(int speed) {
+  if(speed >= 0 && speed <= 3) {
+    this->speed = speed;
+    if(speed > 0) {
+      int msec = 0;
+      switch(speed) {
+        case 1: msec = 1000; break;
+        case 2: msec = 500;  break;
+        case 3: msec = 250;  break;
+      }
+      install_param_int_ex(Server::time_increment, this, MSEC_TO_TIMER(msec));
+    } else {
+      remove_param_int(Server::time_increment, this);
+    }
+  } else {
+    throw "The specified speed is not valid";
+  }
+}
+int  Server::getSpeed() {
+  return this->speed;
+}
+
 // Server update loop, the main loop:
 // =====================================================================
-void Server::update (  ){
+void Server::update () {
 
     // Wait for network updates (max 250 ms, then move on)
-    net.update(50);
+    net.update(100);
 
 
     // New stuff happening: (TODO: move to function)

@@ -50,6 +50,7 @@ class Server {
     BuildingManager bman;
 
     bool time_advance;
+    int  speed;
 
   public:
     NLSocket *net_server; 
@@ -58,6 +59,9 @@ class Server {
 
     Server();
     virtual ~Server();
+
+    void setSpeed(int speed);
+    int  getSpeed();
 
 
     void static time_increment(void *);
