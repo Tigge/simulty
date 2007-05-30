@@ -1,6 +1,7 @@
 #ifndef _SHARED_H_
 #define _SHARED_H_
 
+#include "NL.hpp"
 
 
 //#define err std::cerr
@@ -15,15 +16,18 @@ const unsigned char DIR_RIGHT = 2;
 const unsigned char DIR_DOWN  = 3;
 const unsigned char DIR_LEFT  = 4;
 
-
 // Costs: (for now)
 
-const unsigned char SIMULTY_COST_ROAD = 10;
-const unsigned char SIMULTY_COST_LAND = 10;
+const unsigned NLINT16 SIMULTY_COST_ROAD = 10;
+const unsigned NLINT16 SIMULTY_COST_LAND = 10;
 
-const unsigned char SIMULTY_COST_ZONE_IND = 100;
-const unsigned char SIMULTY_COST_ZONE_COM = 120;
-const unsigned char SIMULTY_COST_ZONE_RES = 80;
+const unsigned NLINT16 SIMULTY_COST_IND = 100;
+const unsigned NLINT16 SIMULTY_COST_COM = 120;
+const unsigned NLINT16 SIMULTY_COST_RES = 80;
+
+const unsigned NLINT16 SIMULTY_COST_POLICE = 3000;
+const unsigned NLINT16 SIMULTY_COST_HOSPITAL = 2600;
+const unsigned NLINT16 SIMULTY_COST_FIRE = 1800;
 
 // Packets:
 

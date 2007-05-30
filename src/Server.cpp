@@ -240,20 +240,16 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
             for(int x = startx; x <= endx && x < map->getWidth(); x++)
                 for(int y = starty; y <= endy && y < map->getHeight(); y++)
                     if(map->getTile(x, y)->getOwner() == -1)
-                    {
                         cost += SIMULTY_COST_LAND;
-                    }
 
             // If player has enough money, do the change:
-            if(from->getMoney() > cost)
-            {
+            if(from->getMoney() > cost) {
                 from->setMoney(from->getMoney() - cost);
 
                 for(int x = startx; x <= endx && x < map->getWidth(); x++)
                     for(int y = starty; y <= endy && y < map->getHeight(); y++)
-                        if(map->getTile(x, y)->getOwner() == -1) {
+                        if(map->getTile(x, y)->getOwner() == -1)
                             map->getTile(x, y)->setOwner(from->getSlot());
-                        }
 
 
                 // Send change to everyone else:
@@ -282,6 +278,7 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
             }
           }
           if(from->getMoney() > SIMULTY_COST_ROAD) {
+            from->setMoney(from->getMoney() - cost);
 
             for(int x = fromX; x <= toX && x < map->getWidth(); x++) {
               for(int y = fromY; y <= toY && y < map->getHeight(); y++) {
@@ -303,7 +300,6 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
             from->socket->packet_put(mupd);
             */
 
-            from->setMoney(from->getMoney() - cost);
 
             //packet_send_to_all(pack);
           }
@@ -321,13 +317,13 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
           switch(type)
           {
             case SIMULTY_ZONE_COM:
-              cost_per_tile = SIMULTY_COST_ZONE_COM;
+              cost_per_tile = SIMULTY_COST_COM;
               break;
             case SIMULTY_ZONE_IND:
-              cost_per_tile = SIMULTY_COST_ZONE_IND;
+              cost_per_tile = SIMULTY_COST_IND;
               break;
             case SIMULTY_ZONE_RES:
-              cost_per_tile = SIMULTY_COST_ZONE_RES;
+              cost_per_tile = SIMULTY_COST_RES;
               break;
             default:
               cost_per_tile = 0xffff; // Shouldn't end up here, but just in case - make 'em pay!
@@ -342,6 +338,7 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
                 cost += cost_per_tile;
 
           if(cost < from->getMoney()) {
+            from->setMoney(from->getMoney() - cost);
 
             for(int x = startx; x <= endx; x++)
               for(int y = starty; y <= endy; y++)
@@ -353,8 +350,6 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
             zonepak << (NLINT16)from->getSlot() << type << startx << starty << endx << endy;
 
             packet_send_to_all(zonepak);
-
-            from->setMoney(from->getMoney() - cost);
           }
 
           break;
@@ -368,7 +363,29 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
 
                 Building *b = BuildingFactory::getBuilding(buildingType, Point(x, y), from->getSlot());
 
-                if(bman.canBuildSpecialBuilding(b, from->getSlot(), map)) {
+                int cost;
+
+                switch(buildingType)
+                {
+                  case Building::TYPE_POLICE:
+                    cost = SIMULTY_COST_POLICE;
+                    break;
+                  case Building::TYPE_HOSPITAL:
+                    cost = SIMULTY_COST_HOSPITAL;
+                    break;
+                  case Building::TYPE_FIRE:
+                    cost = SIMULTY_COST_FIRE;
+                    break;
+                  default:
+                    cost = 0xffff; // Shouldn't end up here, but just in case - make 'em pay! (65k)
+                    break;
+                }
+
+                std::cerr << cost << std::endl;
+
+                if( from->getMoney() >= cost && bman.canBuildSpecialBuilding(b, from->getSlot(), map)) {
+                  from->setMoney(from->getMoney() - cost);
+
                   bman.addSpecialBuilding(b);
 
                   NLPacket buildingPack(NPACKET_TYPE_SIMULTY_BUILDING_BUILD);
