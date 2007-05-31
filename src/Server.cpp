@@ -139,59 +139,77 @@ int  Server::getSpeed() {
 // =====================================================================
 void Server::update () {
 
-    // Wait for network updates (max 250 ms, then move on)
-    net.update(100);
+  // Wait for network updates (max 250 ms, then move on)
+  net.update(100);
 
-
-    // New stuff happening: (TODO: move to function)
-    if(time_advance)
-    {
-        for(unsigned int i = 0; i < pman.count(); i++)
-        {
-            player_server_network *plr = (player_server_network *)pman.get_by_n(i);
-
-            if(plr->getType() == PLAYER_TYPE_SERVER_NETWORK)
-            {
-                NLPacket p(NPACKET_TYPE_SIMULTY_TIME_INCR);
-                plr->socket->packet_put(p);
+/*
+  unsigned int thrive_min_val = 1;
+  std::vector<Tile*> buildable_tiles;
+  // TODO: Give timelimit
+  for(int p = 0; p < pman.count(); p++) {
+    for(int x = 0; x < map->getWidth(); x++) {
+      for(int y = 0; y < map->getHeight(); y++) {
+        if(map->getTile(x, y)->getZone() != 0) {
+          for(int i = 0; i < bman.getSpecialBuildingCount(); i++) {
+            if(x < bman.getSpecialBuilding(i)->getPosition().getX() + bman.getSpecialBuilding(i)->getWidth()
+            && x >= bman.getSpecialBuilding(i)->getPosition().getX()
+            && y < bman.getSpecialBuilding(i)->getPosition().getY() + bman.getSpecialBuilding(i)->getHeight()
+            && y >= bman.getSpecialBuilding(i)->getPosition().getY()) { // then the tile is underneath an already existant building.
+              if(bman.getSpecialBuilding(i)->getType() == Building::TYPE_RESIDENTIAL // || COM || IND
+              && bman.getThriveValue(map, pman.get_by_n(p)->getSlot(), Point(bman.getSpecialBuilding(i)->getPosition().getX(),
+                                                                            bman.getSpecialBuilding(i)->getPosition().getY())) > 1) {//level) {
+                //level++;
+              }
             }
+             else if(bman.getThriveValue(map, pman.get_by_n(p)->getSlot(), Point(x,y)) >= thrive_min_val) {
+              buildable_tiles.push_back(map->getTile(x, y));
+            }
+          }
         }
-        time_advance = false;
+      }
     }
+  }
+  for(int i = 0; i < buildable_tiles.size(); i++) {
+    //check for neighbors, build largest houses possible
+  }*/
 
+  // New stuff happening: (TODO: move to function)
+  if(time_advance) {
+    for(unsigned int i = 0; i < pman.count(); i++) {
+      player_server_network *plr = (player_server_network *)pman.get_by_n(i);
 
-    // New connection:
-    // -----------------------------------------------------------------
-    if(net_server->got_connection())
-    {
-        player_add(PLAYER_TYPE_SERVER_NETWORK);
+      if(plr->getType() == PLAYER_TYPE_SERVER_NETWORK) {
+        NLPacket p(NPACKET_TYPE_SIMULTY_TIME_INCR);
+        plr->socket->packet_put(p);
+      }
     }
+    time_advance = false;
+  }
 
-    for(unsigned int i = 0; i < pman.count(); i++)
-    {
-        // Do only remote players (TODO: Better idea to make ai and remote players work kinda like the same
-        if(pman.get_by_n(i)->getType() == PLAYER_TYPE_SERVER_NETWORK)
-        {
-            player_server_network *pl = (player_server_network *)pman.get_by_n(i);
 
-            // A player have left or got disconnected somehow:
-            if(pl->socket->is_connected() == false)
-            {
-                player_remove(pl);
+  // New connection:
+  // -----------------------------------------------------------------
+  if(net_server->got_connection()) {
+    player_add(PLAYER_TYPE_SERVER_NETWORK);
+  }
 
-            }
+  for(unsigned int i = 0; i < pman.count(); i++) {
+    // Do only remote players (TODO: Better idea to make ai and remote players work kinda like the same
+    if(pman.get_by_n(i)->getType() == PLAYER_TYPE_SERVER_NETWORK) {
+      player_server_network *pl = (player_server_network *)pman.get_by_n(i);
 
-            // We got a packet:
-            if(pl->socket->packet_exists())
-            {
-                //err << "* Server have recieved a package, from client " << pl->socket->get_id() << "... " << endl;
-                packet_handle(pl, pl->socket->packet_get());
-            }
+      // A player have left or got disconnected somehow:
+      if(pl->socket->is_connected() == false) {
+        player_remove(pl);
+      }
 
-        }
-
+      // We got a packet:
+      if(pl->socket->packet_exists()) {
+        //err << "* Server have recieved a package, from client " << pl->socket->get_id() << "... " << endl;
+        packet_handle(pl, pl->socket->packet_get());
+      }
     }
-
+  }
 }
 
 
