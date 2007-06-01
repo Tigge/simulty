@@ -10,7 +10,12 @@ ELSE(WIN32)
 ENDIF(WIN32)
 
 
-FIND_LIBRARY(ALLEGRO NAMES alld-4.2.1 alleg-4.2.1 alleg-4.2.0 alleg)
+# TODO: Fix allegro unshareable problem
+
+FIND_LIBRARY(ALLEGRO NAMES alld-4.2.1 alld-4.2.0 alld)
+FIND_LIBRARY(GUICHAN NAMES guichan)
+FIND_LIBRARY(GUICHANALLEGRO NAMES guichan_allegro)
+FIND_LIBRARY(ALLEGROUNSHARABLE alld_unsharable)
 
 INCLUDE_DIRECTORIES(${Simulty_SOURCE_DIR}/src/NL ${Simulty_SOURCE_DIR}/src/error /usr/local/include)
 
@@ -26,7 +31,7 @@ ADD_EXECUTABLE(../simulty-server Server.cpp Point.cpp Map.cpp PlayerManager.cpp
 IF(WIN32)
   TARGET_LINK_LIBRARIES(../simulty-server NL elog ${ALLEGRO} wsock32)
 ELSE(WIN32)
-  TARGET_LINK_LIBRARIES(../simulty-server NL elog ${ALLEGRO} )
+  TARGET_LINK_LIBRARIES(../simulty-server NL elog ${ALLEGRO} ${ALLEGROUNSHARABLE})
 ENDIF(WIN32)
 
 # Client:
@@ -38,11 +43,11 @@ ADD_EXECUTABLE(../simulty-client Client.cpp Point.cpp Map.cpp MapRender.cpp
     BuildingRender.cpp GUI.cpp Mouse.cpp Camera.cpp)
 
 IF(WIN32)
-  TARGET_LINK_LIBRARIES(../simulty-client NL elog ${ALLEGRO} wsock32)
+  TARGET_LINK_LIBRARIES(../simulty-client NL elog ${ALLEGRO} wsock32 )
 ELSE(WIN32)
-  TARGET_LINK_LIBRARIES(../simulty-client NL elog ${ALLEGRO} )
+  TARGET_LINK_LIBRARIES(../simulty-client NL elog ${ALLEGRO} ${ALLEGROUNSHARABLE})
 ENDIF(WIN32)
 
-
+# ${GUICHAN} ${GUICHANALLEGRO}
 
 

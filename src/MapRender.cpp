@@ -69,15 +69,26 @@ MapRender::~MapRender() {
 
   // TODO: destroy all images
 
+  for(int i = 1; i < 5; i++)
+    destroy_bitmap(t_border[i]);
+  delete [] t_border;
+
+
   for(int i = 0; i < 1; i++)
     destroy_bitmap(t_terrain[i]);
-
   delete [] t_terrain;
 
-  for(int i = 0; i < 3; i++)
+  for(int i = 0; i < 16; i++)
     destroy_bitmap(t_roads[i]);
-
   delete [] t_roads;
+  
+  destroy_bitmap(t_owned);
+    
+  destroy_bitmap(t_zone_res);
+  destroy_bitmap(t_zone_com);
+  destroy_bitmap(t_zone_ind);
+    
+  destroy_bitmap(mouse_hint);
 
 }
 

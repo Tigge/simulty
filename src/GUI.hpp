@@ -3,8 +3,9 @@
 #ifndef _GUI_H_
 #define _GUI_H_
 
+//#include <guichan.hpp>
+//#include <guichan/allegro.hpp>
 #include "allegro.h"
-
 #ifdef WIN32
   #include "winalleg.h"
 #endif
@@ -34,6 +35,23 @@ class Client;
 class GUI {
   private:
 
+    BITMAP *buffer;
+
+    int fps;
+    int speed_counter;
+    int frames;
+
+    // Guichan:
+    /*
+    gcn::AllegroInput       *input;
+    gcn::AllegroGraphics    *graphics;
+    gcn::AllegroImageLoader *imageLoader;
+    
+    gcn::Gui        *gui;
+    gcn::Container  *top;
+    gcn::ImageFont  *guiFont;
+    */
+
     BITMAP *menu_background;
     BITMAP *gui_background;
     
@@ -51,16 +69,16 @@ class GUI {
     BITMAP *icon_fire;
     BITMAP *icon_hospital;
     
-    bool                    console_show;
+    bool                     console_show;
     std::vector<std::string> console_data;
         
-    Mouse mouse;
+    Mouse  mouse;
     Camera camera;
     
     Client         *client;
     
-    MapRender       mr;
-    BuildingRender  br;
+    MapRender       *mr;
+    BuildingRender  *br;
     
     Point           mouse_down_tile;
     Point           mouse_up_tile;
@@ -75,10 +93,16 @@ class GUI {
     
     bool pointInArea(Point p, Point a, Point b);
   
-    GUI(Client *client);
+    GUI();
     ~GUI();
-    void render( BITMAP * );
+    void render();
     void update();
+
+    bool needUpdate();
+    bool running();
+
+    static void handleSpeed(void *);
+    static void handleFPS(void *);
 };
 
 #endif

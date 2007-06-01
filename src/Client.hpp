@@ -2,13 +2,6 @@
 #ifndef _CLIENT_HPP_
 #define _CLIENT_HPP_
 
-
-#include "allegro.h"
-
-#ifdef WIN32
-  #include "winalleg.h"
-#endif
-
 #include "PlayerManager.hpp"
 
 #include "Player.hpp"
@@ -39,7 +32,7 @@ class Client {
 
   private:
 
-    BITMAP *buffer;    
+
     NLNetwork net;
 
   public:
@@ -51,8 +44,8 @@ class Client {
 
     BuildingManager bman;
 
-    bool cam_move_step(int dir, int step);
-    bool cam_move_jump(int x, int y);
+    //bool cam_move_step(int dir, int step);
+    //bool cam_move_jump(int x, int y);
 
   public:
 
@@ -63,29 +56,22 @@ class Client {
     unsigned char state_menu;
     unsigned char state_game;
 
-    int fps;
-    int speed_counter;
-    int frames;
-
     int time;
-    int money;
+    //int money;
 
-    Point cam;
+    //Point cam;
+    GUI *gui;
 
     NLSocket *net_client;
-    GUI *gui;
 
   // Operations
   public:
-    Client (  );
-    ~Client (  );
+    Client(GUI *);
+    ~Client();
 
     bool running();
 
-    bool needupdate();
-
-    void render (  );
-    void update (  );
+    void update();
 
     void packet_handle(NLPacket p);
     
@@ -96,6 +82,5 @@ class Client {
     
 };
 
-//extern Client *client;
 
 #endif

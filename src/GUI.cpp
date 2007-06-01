@@ -5,10 +5,105 @@
 
 #include "LoaderSaver.hpp"
 
-GUI::GUI(Client *client) {
+int main(int argc, char *argv[]) {
 
-  this->client = client;  
-  mr.setMap(client->map);
+    std::cerr << "Starting..." << std::endl;
+    GUI *gui = new GUI();
+    std::cerr << "New game client" << std::endl;
+
+    while(gui->running()) {
+    
+        //cerr << ".";
+        while(gui->needUpdate())
+        {
+            gui->update();
+        }
+
+        gui->render();
+        rest(0);
+    }
+
+    std::cerr << "Deleting game client..." << std::endl;
+    delete gui;
+
+    std::cerr << "Ending..." << std::endl;
+
+    return 0;
+} END_OF_MAIN()
+
+
+
+// TODO - static functions instead? yes, do static
+void GUI::handleSpeed(void *data) {
+    ((GUI *)data)->speed_counter++;
+} END_OF_FUNCTION(GUI::speedhandler)
+
+void GUI::handleFPS(void *data) {
+    ((GUI *)data)->fps    = ((GUI *)data)->frames;
+    ((GUI *)data)->frames = 0;
+} END_OF_FUNCTION(fpshandler)
+
+
+GUI::GUI() {
+
+  // Initializing allegro (and some sub elements)
+  if(install_allegro(SYSTEM_AUTODETECT, &errno, atexit) != 0) {
+    allegro_message("* Allegro could not be inited:\n  %s", allegro_error);
+    exit(0);
+  }
+
+  set_color_depth(16);
+  if(set_gfx_mode(GFX_AUTODETECT_WINDOWED, 800, 600, 0, 0) != 0) {
+    allegro_message("* Graphics could not be inited:\n  %s", allegro_error);
+    exit(0);
+  }
+  set_color_conversion(COLORCONV_TOTAL | COLORCONV_KEEP_TRANS);
+
+  // No mouse, bitte!
+  show_mouse(NULL); 
+
+  if(install_timer() != 0) {
+    allegro_message("* Timers could not be inited:\n  %s", allegro_error);
+    exit(0);
+  } else if(install_keyboard() != 0) {
+    allegro_message("* Keyboard could not be inited:\n  %s", allegro_error);
+    exit(0);
+  } else if(install_mouse() == -1) {
+    allegro_message("* Mouse could not be inited:\n  %s", allegro_error);
+    exit(0);
+  }
+
+  install_param_int_ex(GUI::handleSpeed, this, BPS_TO_TIMER(60));
+  install_param_int_ex(GUI::handleFPS,   this, BPS_TO_TIMER(1));
+
+  fps =  speed_counter =  frames = 0;
+
+  // Locking variables and functions
+  LOCK_VARIABLE(fps);
+  LOCK_VARIABLE(speed_counter);
+  LOCK_VARIABLE(frames);
+
+  LOCK_FUNCTION(speedhandler);
+  LOCK_FUNCTION(fpshandler);
+
+  // Setting color depth
+  std::cout << "Allegro inited..." << std::endl;
+  
+  // Create new client to work on
+  client = new Client(this);
+
+  // Create double buffer
+  buffer = create_bitmap(SCREEN_W, SCREEN_H);
+
+  if(!buffer) {
+    allegro_message("Couldn't load / create some images");
+    exit(1);
+  }
+  
+  mr = new MapRender();
+  mr->setMap(client->map);
+  
+  br = new BuildingRender();
 
   try {
 
@@ -34,6 +129,19 @@ GUI::GUI(Client *client) {
     exit(1);
   }
 
+  // Set up guichan:
+  
+  /*
+	imageLoader = new gcn::AllegroImageLoader();
+	gcn::Image::setImageLoader(imageLoader);
+
+	graphics = new gcn::AllegroGraphics();
+	graphics->setTarget(buffer);
+
+	input = new gcn::AllegroInput();
+  */
+
+
   console_show = false;
 
   tool = 0;
@@ -41,9 +149,37 @@ GUI::GUI(Client *client) {
 
 GUI::~GUI (  ){
 
+  delete client;
+
+  delete mr;
+  delete br;
+
+  destroy_bitmap(menu_background);
+  destroy_bitmap(gui_background);
+
+  destroy_bitmap(mouse_pointer);
+  destroy_bitmap(mouse_block);
+
+  destroy_bitmap(icon_ind);
+  destroy_bitmap(icon_res);
+  destroy_bitmap(icon_com);
+
+  destroy_bitmap(icon_road);
+  destroy_bitmap(icon_land);
+
+  destroy_bitmap(icon_police);
+  destroy_bitmap(icon_fire);
+  destroy_bitmap(icon_hospital);
+
+  destroy_bitmap(buffer);
+
+
 }
 
-void GUI::render ( BITMAP *buffer ){
+void GUI::render() {
+
+  // Clear the double buffer:
+  clear_bitmap(buffer);
 
     if(client->state_menu) {
 
@@ -59,10 +195,10 @@ void GUI::render ( BITMAP *buffer ){
     } else if(client->state_game == SIMULTY_CLIENT_STATE_GAME_ON) {
 
         // Render map:
-        mr.render(buffer, camera);
+        mr->render(buffer, camera);
 
         // Render buildings:
-        br.render(buffer, &mr, camera, &client->bman);
+        br->render(buffer, mr, camera, &client->bman);
 
         /*
         Point pos = client->map->val2tile(Point(mouse_x + client->cam.getX(), mouse_y + client->cam.getY()));
@@ -114,8 +250,8 @@ void GUI::render ( BITMAP *buffer ){
         }
         //blit(mouse_hint, buffer, 0, 0, (mouse_x / TILE_W) * TILE_W, (mouse_y / TILE_H) * TILE_H, mouse_hint->w, mouse_hint->h);
 
-        Point realtile = mr.toTileCoord(mouse.getPosition(), camera);
-        Point realscrn = mr.toScreenCoord(realtile, camera);
+        Point realtile = mr->toTileCoord(mouse.getPosition(), camera);
+        Point realscrn = mr->toScreenCoord(realtile, camera);
 
         // Redner mouse block
         masked_blit(mouse_block, buffer, 0, 0, realscrn.getX(), realscrn.getY(), mouse_block->w, mouse_block->h);
@@ -132,19 +268,19 @@ void GUI::render ( BITMAP *buffer ){
         blit(icon_fire,     buffer, 0, 0, SCREEN_W - 37, 106, 32, 32);
         blit(icon_hospital, buffer, 0, 0, SCREEN_W - 74, 106, 32, 32);
 
-        textprintf_ex(buffer, font, 20, SCREEN_H - 40, makecol(0, 0, 0), -1, "Money: %i", client->money);
+        //textprintf_ex(buffer, font, 20, SCREEN_H - 40, makecol(0, 0, 0), -1, "Money: %i", client->money);
         textprintf_ex(buffer, font, 20, SCREEN_H - 30, makecol(0, 0, 0), -1, "Time: %i %s %i",
             client->cal.getYear(), client->cal.getMonthAsString().c_str(), client->cal.getDay());
         textprintf_ex(buffer, font, 20, SCREEN_H - 20, makecol(0, 0, 0), -1, "Tool: %i", tool);
 
-        textprintf_ex(buffer, font, 200, SCREEN_H - 20, makecol(0, 0, 0), -1, "FPS: %i", client->fps);
+        textprintf_ex(buffer, font, 200, SCREEN_H - 20, makecol(0, 0, 0), -1, "FPS: %i", fps);
 
         //textprintf_ex(buffer, font, 200, SCREEN_H - 50, makecol(0, 0, 0), -1, "Camera: %i, %i", camera.getX(), camera.getY());
         textprintf_ex(buffer, font, 200, SCREEN_H - 30, makecol(0, 0, 0), -1, "Mouse: %i, %i", realtile.getX(), realtile.getY());
 
 
         if(realtile.getX() > 5 && realtile.getY() > 5 && realtile.getX() < 25 && realtile.getY() < 25)
-          textprintf_ex(buffer, font, 300, SCREEN_H - 30, makecol(0, 0, 0), -1, "Thrive: %i", client->bman.getThriveValue(client->map, client->player_me->slot_get(), realtile));
+          textprintf_ex(buffer, font, 300, SCREEN_H - 30, makecol(0, 0, 0), -1, "Thrive: %i", client->bman.getThriveValue(client->map, client->player_me->getSlot(), realtile));
 
 
         textprintf_ex(buffer, font, 600, SCREEN_H - 30, makecol(0, 0, 0), -1, "MD: %i, %i MU: %i, %i", mouse_down_tile.getX(), mouse_down_tile.getY(), mouse_up_tile.getX(), mouse_up_tile.getY());
@@ -164,8 +300,14 @@ void GUI::render ( BITMAP *buffer ){
 
     }
 
-    // Draw mouse pointer:
-    masked_blit(mouse_pointer, buffer, 0, 0, mouse.getPosition().getX(), mouse.getPosition().getY(), 32, 32);
+  // Draw mouse pointer:
+  masked_blit(mouse_pointer, buffer, 0, 0, mouse.getPosition().getX(), mouse.getPosition().getY(), 32, 32);
+
+  // Render buffer to screen:
+  blit(buffer, screen, 0, 0, 0, 0, SCREEN_W, SCREEN_H);
+
+  // Increase number of frames:
+  frames++;
 
 }
 
@@ -173,18 +315,20 @@ void GUI::render ( BITMAP *buffer ){
 void GUI::update()
 {
 
+  client->update();
+
     mouse.update();
 
     if(client->state_menu) {
-
-
-
+      if(mouse.getLeftButtonState() == STATE_PRESS) {
+        client->state_menu = false; client->state_game = SIMULTY_CLIENT_STATE_GAME_START; 
+      }
     } else if(client->state_game == SIMULTY_CLIENT_STATE_GAME_ON) {
 
         // Mouse input:
         if(mouse.getLeftButtonState() == STATE_PRESS) {
 
-            mouse_down_tile = mr.toTileCoord(mouse.getPressPosition(), camera);
+            mouse_down_tile = mr->toTileCoord(mouse.getPressPosition(), camera);
 
             if(Point::inArea(mouse.getPosition(), Point(SCREEN_W - 37, 5), 32, 32)) {
                 tool = SIMULTY_CLIENT_TOOL_ZONE_COM;
@@ -208,7 +352,7 @@ void GUI::update()
 
         } else if(mouse.getLeftButtonState() == STATE_HOLD) {
 
-            mouse_up_tile = mr.toTileCoord(mouse.getPosition(), camera);
+            mouse_up_tile = mr->toTileCoord(mouse.getPosition(), camera);
 
             //std::cout << "mouse hold event" << std::endl;
 
@@ -268,15 +412,20 @@ void GUI::update()
 
     }
 
-
+  speed_counter--;
 
 }
 
 
-void GUI::console_log(std::string s)
-{
+void GUI::console_log(std::string s) {
     console_data.push_back(s);
 }
 
+bool GUI::needUpdate() {
+    return speed_counter > 0;
+}
 
+bool GUI::running() {
+  return client->state_running;
+}
 

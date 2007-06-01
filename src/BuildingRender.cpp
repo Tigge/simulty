@@ -7,16 +7,23 @@ BuildingRender::BuildingRender() {
 
   try {
 
-    buildingPolice   = load_bitmap("img/special/police.pcx",   NULL);
-    buildingFire     = load_bitmap("img/special/fire.pcx",     NULL);
-    buildingHospital = load_bitmap("img/special/hospital.pcx", NULL);
-    buildingResidential = load_bitmap("img/special/res.pcx", NULL);
+    buildingPolice      = load_bitmap("img/special/police.pcx",   NULL);
+    buildingFire        = load_bitmap("img/special/fire.pcx",     NULL);
+    buildingHospital    = load_bitmap("img/special/hospital.pcx", NULL);
+    buildingResidential = load_bitmap("img/special/res.pcx",      NULL);
 
   } catch(ImageLoaderException e) {
     allegro_message("Error: %s", e.what());
     exit(1);
   }
 
+}
+
+BuildingRender::~BuildingRender() {
+  destroy_bitmap(buildingPolice);
+  destroy_bitmap(buildingFire);
+  destroy_bitmap(buildingHospital);
+  destroy_bitmap(buildingResidential);
 }
 
 void BuildingRender::renderBuilding(BITMAP *r, Building *b, Point where) {

@@ -6,124 +6,27 @@
 
 #define err std::cerr
 
-//Client *client;
 
 
-int main(int argc, char *argv[])
-{
-    std::cerr << "Starting..." << std::endl;
-    Client *client = new Client;
-    std::cerr << "New game client" << std::endl;
+Client::Client(GUI *gui) {
 
-    while(client->running())
-    {
-        //cerr << ".";
-        while(client->needupdate())
-        {
-            client->update();
-        }
-
-        client->render();
-        rest(0);
-    }
-
-    std::cerr << "Deleting game client..." << std::endl;
-    delete client;
-
-    std::cerr << "Ending..." << std::endl;
-
-    return 0;
-}
-END_OF_MAIN()
-
-
-
-// TODO - static functions instead?
-void speedhandler(void *data)
-{
-    ((Client *)data)->speed_counter++;
-}
-END_OF_FUNCTION()
-
-void fpshandler(void *data)
-{
-    ((Client *)data)->fps = ((Client *)data)->frames;
-    ((Client *)data)->frames = 0;
-}
-END_OF_FUNCTION()
-
-void mousehandler(int flags)
-{
-
-}
-
-
-Client::Client()
-{
-
-    // Initializing allegro (and some sub elements)
-    if(install_allegro(SYSTEM_AUTODETECT, &errno, atexit) != 0) {
-      allegro_message("* Allegro could not be inited:\n  %s", allegro_error);
-      exit(0);
-    } else if(install_timer() != 0) {
-      allegro_message("* Timers could not be inited:\n  %s", allegro_error);
-      exit(0);
-    } else if(install_keyboard() != 0) {
-      allegro_message("* Keyboard could not be inited:\n  %s", allegro_error);
-      exit(0);
-    } else if(install_mouse() == -1) {
-      allegro_message("* Mouse could not be inited:\n  %s", allegro_error);
-      exit(0);
-    }
-
-    // Locking variables and functions
-    LOCK_VARIABLE(fps);
-    LOCK_VARIABLE(speed_counter);
-    LOCK_VARIABLE(frames);
-
-    LOCK_FUNCTION(speedhandler);
-    LOCK_FUNCTION(fpshandler);
-
-    // Setting color depth
-    std::cout << "Allegro inited..." << std::endl;
-
-    set_color_depth(16);
-    if(set_gfx_mode(GFX_AUTODETECT_WINDOWED, 800, 600, 0, 0) != 0) {
-      allegro_message("* Graphics could not be inited:\n  %s", allegro_error);
-      exit(0);
-    }
-    set_color_conversion(COLORCONV_TOTAL | COLORCONV_KEEP_TRANS);
-
-    // Create double buffer
-    buffer = create_bitmap(800, 600);
-
-    if(!buffer) {
-      allegro_message("Couldn't load / create some images");
-      exit(1);
-    }
+    // Client is using this GUI:
+    this->gui = gui;
 
     // Add local socket and connect it to server (TODO: move later)
     net_client = net.add();
     if(!net_client->connect_to("localhost", 5557)) {
-      allegro_message(" * Could not connect to server");
+      //allegro_message(" * Could not connect to server");
       exit(0);
     }
-
-    install_param_int_ex(speedhandler, this, BPS_TO_TIMER(60));
-    install_param_int_ex(fpshandler, this, BPS_TO_TIMER(1));
-
-    fps =  speed_counter =  frames = 0;
-
+    
     state_running = true;
     state_menu  = true;
     state_game = false;
 
     map = new Map(50, 50);
-    gui = new GUI(this);
 
     time = 0;
-
-
 
     // Set max players and set up all slots:
 
@@ -134,70 +37,29 @@ Client::Client()
 Client::~Client (){
 
   delete map;
-  delete gui;
 
 }
 
-bool Client::needupdate()
-{
-    return speed_counter > 0;
-}
 
-bool Client::running()
-{
-    return state_running;
-}
 
-void Client::render ()
-{
-    // Clear the double buffer:
-    clear_bitmap(buffer);
 
-    if(state_game) {
 
-        if(state_game == SIMULTY_CLIENT_STATE_GAME_ON) {
+void Client::update() {
 
-            //m->render(buffer, cam);
+  if(state_menu) {
 
-        }
+
+
+  } else if(state_game) {
+
+    net.update(0);
+
+    if(net_client->packet_exists()) {
+      //err << "* Client have recieved a package... " << endl;
+      packet_handle(net_client->packet_get());
+
     }
-
-    // Render gui:
-    gui->render(buffer);
-
-    // Render buffer to screen:
-    blit(buffer, screen, 0, 0, 0, 0, 800, 600);
-
-    // Increase number of frames:
-    frames++;
-}
-
-
-
-void Client::update (  )
-{
-
-    speed_counter--;
-
-    // Update gui
-    gui->update();
-
-
-    if(state_menu) {
-
-        if(mouse_b & 1) { state_menu = false; state_game = SIMULTY_CLIENT_STATE_GAME_START; }
-
-    } else if(state_game) {
-
-        net.update(0);
-
-        if(net_client->packet_exists())
-        {
-            //err << "* Client have recieved a package... " << endl;
-            packet_handle(net_client->packet_get());
-
-        }
-     }
+  }
 }
 
 
