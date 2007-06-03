@@ -63,7 +63,7 @@ AllegroGUI::AllegroGUI() {
   }
 
   set_color_depth(16);
-  if(set_gfx_mode(GFX_AUTODETECT_WINDOWED, 800, 600, 0, 0) != 0) {
+  if(set_gfx_mode(GFX_AUTODETECT_WINDOWED, 1024, 768, 0, 0) != 0) {
     allegro_message("* Graphics could not be inited:\n  %s", allegro_error);
     exit(0);
   }
@@ -310,7 +310,8 @@ void AllegroGUI::render() {
 
   if(client->state_menu) {
 
-    blit(menu_background, buffer, 0, 0, 0, 0, 800, 600);
+    blit(menu_background, buffer, 0, 0, SCREEN_W - menu_background->w, 
+        SCREEN_H - menu_background->h, menu_background->w, menu_background->h);
 
     textprintf_ex(buffer, font, SCREEN_W - 200, SCREEN_H - 300, makecol(0, 0, 0), -1, "New local game");
     textprintf_ex(buffer, font, SCREEN_W - 200, SCREEN_H - 280, makecol(0, 0, 0), -1, "New network game");
@@ -361,7 +362,8 @@ void AllegroGUI::render() {
     masked_blit(mouse_block, buffer, 0, 0, realscrn.getX(), realscrn.getY(), mouse_block->w, mouse_block->h);
 
     // Render GUI:
-    masked_blit(gui_background, buffer, 0, 0, 0, 0, gui_background->w, gui_background->h);
+    masked_blit(gui_background, buffer, 0, 0, SCREEN_W - gui_background->w, 
+        SCREEN_H - gui_background->h, gui_background->w, gui_background->h);
 
     //textprintf_ex(buffer, font, 20, SCREEN_H - 40, makecol(0, 0, 0), -1, "Money: %i", client->money);
     textprintf_ex(buffer, font, 20, SCREEN_H - 30, makecol(0, 0, 0), -1, "Time: %i %s %i",
@@ -444,7 +446,7 @@ void AllegroGUI::update()
 
             Point::fixOrder(mouse_down_tile, mouse_up_tile);
 
-            if(mouse.getPosition().getX() < 720) {
+            if(mouse.getPosition().getX() < SCREEN_W - 80) {
 
               if(tool == SIMULTY_CLIENT_TOOL_LAND) {
                   client->buy_land(mouse_down_tile, mouse_up_tile);

@@ -28,6 +28,29 @@ BuildingRender::~BuildingRender() {
 
 void BuildingRender::renderBuilding(BITMAP *r, Building *b, Point where) {
 
+  if(b->getType() == Building::TYPE_RESIDENTIAL
+      || b->getType() == Building::TYPE_COMMERSIAL
+      || b->getType() == Building::TYPE_INDUSTRIAL) {
+    
+    int color = makecol(255, 255, 255);
+    
+    switch(b->getType()) {
+      case Building::TYPE_RESIDENTIAL: color = makecol(100, 255, 100); break;
+      case Building::TYPE_COMMERSIAL:  color = makecol(100, 100, 255); break;
+      case Building::TYPE_INDUSTRIAL:  color = makecol(255, 100, 100); break;
+    }
+    
+    int x = b->getPosition().getX();
+    int y = b->getPosition().getY();
+    
+    int points[8] = { x + TILE_W / 2 + 2, y + 2, 
+                      x + (TILE_W / 2) * (b->getWidth() + 1) - 2, y + (TILE_W / 2) * b->getHeight(),
+                      x + TILE_W / 2 - 2, y * TILE_H * b->getHeight() - 2,
+                      x + (TILE_W / 2) * (b->getWidth() - 1) + 2, y + (TILE_W / 2) * b->getHeight() };
+    polygon(r, 4, points, color);
+
+  } else {
+
     BITMAP *image = NULL;
 
     switch(b->getType()) {
@@ -44,7 +67,7 @@ void BuildingRender::renderBuilding(BITMAP *r, Building *b, Point where) {
     int x = where.getX() - (b->getWidth() - 1)  * TILE_W / 2;
 
     masked_blit(image, r, 0, 0, x, y, image->w, image->h);
-
+  }
 }
 
 
