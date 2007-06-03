@@ -1,4 +1,4 @@
-#include "GUI.hpp"
+#include "AllegroGUI.hpp"
 
 #include "../../Client.hpp"
 #include "ImageLoader.hpp"

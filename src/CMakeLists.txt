@@ -42,7 +42,7 @@ ADD_EXECUTABLE(../simulty-client Client.cpp Point.cpp Map.cpp
     BuildingHospital.cpp BuildingManager.cpp BuildingFactory.cpp 
     
     guis/allegro/MapRender.cpp guis/allegro/BuildingRender.cpp 
-    guis/allegro/GUI.cpp guis/allegro/Mouse.cpp guis/allegro/Camera.cpp)
+    guis/allegro/AllegroGUI.cpp guis/allegro/Mouse.cpp guis/allegro/Camera.cpp)
 
 IF(WIN32)
   TARGET_LINK_LIBRARIES(../simulty-client NL elog ${ALLEGRO} wsock32 )
