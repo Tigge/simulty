@@ -50,9 +50,9 @@ class Client {
   public:
 
     Map *map;
-    
+
     bool state_running;
-    
+
     unsigned char state_menu;
     unsigned char state_game;
 
@@ -74,12 +74,12 @@ class Client {
     void update();
 
     void packet_handle(NLPacket p);
-    
+
     void buy_land(Point from, Point to);
     void buy_road(Point from, Point to);
     void buy_zone(Point from, Point to, int type);
     void buy_building(Point where, int type);
-    
+
 };
 
 

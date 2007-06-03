@@ -2,6 +2,15 @@
 #include "Client.hpp"
 
 
+BuildingManager::~BuildingManager() {
+
+  for(unsigned int i = 0; i < special_buildings.size(); i++)
+    delete special_buildings[i];
+
+  for(unsigned int i = 0; i < zone_buildings.size(); i++)
+    delete zone_buildings[i];
+}
+
 int BuildingManager::getThriveValueForCrime(Map *m, char slot, Point where) {
 
   // Out of bounds:
@@ -138,4 +147,102 @@ bool BuildingManager::canBuildSpecialBuilding(Building *b, unsigned char slot, M
 
   return true;
 }
+void BuildingManager::addZoneBuilding(unsigned char player_slot, int buildingType, Point p, int w, int h) {
 
+  /*Building *b = BuildingFactory::getBuilding(buildingType, p, player_slot);
+
+  b->setWidth(w);
+  b->setHeight(h);
+
+  zone_buildings.push_back(b);*/
+}
+void BuildingManager::updateZoneBuildings(unsigned char player_slot, Map *map)
+{
+  /*//Tear down all old buildings
+  for(unsigned int i = 0; i < zone_buildings.size(); i++)
+    delete zone_buildings[i];
+  zone_buildings = std::vector<Building *>();*/
+
+  int thrive_min_val = 1;
+  int max_size = 3;
+  std::vector<Point> buildable_tiles;
+
+  // loop through all tiles
+  for(int x = 0; x < map->getWidth(); x++) {
+    for(int y = 0; y < map->getHeight(); y++) {
+      // If the tile is zoned and hasn't got a road on it
+      if(map->getTile(x, y)->getZone() != 0 && !map->getTile(x, y)->isRoad()) {
+
+        // Check for special buildings on the zone
+        bool special_building = false;
+        for(int i = 0; i < special_buildings.size(); i++) {
+          if(x < special_buildings[i]->getPosition().getX() + special_buildings[i]->getWidth()
+          && x >= special_buildings[i]->getPosition().getX()
+          && y < special_buildings[i]->getPosition().getY() + special_buildings[i]->getHeight()
+          && y >= special_buildings[i]->getPosition().getY()) { // then the tile is underneath an already existant building.
+            special_building = true; break;
+          }
+        }
+        if(!special_building) {
+          // Check for zone buildings on the zone
+          bool zone_building = false;
+          for(int i = 0; i < zone_buildings.size(); i++) {
+            if(x < zone_buildings[i]->getPosition().getX() + zone_buildings[i]->getWidth()
+            && x >= zone_buildings[i]->getPosition().getX()
+            && y < zone_buildings[i]->getPosition().getY() + zone_buildings[i]->getHeight()
+            && y >= zone_buildings[i]->getPosition().getY()) { // then the tile is underneath an already existant building.
+              zone_building = true; break;
+            }
+          }
+          if(zone_building) {
+            // If there is one, level up?
+          }
+          // If there is no building, we can build here. Is this area attractive enough?
+          else if(getThriveValue(map, player_slot, Point(x,y)) >= thrive_min_val) {
+
+            // Theoreticly, all zones which meats the minimum value will be inhabited
+            int tries = 0;
+            while(tries < max_size) {
+              tries++;
+              bool good = true;
+              unsigned char zone = map->getTile(x, y)->getZone();
+              int total_thrive = 0,
+                  w = 1+rand()%max_size,
+                  h = 1+rand()%max_size;
+
+              // Check if the surrounding tiles can join our building project
+              for(int tile_x = x; tile_x < x+w; tile_x++) {
+                for(int tile_y = y; tile_y < y+h; tile_y++) {
+                  total_thrive += getThriveValue(map, player_slot, Point(tile_x, tile_y));
+                  if(map->getTile(tile_x, tile_y)->getZone() != zone
+                  || map->getTile(tile_x, tile_y)->getOwner() != player_slot
+                  || map->getTile(tile_x, tile_y)->isRoad()) {
+                    good = false; break;
+                  }
+                  for(unsigned int i = 0; i < special_buildings.size(); i++) {
+                    if(tile_x >= special_buildings[i]->position.getX() && tile_x < special_buildings[i]->position.getX() + special_buildings[i]->getWidth()
+                    && tile_y >= special_buildings[i]->position.getY() && tile_y < special_buildings[i]->position.getY() + special_buildings[i]->getHeight()) {
+                      good = false; break;
+                    }
+                  }
+                  for(unsigned int i = 0; i < zone_buildings.size(); i++) {
+                    if(tile_x >= zone_buildings[i]->position.getX() && tile_x < zone_buildings[i]->position.getX() + zone_buildings[i]->getWidth()
+                    && tile_y >= zone_buildings[i]->position.getY() && tile_y < zone_buildings[i]->position.getY() + zone_buildings[i]->getHeight()) {
+                      good = false; break;
+                    }
+                  }
+                }
+                if(!good)
+                  break;
+              }
+              if(good) {
+                int average_thrive = total_thrive/(w*h);
+                addZoneBuilding(player_slot, Building::TYPE_RESIDENTIAL, Point(x, y), w, h);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

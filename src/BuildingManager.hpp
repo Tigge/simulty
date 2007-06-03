@@ -15,6 +15,7 @@ class BuildingManager {
     std::vector<Building *> special_buildings;
 
   public:
+    ~BuildingManager();
 
     // Thrive values:
     int getThriveValueForCrime(Map *m, char slot, Point where);
@@ -33,6 +34,9 @@ class BuildingManager {
 
     bool canBuildSpecialBuilding(Building *b, unsigned char slot, Map *m);
     bool canBuild(Point at, unsigned char slot, Map *m);
+
+    void updateZoneBuildings(unsigned char player_slot, Map *map);
+    void addZoneBuilding(unsigned char player_slot, int buildingType, Point p, int w, int h);
 };
 
 #endif

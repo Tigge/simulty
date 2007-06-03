@@ -26,6 +26,13 @@ unsigned char Building::getHeight() {
     return height;
 }
 
+void Building::setWidth(unsigned char set_width) {
+  width = set_width;
+}
+void Building::setHeight(unsigned char set_height) {
+  height = set_height;
+}
+
 void Building::render (  ){
 }
 
@@ -38,7 +45,7 @@ int Building::getZ() {
   int base = getPosition().getX() + getPosition().getY();
   if(getWidth() > getHeight())
     return base - 1 + getWidth();
-  else 
+  else
     return base - 1 + getHeight();
 }
 int Building::getOwner() {

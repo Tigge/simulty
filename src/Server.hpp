@@ -21,7 +21,7 @@
 
 #include "Point.hpp"
 
-
+#include "Calendar.hpp"
 
 const unsigned char SIMULTY_SERVER_STATE_LOBBY      = 1;
 
@@ -46,14 +46,17 @@ class Server {
     void packet_send_to_all(NLPacket pack);
 
     PlayerManagerServer pman;
-    
+
     BuildingManager bman;
+
+    Calendar calendar;
 
     bool time_advance;
     int  speed;
+    int last_rebuilt;
 
   public:
-    NLSocket *net_server; 
+    NLSocket *net_server;
   // Operations
   public:
 

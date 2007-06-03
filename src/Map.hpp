@@ -5,6 +5,7 @@
 #define TILE_H 32
 
 #include "Tile.hpp"
+#include "Point.hpp"
 
 #include <vector>
 
@@ -19,12 +20,13 @@ class Map {
 
   // Operations
   public:
-  
+
     Map(int width, int height);
     virtual ~Map();
 
-    virtual Tile *getTile(int x, int y);    
-    
+    virtual Tile *getTile(int x, int y);
+    virtual Tile *getTile(Point p);
+
     virtual int getWidth();
     virtual int getHeight();
 

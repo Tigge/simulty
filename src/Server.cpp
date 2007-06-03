@@ -42,6 +42,7 @@ Server *server;
 
 int main(int argc, char *argv[]) {
 
+  try {
     server = new Server;
 
     while(true)
@@ -52,7 +53,12 @@ int main(int argc, char *argv[]) {
 
 
     delete server;
-
+  }
+  catch(std::exception& error)
+  {
+    std::cerr << "Simulty encountered an error which it couldn't recover from." << std::endl;
+    std::cerr << "Error message: " << error.what() << std::endl;
+  }
 }
 END_OF_MAIN()
 
@@ -61,36 +67,37 @@ END_OF_MAIN()
 // =====================================================================
 Server::Server() {
 
-    allegro_init();
+  allegro_init();
 
-    install_timer();
+  install_timer();
 
-    net_server = net.add();
-    net_server->listen_on(5557);
-
-
-    std::cout << "  _______ __                  __ __         " << std::endl;
-    std::cout << " |     __|__|.--------.--.--.|  |  |_.--.--." << std::endl;
-    std::cout << " |__     |  ||        |  |  ||  |   _|  |  |" << std::endl;
-    std::cout << " |_______|__||__|__|__|_____||__|____|___  |" << std::endl;
-    std::cout << "                                     |_____|" << std::endl;
-    std::cout << " Server - Released under GPL v2             " << std::endl;
-    std::cout << " ___________________________________________" << std::endl;
-
-    std::cerr << " * Starting game server                     " << std::endl;
-    std::cerr << " * Initializing resources                   " << std::endl;
-    std::cerr << " * Reticulating splines                     " << std::endl;
-
-    std::cerr << std::endl;
-
-    map = new Map(50, 50);
-
-    time_advance = false;
-
-    // Set initial speed:
-    setSpeed(1);
+  net_server = net.add();
+  net_server->listen_on(5557);
 
 
+  std::cout << "  _______ __                  __ __         " << std::endl;
+  std::cout << " |     __|__|.--------.--.--.|  |  |_.--.--." << std::endl;
+  std::cout << " |__     |  ||        |  |  ||  |   _|  |  |" << std::endl;
+  std::cout << " |_______|__||__|__|__|_____||__|____|___  |" << std::endl;
+  std::cout << "                                     |_____|" << std::endl;
+  std::cout << " Server - Released under GPL v2             " << std::endl;
+  std::cout << " ___________________________________________" << std::endl;
+
+  std::cerr << " * Starting game server                     " << std::endl;
+  std::cerr << " * Initializing resources                   " << std::endl;
+  std::cerr << " * Reticulating splines                     " << std::endl;
+
+  std::cerr << std::endl;
+
+  map = new Map(50, 50);
+
+  time_advance = false;
+
+  // Set initial speed:
+  setSpeed(1);
+
+  srand(time(0));
+  last_rebuilt = 0;
 }
 
 // Destructor, cleans everything up:
@@ -139,39 +146,18 @@ int  Server::getSpeed() {
 // =====================================================================
 void Server::update () {
 
+  calendar.advance();
+
   // Wait for network updates (max 250 ms, then move on)
   net.update(100);
 
-/*
-  unsigned int thrive_min_val = 1;
-  std::vector<Tile*> buildable_tiles;
   // TODO: Give timelimit
-  for(int p = 0; p < pman.count(); p++) {
-    for(int x = 0; x < map->getWidth(); x++) {
-      for(int y = 0; y < map->getHeight(); y++) {
-        if(map->getTile(x, y)->getZone() != 0) {
-          for(int i = 0; i < bman.getSpecialBuildingCount(); i++) {
-            if(x < bman.getSpecialBuilding(i)->getPosition().getX() + bman.getSpecialBuilding(i)->getWidth()
-            && x >= bman.getSpecialBuilding(i)->getPosition().getX()
-            && y < bman.getSpecialBuilding(i)->getPosition().getY() + bman.getSpecialBuilding(i)->getHeight()
-            && y >= bman.getSpecialBuilding(i)->getPosition().getY()) { // then the tile is underneath an already existant building.
-              if(bman.getSpecialBuilding(i)->getType() == Building::TYPE_RESIDENTIAL // || COM || IND
-              && bman.getThriveValue(map, pman.get_by_n(p)->getSlot(), Point(bman.getSpecialBuilding(i)->getPosition().getX(),
-                                                                            bman.getSpecialBuilding(i)->getPosition().getY())) > 1) {//level) {
-                //level++;
-              }
-            }
-             else if(bman.getThriveValue(map, pman.get_by_n(p)->getSlot(), Point(x,y)) >= thrive_min_val) {
-              buildable_tiles.push_back(map->getTile(x, y));
-            }
-          }
-        }
-      }
+  if(calendar.getYear() > last_rebuilt) { // where true = timelimit
+    last_rebuilt = calendar.getYear();
+    for(unsigned int i = 0; i < pman.count(); i++) {
+      bman.updateZoneBuildings(pman.get_by_n(i)->getSlot(), map);
     }
   }
-  for(int i = 0; i < buildable_tiles.size(); i++) {
-    //check for neighbors, build largest houses possible
-  }*/
 
   // New stuff happening: (TODO: move to function)
   if(time_advance) {
@@ -219,217 +205,216 @@ void Server::update () {
 
 bool Server::packet_handle(player_server_network *from, NLPacket pack)
 {
-  std::cerr << "Player has " << from->getMoney() << " money!" << std::endl;
-    switch(pack.getType())
+  switch(pack.getType())
+  {
+    // Version type:
+    case NPACKET_TYPE_SIMULTY_VERSION_CLIENT:
     {
-        // Version type:
-        case NPACKET_TYPE_SIMULTY_VERSION_CLIENT:
-        {
-            std::cerr << "** Got version info from client" << std::endl;
+        std::cerr << "** Got version info from client" << std::endl;
 
 
-            NLPacket pgd(NPACKET_TYPE_SIMULTY_GAMEDATA);
-            std::string data = LoaderSaver::saveGame(map, NULL, NULL);
-            pgd << data;
-            //std::cout << "The data is " << data.length() << " chars long and packet is " << pgd.getSize() << std::endl;
-            //pgd.print();
-            from->socket->packet_put(pgd);
+        NLPacket pgd(NPACKET_TYPE_SIMULTY_GAMEDATA);
+        std::string data = LoaderSaver::saveGame(map, NULL, NULL);
+        pgd << data;
+        //std::cout << "The data is " << data.length() << " chars long and packet is " << pgd.getSize() << std::endl;
+        //pgd.print();
+        from->socket->packet_put(pgd);
 
-            NLPacket pid(NPACKET_TYPE_SIMULTY_ID);
-            pid << (NLINT32)from->getId() << (NLINT16)from->getSlot();
+        NLPacket pid(NPACKET_TYPE_SIMULTY_ID);
+        pid << (NLINT32)from->getId() << (NLINT16)from->getSlot();
 
-            from->socket->packet_put(pid);
+        from->socket->packet_put(pid);
 
-            break;
-        }
+        break;
+    }
 
-        // Buy land:
-        case NPACKET_TYPE_SIMULTY_LAND_BUY:
-        {
-            // Read values from packet:
-            NLINT32 startx, starty, endx, endy;
-            pack >> startx >> starty >> endx >> endy;
+    // Buy land:
+    case NPACKET_TYPE_SIMULTY_LAND_BUY:
+    {
+        // Read values from packet:
+        NLINT32 startx, starty, endx, endy;
+        pack >> startx >> starty >> endx >> endy;
 
-            if(startx < 0 || starty < 0)break;
+        if(startx < 0 || starty < 0)break;
 
-            // Calculate cost:
-            int cost = 0;
+        // Calculate cost:
+        int cost = 0;
+
+        for(int x = startx; x <= endx && x < map->getWidth(); x++)
+            for(int y = starty; y <= endy && y < map->getHeight(); y++)
+                if(map->getTile(x, y)->getOwner() == -1)
+                    cost += SIMULTY_COST_LAND;
+
+        // If player has enough money, do the change:
+        if(from->getMoney() > cost) {
+            from->setMoney(from->getMoney() - cost);
 
             for(int x = startx; x <= endx && x < map->getWidth(); x++)
                 for(int y = starty; y <= endy && y < map->getHeight(); y++)
                     if(map->getTile(x, y)->getOwner() == -1)
-                        cost += SIMULTY_COST_LAND;
-
-            // If player has enough money, do the change:
-            if(from->getMoney() > cost) {
-                from->setMoney(from->getMoney() - cost);
-
-                for(int x = startx; x <= endx && x < map->getWidth(); x++)
-                    for(int y = starty; y <= endy && y < map->getHeight(); y++)
-                        if(map->getTile(x, y)->getOwner() == -1)
-                            map->getTile(x, y)->setOwner(from->getSlot());
+                        map->getTile(x, y)->setOwner(from->getSlot());
 
 
-                // Send change to everyone else:
+            // Send change to everyone else:
 
-                NLPacket landp(NPACKET_TYPE_SIMULTY_LAND_BUY);
-                landp << (NLINT16)from->getSlot() << startx << starty << endx << endy;
+            NLPacket landp(NPACKET_TYPE_SIMULTY_LAND_BUY);
+            landp << (NLINT16)from->getSlot() << startx << starty << endx << endy;
 
-                packet_send_to_all(landp);
-            }
-
-            break;
-        }
-        // Buy road:
-        case NPACKET_TYPE_SIMULTY_ROAD_BUILD:
-        {
-          NLINT32 fromX, fromY, toX, toY; NLPacket roadp = pack;
-          roadp >> fromX >> fromY >> toX >> toY;
-
-          int cost = 0;
-
-          for(int x = fromX; x <= toX && x < map->getWidth(); x++) {
-            for(int y = fromY; y <= toY && y < map->getHeight(); y++) {
-              if(bman.canBuild(Point(x, y), from->getSlot(), map)) {
-                  cost += SIMULTY_COST_ROAD;
-              }
-            }
-          }
-          if(from->getMoney() > SIMULTY_COST_ROAD) {
-            from->setMoney(from->getMoney() - cost);
-
-            for(int x = fromX; x <= toX && x < map->getWidth(); x++) {
-              for(int y = fromY; y <= toY && y < map->getHeight(); y++) {
-
-                if(bman.canBuild(Point(x, y), from->getSlot(), map)) {
-
-                  map->getTile(x, y)->setRoad(true);
-
-                  NLPacket p(NPACKET_TYPE_SIMULTY_ROAD_BUILD);
-                  p << x << y;
-                  packet_send_to_all(p);
-                }
-              }
-            }
-
-            /*
-            NLPacket mupd(NPACKET_TYPE_SIMULTY_MONEY_CHANGE);
-            from->money -= 20; mupd << from->money;
-            from->socket->packet_put(mupd);
-            */
-
-
-            //packet_send_to_all(pack);
-          }
-          break;
+            packet_send_to_all(landp);
         }
 
-        case NPACKET_TYPE_SIMULTY_LAND_ZONE:
-        {
-          NLINT32 startx, starty, endx, endy; NLINT16 type;
-          pack >> type >> startx >> starty >> endx >> endy;
-
-          int cost = 0;
-          int cost_per_tile;
-
-          switch(type)
-          {
-            case SIMULTY_ZONE_COM:
-              cost_per_tile = SIMULTY_COST_COM;
-              break;
-            case SIMULTY_ZONE_IND:
-              cost_per_tile = SIMULTY_COST_IND;
-              break;
-            case SIMULTY_ZONE_RES:
-              cost_per_tile = SIMULTY_COST_RES;
-              break;
-            default:
-              cost_per_tile = 0xffff; // Shouldn't end up here, but just in case - make 'em pay!
-              break;
-          }
-
-
-
-          for(int x = startx; x <= endx; x++)
-            for(int y = starty; y <= endy; y++)
-              if(bman.canBuild(Point(x, y), from->getSlot(), map))
-                cost += cost_per_tile;
-
-          if(cost < from->getMoney()) {
-            from->setMoney(from->getMoney() - cost);
-
-            for(int x = startx; x <= endx; x++)
-              for(int y = starty; y <= endy; y++)
-                if(bman.canBuild(Point(x, y), from->getSlot(), map))
-                  map->getTile(x, y)->setZone(type);
-
-
-            NLPacket zonepak(NPACKET_TYPE_SIMULTY_LAND_ZONE);
-            zonepak << (NLINT16)from->getSlot() << type << startx << starty << endx << endy;
-
-            packet_send_to_all(zonepak);
-          }
-
-          break;
-
-        } case NPACKET_TYPE_SIMULTY_BUILDING_BUILD: {
-            NLINT16 buildingType; NLINT32 x, y;
-            pack >> buildingType >> x >> y;
-
-            if( x > 0 && y > 0) {
-                std::cerr << "B: " << Point(x, y) << " - " << buildingType << std::endl;
-
-                Building *b = BuildingFactory::getBuilding(buildingType, Point(x, y), from->getSlot());
-
-                int cost;
-
-                switch(buildingType)
-                {
-                  case Building::TYPE_POLICE:
-                    cost = SIMULTY_COST_POLICE;
-                    break;
-                  case Building::TYPE_HOSPITAL:
-                    cost = SIMULTY_COST_HOSPITAL;
-                    break;
-                  case Building::TYPE_FIRE:
-                    cost = SIMULTY_COST_FIRE;
-                    break;
-                  default:
-                    cost = 0xffff; // Shouldn't end up here, but just in case - make 'em pay! (65k)
-                    break;
-                }
-
-                std::cerr << cost << std::endl;
-
-                if( from->getMoney() >= cost && bman.canBuildSpecialBuilding(b, from->getSlot(), map)) {
-                  from->setMoney(from->getMoney() - cost);
-
-                  bman.addSpecialBuilding(b);
-
-                  NLPacket buildingPack(NPACKET_TYPE_SIMULTY_BUILDING_BUILD);
-                  buildingPack << (NLINT16)from->getSlot() << buildingType << x << y;
-                  packet_send_to_all(buildingPack);
-
-                  std::cerr << "Building!" << std::endl;
-                } else {
-                  delete b;
-                }
-            }
-
-            break;
-
-        } default: {
-            std::cerr << "** Got uknown message with id "
-                    << NPACKET_TYPE_SIMULTY_LAND_ZONE << " "
-                    << pack.getType() << std::endl;
-            pack.print();
-
-            return false;
-        }
-
-
+        break;
     }
-    return true;
+    // Buy road:
+    case NPACKET_TYPE_SIMULTY_ROAD_BUILD:
+    {
+      NLINT32 fromX, fromY, toX, toY; NLPacket roadp = pack;
+      roadp >> fromX >> fromY >> toX >> toY;
+
+      int cost = 0;
+
+      for(int x = fromX; x <= toX && x < map->getWidth(); x++) {
+        for(int y = fromY; y <= toY && y < map->getHeight(); y++) {
+          if(bman.canBuild(Point(x, y), from->getSlot(), map)) {
+              cost += SIMULTY_COST_ROAD;
+          }
+        }
+      }
+      if(from->getMoney() > SIMULTY_COST_ROAD) {
+        from->setMoney(from->getMoney() - cost);
+
+        for(int x = fromX; x <= toX && x < map->getWidth(); x++) {
+          for(int y = fromY; y <= toY && y < map->getHeight(); y++) {
+
+            if(bman.canBuild(Point(x, y), from->getSlot(), map)) {
+
+              map->getTile(x, y)->setRoad(true);
+
+              NLPacket p(NPACKET_TYPE_SIMULTY_ROAD_BUILD);
+              p << x << y;
+              packet_send_to_all(p);
+            }
+          }
+        }
+
+        /*
+        NLPacket mupd(NPACKET_TYPE_SIMULTY_MONEY_CHANGE);
+        from->money -= 20; mupd << from->money;
+        from->socket->packet_put(mupd);
+        */
+
+
+        //packet_send_to_all(pack);
+      }
+      break;
+    }
+
+    case NPACKET_TYPE_SIMULTY_LAND_ZONE:
+    {
+      NLINT32 startx, starty, endx, endy; NLINT16 type;
+      pack >> type >> startx >> starty >> endx >> endy;
+
+      int cost = 0;
+      int cost_per_tile;
+
+      switch(type)
+      {
+        case SIMULTY_ZONE_COM:
+          cost_per_tile = SIMULTY_COST_COM;
+          break;
+        case SIMULTY_ZONE_IND:
+          cost_per_tile = SIMULTY_COST_IND;
+          break;
+        case SIMULTY_ZONE_RES:
+          cost_per_tile = SIMULTY_COST_RES;
+          break;
+        default:
+          cost_per_tile = 0xffff; // Shouldn't end up here, but just in case - make 'em pay!
+          break;
+      }
+
+
+
+      for(int x = startx; x <= endx; x++)
+        for(int y = starty; y <= endy; y++)
+          if(bman.canBuild(Point(x, y), from->getSlot(), map))
+            cost += cost_per_tile;
+
+      if(cost < from->getMoney()) {
+        from->setMoney(from->getMoney() - cost);
+
+        for(int x = startx; x <= endx; x++)
+          for(int y = starty; y <= endy; y++)
+            if(bman.canBuild(Point(x, y), from->getSlot(), map))
+              map->getTile(x, y)->setZone(type);
+
+
+        NLPacket zonepak(NPACKET_TYPE_SIMULTY_LAND_ZONE);
+        zonepak << (NLINT16)from->getSlot() << type << startx << starty << endx << endy;
+
+        packet_send_to_all(zonepak);
+      }
+
+      break;
+
+    } case NPACKET_TYPE_SIMULTY_BUILDING_BUILD: {
+        NLINT16 buildingType; NLINT32 x, y;
+        pack >> buildingType >> x >> y;
+
+        if( x > 0 && y > 0) {
+            std::cerr << "B: " << Point(x, y) << " - " << buildingType << std::endl;
+
+            Building *b = BuildingFactory::getBuilding(buildingType, Point(x, y), from->getSlot());
+
+            int cost;
+
+            switch(buildingType)
+            {
+              case Building::TYPE_POLICE:
+                cost = SIMULTY_COST_POLICE;
+                break;
+              case Building::TYPE_HOSPITAL:
+                cost = SIMULTY_COST_HOSPITAL;
+                break;
+              case Building::TYPE_FIRE:
+                cost = SIMULTY_COST_FIRE;
+                break;
+              default:
+                cost = 0xffff; // Shouldn't end up here, but just in case - make 'em pay! (65k)
+                break;
+            }
+
+            std::cerr << cost << std::endl;
+
+            if( from->getMoney() >= cost && bman.canBuildSpecialBuilding(b, from->getSlot(), map)) {
+              from->setMoney(from->getMoney() - cost);
+
+              bman.addSpecialBuilding(b);
+
+              NLPacket buildingPack(NPACKET_TYPE_SIMULTY_BUILDING_BUILD);
+              buildingPack << (NLINT16)from->getSlot() << buildingType << x << y;
+              packet_send_to_all(buildingPack);
+
+              std::cerr << "Building!" << std::endl;
+            } else {
+              delete b;
+            }
+        }
+
+        break;
+
+    } default: {
+        std::cerr << "** Got uknown message with id "
+                << NPACKET_TYPE_SIMULTY_LAND_ZONE << " "
+                << pack.getType() << std::endl;
+        pack.print();
+
+        return false;
+    }
+  }
+
+  std::cerr << "Player has " << from->getMoney() << " money!" << std::endl;
+  return true;
 }
 
 

@@ -42,13 +42,16 @@ class Building {
     virtual unsigned char getType() = 0;
     virtual unsigned char getWidth();
     virtual unsigned char getHeight();
+
+    virtual void setWidth(unsigned char set_width);
+    virtual void setHeight(unsigned char set_height);
+
     virtual int getOwner();
 
     virtual int getZ();
 
     virtual void render();
     virtual void update();
-
 };
 
 #endif

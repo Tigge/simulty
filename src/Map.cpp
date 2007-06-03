@@ -11,6 +11,9 @@ Tile *Map::getTile(int x, int y) {
     return &tiles[y * width + x];
 
 }
+Tile *Map::getTile(Point p) {
+  return getTile(p.getX(), p.getY());
+}
 
 int Map::getWidth() {
     return width;
