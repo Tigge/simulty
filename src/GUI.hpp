@@ -3,14 +3,16 @@
 #ifndef _GUI_H_
 #define _GUI_H_
 
-//#include <guichan.hpp>
-//#include <guichan/allegro.hpp>
+#include <guichan.hpp>
+#include <guichan/allegro.hpp>
 #include "allegro.h"
 #ifdef WIN32
   #include "winalleg.h"
 #endif
 
 #include <vector>
+
+#include "ImageButton.hpp"
 
 #include "Camera.hpp"
 #include "Mouse.hpp"
@@ -32,7 +34,7 @@ const unsigned char SIMULTY_CLIENT_TOOL_BUILD_FIRE     = 52;
 
 class Client;
 
-class GUI {
+class GUI : public gcn::KeyListener {
   private:
 
     BITMAP *buffer;
@@ -42,26 +44,29 @@ class GUI {
     int frames;
 
     // Guichan:
-    /*
+    
     gcn::AllegroInput       *input;
     gcn::AllegroGraphics    *graphics;
     gcn::AllegroImageLoader *imageLoader;
     
-    gcn::Gui        *gui;
-    gcn::Container  *top;
-    gcn::ImageFont  *guiFont;
-    */
+    gcn::Gui          *gui;
+    gcn::Container    *top;
+    //gcn::DefaultFont  *guiFont;
+    
+    gcn::Button     *indButton;
+    gcn::Button     *resButton;
+    gcn::Button     *comButton;
+    
+    gcn::Image      *indIcon;
+    gcn::Image      *resIcon;
+    gcn::Image      *comIcon;
 
     BITMAP *menu_background;
     BITMAP *gui_background;
     
     BITMAP *mouse_block;   
     BITMAP *mouse_pointer;     
-    
-    BITMAP *icon_ind;
-    BITMAP *icon_res;
-    BITMAP *icon_com;
-    
+
     BITMAP *icon_road;
     BITMAP *icon_land;
     
@@ -86,6 +91,9 @@ class GUI {
     int tool;    
         
   public:
+
+    virtual void keyPressed(gcn::KeyEvent &keyEvent);
+    virtual void keyReleased(gcn::KeyEvent &keyEvent);
 
     std::string test;
 

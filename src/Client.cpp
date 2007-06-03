@@ -16,7 +16,7 @@ Client::Client(GUI *gui) {
     // Add local socket and connect it to server (TODO: move later)
     net_client = net.add();
     if(!net_client->connect_to("localhost", 5557)) {
-      //allegro_message(" * Could not connect to server");
+      std::cerr << "Can't connect to local server" << std::endl;
       exit(0);
     }
     

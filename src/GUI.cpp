@@ -7,6 +7,7 @@
 
 int main(int argc, char *argv[]) {
 
+  try {
     std::cerr << "Starting..." << std::endl;
     GUI *gui = new GUI();
     std::cerr << "New game client" << std::endl;
@@ -27,8 +28,17 @@ int main(int argc, char *argv[]) {
     delete gui;
 
     std::cerr << "Ending..." << std::endl;
-
-    return 0;
+  } catch (gcn::Exception e) {
+    std::cerr << e.getMessage() << std::endl;
+    return 1;
+  } catch (std::exception e) {
+    std::cerr << "Std exception: " << e.what() << std::endl;
+    return 1;
+  } catch (...) {
+    std::cerr << "Unknown exception" << std::endl;
+    return 1;
+  }
+  return 0;
 } END_OF_MAIN()
 
 
@@ -113,10 +123,6 @@ GUI::GUI() {
     mouse_pointer   = ImageLoader::getImage("img/cursor.pcx");
     mouse_block     = ImageLoader::getImage("img/mouse_block.pcx");
 
-    icon_ind        = ImageLoader::getImage("img/menu_icon_ind.pcx");
-    icon_res        = ImageLoader::getImage("img/menu_icon_res.pcx");
-    icon_com        = ImageLoader::getImage("img/menu_icon_com.pcx");
-
     icon_road       = ImageLoader::getImage("img/menu_icon_road.pcx");
     icon_land       = ImageLoader::getImage("img/menu_icon_land.pcx");
 
@@ -131,20 +137,65 @@ GUI::GUI() {
 
   // Set up guichan:
   
-  /*
-	imageLoader = new gcn::AllegroImageLoader();
-	gcn::Image::setImageLoader(imageLoader);
+  
+  imageLoader = new gcn::AllegroImageLoader();
+  gcn::Image::setImageLoader(imageLoader);
 
-	graphics = new gcn::AllegroGraphics();
-	graphics->setTarget(buffer);
+  graphics = new gcn::AllegroGraphics();
+  graphics->setTarget(buffer);
 
-	input = new gcn::AllegroInput();
-  */
+  input = new gcn::AllegroInput();
+  
+  top = new gcn::Container();
+  // Set the dimension of the top container to match the screen.
+  top->setDimension(gcn::Rectangle(0, 0, SCREEN_W, SCREEN_H));
+  // Make it transparent
+  top->setOpaque(false);
+  
+  gui = new gcn::Gui();
+  // Set gui to use the AllegroGraphics object.
+  gui->setGraphics(graphics);
+  // Set gui to use the AllegroInput object
+  gui->setInput(input);
+  // Set the top container
+  gui->setTop(top);
+  
+  gui->addGlobalKeyListener(this);
+  // Load the image font.
+  //guiFont = new gcn::ImageFont("fixedfont.bmp", " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789");
+  //guiFont = new gcn::DefaultFont();
+  // The global font is static and must be set.
+  //gcn::Widget::setGlobalFont(guiFont);
 
+  indIcon   = imageLoader->load("img/menu_icon_ind.pcx", true);
+  indButton = new gcn::ImageButton(indIcon);
+  indButton->setDimension(gcn::Rectangle(0, 0, 32, 32));
+  top->add(indButton, SCREEN_W - 37, 5);
+
+  comIcon   = imageLoader->load("img/menu_icon_com.pcx", true);
+  comButton = new gcn::ImageButton(comIcon);
+  comButton->setDimension(gcn::Rectangle(0, 0, 32, 32));  
+  top->add(comButton, SCREEN_W - 74, 5);
+
+  resIcon   = imageLoader->load("img/menu_icon_res.pcx", true);
+  resButton = new gcn::ImageButton(resIcon);
+  resButton->setDimension(gcn::Rectangle(0, 0, 32, 32));
+  top->add(resButton, SCREEN_W - 37, 42);  
 
   console_show = false;
-
   tool = 0;
+
+  gcn::Window *w = new gcn::Window("Economy");
+  w->setDimension(gcn::Rectangle(0, 0, 300, 300));
+  w->setBaseColor(gcn::Color(255, 150, 200, 190));
+
+  gcn::Slider *s = new gcn::Slider(0.0, 100.0);
+  s->setSize(100, 10);
+  
+  w->add(s);
+  top->add(w, 100, 100);
+  
+
 }
 
 GUI::~GUI (  ){
@@ -160,10 +211,6 @@ GUI::~GUI (  ){
   destroy_bitmap(mouse_pointer);
   destroy_bitmap(mouse_block);
 
-  destroy_bitmap(icon_ind);
-  destroy_bitmap(icon_res);
-  destroy_bitmap(icon_com);
-
   destroy_bitmap(icon_road);
   destroy_bitmap(icon_land);
 
@@ -173,8 +220,37 @@ GUI::~GUI (  ){
 
   destroy_bitmap(buffer);
 
+  // Guichan stuff
+  delete input;
+  delete graphics;
+  delete imageLoader;
+  
+  delete resButton;
+  delete comButton;
+  delete indButton;
+  
+  delete resIcon;
+  delete comIcon;
+  delete indIcon;
+  
+  //delete guiFont;
+  delete top;
+  delete gui;
 
 }
+
+void GUI::keyPressed(gcn::KeyEvent &keyEvent) {
+  std::cout << "KP: " << keyEvent.getKey().getValue() << std::endl;
+}
+void GUI::keyReleased(gcn::KeyEvent &keyEvent) {
+
+  if(keyEvent.getKey().getValue() == gcn::Key::ESCAPE) {
+    client->state_running = false;
+  }
+
+  std::cout << "KR: " << keyEvent.getKey().getValue() << std::endl;
+}
+
 
 void GUI::render() {
 
@@ -259,9 +335,6 @@ void GUI::render() {
         // Render GUI:
         masked_blit(gui_background, buffer, 0, 0, 0, 0, gui_background->w, gui_background->h);
 
-        blit(icon_com,      buffer, 0, 0, SCREEN_W - 37,  5,  32, 32);
-        blit(icon_res,      buffer, 0, 0, SCREEN_W - 74,  5,  32, 32);
-        blit(icon_ind,      buffer, 0, 0, SCREEN_W - 37,  42, 32, 32);
         blit(icon_road,     buffer, 0, 0, SCREEN_W - 74,  42, 32, 32);
         blit(icon_land,     buffer, 0, 0, SCREEN_W - 37,  79, 32, 32);
         blit(icon_police,   buffer, 0, 0, SCREEN_W - 74,  79, 32, 32);
@@ -300,6 +373,8 @@ void GUI::render() {
 
     }
 
+  gui->draw();
+
   // Draw mouse pointer:
   masked_blit(mouse_pointer, buffer, 0, 0, mouse.getPosition().getX(), mouse.getPosition().getY(), 32, 32);
 
@@ -315,6 +390,7 @@ void GUI::render() {
 void GUI::update()
 {
 
+  gui->logic();
   client->update();
 
     mouse.update();
