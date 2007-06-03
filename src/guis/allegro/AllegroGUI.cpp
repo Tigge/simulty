@@ -123,12 +123,7 @@ AllegroGUI::AllegroGUI() {
     mouse_pointer   = ImageLoader::getImage("img/cursor.pcx");
     mouse_block     = ImageLoader::getImage("img/mouse_block.pcx");
 
-    icon_road       = ImageLoader::getImage("img/menu_icon_road.pcx");
-    icon_land       = ImageLoader::getImage("img/menu_icon_land.pcx");
 
-    icon_police     = ImageLoader::getImage("img/menu_icon_police.pcx");
-    icon_fire       = ImageLoader::getImage("img/menu_icon_fire.pcx");
-    icon_hospital   = ImageLoader::getImage("img/menu_icon_hospital.pcx");
 
   } catch(ImageLoaderException e) {
     allegro_message("Error: %s", e.what());
@@ -169,18 +164,45 @@ AllegroGUI::AllegroGUI() {
 
   indIcon   = imageLoader->load("img/menu_icon_ind.pcx", true);
   indButton = new gcn::ImageButton(indIcon);
-  indButton->setDimension(gcn::Rectangle(0, 0, 32, 32));
-  top->add(indButton, SCREEN_W - 37, 5);
+  indButton->addActionListener(this);
+  top->add(indButton, SCREEN_W - 74, 5);
 
   comIcon   = imageLoader->load("img/menu_icon_com.pcx", true);
   comButton = new gcn::ImageButton(comIcon);
-  comButton->setDimension(gcn::Rectangle(0, 0, 32, 32));  
-  top->add(comButton, SCREEN_W - 74, 5);
+  comButton->addActionListener(this);
+  top->add(comButton, SCREEN_W - 37, 5);
 
   resIcon   = imageLoader->load("img/menu_icon_res.pcx", true);
   resButton = new gcn::ImageButton(resIcon);
-  resButton->setDimension(gcn::Rectangle(0, 0, 32, 32));
-  top->add(resButton, SCREEN_W - 37, 42);  
+  resButton->addActionListener(this);
+  top->add(resButton, SCREEN_W - 74, 42);  
+
+
+  roadIcon  = imageLoader->load("img/menu_icon_road.pcx", true);
+  roadButton = new gcn::ImageButton(roadIcon);
+  roadButton->addActionListener(this);
+  top->add(roadButton, SCREEN_W - 37, 42);
+  
+  landIcon  = imageLoader->load("img/menu_icon_land.pcx", true);
+  landButton = new gcn::ImageButton(landIcon);
+  landButton->addActionListener(this);
+  top->add(landButton, SCREEN_W - 74, 79);
+
+
+  policeIcon   = imageLoader->load("img/menu_icon_police.pcx", true);
+  policeButton = new gcn::ImageButton(policeIcon);
+  policeButton->addActionListener(this);
+  top->add(policeButton, SCREEN_W - 37, 79);
+
+  fireIcon  = imageLoader->load("img/menu_icon_fire.pcx", true);
+  fireButton = new gcn::ImageButton(fireIcon);
+  fireButton->addActionListener(this);
+  top->add(fireButton, SCREEN_W - 74, 116);
+
+  hospitalIcon  = imageLoader->load("img/menu_icon_hospital.pcx", true);
+  hospitalButton = new gcn::ImageButton(hospitalIcon);
+  hospitalButton->addActionListener(this);
+  top->add(hospitalButton, SCREEN_W - 37, 116);
 
   console_show = false;
   tool = 0;
@@ -211,14 +233,22 @@ AllegroGUI::~AllegroGUI(){
   destroy_bitmap(mouse_pointer);
   destroy_bitmap(mouse_block);
 
-  destroy_bitmap(icon_road);
-  destroy_bitmap(icon_land);
-
-  destroy_bitmap(icon_police);
-  destroy_bitmap(icon_fire);
-  destroy_bitmap(icon_hospital);
-
   destroy_bitmap(buffer);
+
+  delete roadIcon;
+  delete roadButton;
+  
+  delete landIcon;
+  delete landButton;
+
+  delete policeIcon;
+  delete policeButton;
+
+  delete fireIcon;
+  delete fireButton;
+
+  delete hospitalIcon;
+  delete hospitalButton;
 
   // Guichan stuff
   delete input;
@@ -251,6 +281,27 @@ void AllegroGUI::keyReleased(gcn::KeyEvent &keyEvent) {
   std::cout << "KR: " << keyEvent.getKey().getValue() << std::endl;
 }
 
+void AllegroGUI::action(const gcn::ActionEvent &actionEvent) {
+
+  if(actionEvent.getSource() == comButton) {
+    tool = SIMULTY_CLIENT_TOOL_ZONE_COM;
+  } else if(actionEvent.getSource() == resButton) {
+    tool = SIMULTY_CLIENT_TOOL_ZONE_RES;
+  } else if(actionEvent.getSource() == indButton) {
+    tool = SIMULTY_CLIENT_TOOL_ZONE_IND;
+  } else if(actionEvent.getSource() == roadButton) {
+    tool = SIMULTY_CLIENT_TOOL_ROAD;
+  } else if(actionEvent.getSource() == landButton) {
+    tool = SIMULTY_CLIENT_TOOL_LAND;
+  } else if(actionEvent.getSource() == policeButton) {
+    tool = SIMULTY_CLIENT_TOOL_BUILD_POLICE;
+  } else if(actionEvent.getSource() == fireButton) {
+    tool = SIMULTY_CLIENT_TOOL_BUILD_FIRE;
+  } else if(actionEvent.getSource() == hospitalButton) {
+    tool = SIMULTY_CLIENT_TOOL_BUILD_HOSPITAL;
+  }
+}
+
 
 void AllegroGUI::render() {
 
@@ -276,18 +327,7 @@ void AllegroGUI::render() {
         // Render buildings:
         br->render(buffer, mr, camera, &client->bman);
 
-        /*
-        Point pos = client->map->val2tile(Point(mouse_x + client->cam.getX(), mouse_y + client->cam.getY()));
-        Point ral = client->map->val2tile_real(Point(mouse_x + client->cam.getX(), mouse_y + client->cam.getY()));
-
-
-        Point xpos = client->map->tile2val(pos);
-        Point xral = client->map->tile2val(ral);
-        */
-
         if(mouse.getLeftButtonState() == STATE_PRESS) {
-
-
 
 
         } if(mouse.getLeftButtonState() == STATE_HOLD) {
@@ -334,12 +374,6 @@ void AllegroGUI::render() {
 
         // Render GUI:
         masked_blit(gui_background, buffer, 0, 0, 0, 0, gui_background->w, gui_background->h);
-
-        blit(icon_road,     buffer, 0, 0, SCREEN_W - 74,  42, 32, 32);
-        blit(icon_land,     buffer, 0, 0, SCREEN_W - 37,  79, 32, 32);
-        blit(icon_police,   buffer, 0, 0, SCREEN_W - 74,  79, 32, 32);
-        blit(icon_fire,     buffer, 0, 0, SCREEN_W - 37, 106, 32, 32);
-        blit(icon_hospital, buffer, 0, 0, SCREEN_W - 74, 106, 32, 32);
 
         //textprintf_ex(buffer, font, 20, SCREEN_H - 40, makecol(0, 0, 0), -1, "Money: %i", client->money);
         textprintf_ex(buffer, font, 20, SCREEN_H - 30, makecol(0, 0, 0), -1, "Time: %i %s %i",
@@ -406,23 +440,7 @@ void AllegroGUI::update()
 
             mouse_down_tile = mr->toTileCoord(mouse.getPressPosition(), camera);
 
-            if(Point::inArea(mouse.getPosition(), Point(SCREEN_W - 37, 5), 32, 32)) {
-                tool = SIMULTY_CLIENT_TOOL_ZONE_COM;
-            } else if(Point::inArea(mouse.getPosition(), Point(SCREEN_W - 74, 5), 32, 32)) {
-                tool = SIMULTY_CLIENT_TOOL_ZONE_RES;
-            } else if(Point::inArea(mouse.getPosition(), Point(SCREEN_W - 37, 42), 32, 32)) {
-                tool = SIMULTY_CLIENT_TOOL_ZONE_IND;
-            } else if(Point::inArea(mouse.getPosition(), Point(SCREEN_W - 74, 42), 32, 32)) {
-                tool = SIMULTY_CLIENT_TOOL_ROAD;
-            } else if(Point::inArea(mouse.getPosition(), Point(SCREEN_W - 37, 79), 32, 32)) {
-                tool = SIMULTY_CLIENT_TOOL_LAND;
-            } else if(Point::inArea(mouse.getPosition(), Point(SCREEN_W - 74, 79), 32, 32)) {
-                tool = SIMULTY_CLIENT_TOOL_BUILD_POLICE;
-            } else if(Point::inArea(mouse.getPosition(), Point(SCREEN_W - 39, 106), 32, 32)) {
-                tool = SIMULTY_CLIENT_TOOL_BUILD_FIRE;
-            } else if(Point::inArea(mouse.getPosition(), Point(SCREEN_W - 74, 106), 32, 32)) {
-                tool = SIMULTY_CLIENT_TOOL_BUILD_HOSPITAL;
-            }
+
 
             //std::cout << "mouse press event" << std::endl;
 
@@ -467,7 +485,6 @@ void AllegroGUI::update()
         if(key[KEY_LEFT]  || mouse_x < 15           )camera.step(DIR_LEFT,  3, client->map->getWidth() * TILE_W / 2, client->map->getHeight() * TILE_H / 2);
 
         if(keypressed()) {
-            if(key[KEY_ESC])client->state_running = false;
             if(key[KEY_F1])console_show = !console_show;
 
             if(key[KEY_PLUS_PAD])tool++;

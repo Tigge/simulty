@@ -24,7 +24,7 @@
 
 
 
-class AllegroGUI : public GUI, gcn::KeyListener {
+class AllegroGUI : public GUI, gcn::KeyListener, gcn::ActionListener {
   private:
 
     BITMAP *buffer;
@@ -46,10 +46,25 @@ class AllegroGUI : public GUI, gcn::KeyListener {
     gcn::Button     *indButton;
     gcn::Button     *resButton;
     gcn::Button     *comButton;
+
+    gcn::Button      *roadButton;
+    gcn::Button      *landButton;
     
+    gcn::Button      *policeButton;
+    gcn::Button      *fireButton;
+    gcn::Button      *hospitalButton;
+
     gcn::Image      *indIcon;
     gcn::Image      *resIcon;
     gcn::Image      *comIcon;
+
+    gcn::Image      *roadIcon;
+    gcn::Image      *landIcon;
+    
+    gcn::Image      *policeIcon;
+    gcn::Image      *fireIcon;
+    gcn::Image      *hospitalIcon;
+
 
     BITMAP *menu_background;
     BITMAP *gui_background;
@@ -57,12 +72,7 @@ class AllegroGUI : public GUI, gcn::KeyListener {
     BITMAP *mouse_block;   
     BITMAP *mouse_pointer;     
 
-    BITMAP *icon_road;
-    BITMAP *icon_land;
-    
-    BITMAP *icon_police;
-    BITMAP *icon_fire;
-    BITMAP *icon_hospital;
+
     
     bool                     console_show;
     std::vector<std::string> console_data;
@@ -84,6 +94,8 @@ class AllegroGUI : public GUI, gcn::KeyListener {
 
     virtual void keyPressed(gcn::KeyEvent &keyEvent);
     virtual void keyReleased(gcn::KeyEvent &keyEvent);
+
+    virtual void action(const gcn::ActionEvent &actionEvent);
 
     std::string test;
 

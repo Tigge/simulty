@@ -28,6 +28,7 @@ namespace gcn {
     
     ImageButton(Image *image) : Button("") {
       setImage(image);
+      adjustSize();
     }
     virtual ~ImageButton() {
       
