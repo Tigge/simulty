@@ -1,5 +1,5 @@
 
-#include "shared.h"
+#include "../../shared.h"
 #include "Camera.hpp"
 
 Camera::Camera() : Point(0, 0) {

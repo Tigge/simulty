@@ -1,7 +1,7 @@
-#include "allegro.h"
+#include "MapRender.hpp"
 
-#include "Client.hpp"
-#include "Tile.hpp"
+//#include "../../Client.hpp"
+#include "../../Tile.hpp"
 
 MapRender::MapRender() {
 

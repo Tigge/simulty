@@ -36,18 +36,17 @@ ENDIF(WIN32)
 
 # Client:
 ###############################################################################
-ADD_EXECUTABLE(../simulty-client Client.cpp Point.cpp Map.cpp MapRender.cpp 
+ADD_EXECUTABLE(../simulty-client Client.cpp Point.cpp Map.cpp 
     Tile.cpp PlayerManager.cpp Player.cpp player_client_local.cpp 
     player_client_remote.cpp Building.cpp BuildingPolice.cpp BuildingFire.cpp
     BuildingHospital.cpp BuildingManager.cpp BuildingFactory.cpp 
-    BuildingRender.cpp GUI.cpp Mouse.cpp Camera.cpp)
+    
+    guis/allegro/MapRender.cpp guis/allegro/BuildingRender.cpp 
+    guis/allegro/GUI.cpp guis/allegro/Mouse.cpp guis/allegro/Camera.cpp)
 
 IF(WIN32)
   TARGET_LINK_LIBRARIES(../simulty-client NL elog ${ALLEGRO} wsock32 )
 ELSE(WIN32)
-  TARGET_LINK_LIBRARIES(../simulty-client NL elog ${ALLEGRO} ${ALLEGROUNSHARABLE})
+  TARGET_LINK_LIBRARIES(../simulty-client NL elog ${ALLEGRO} ${ALLEGROUNSHARABLE} ${GUICHAN} ${GUICHANALLEGRO})
 ENDIF(WIN32)
-
-# ${GUICHAN} ${GUICHANALLEGRO}
-
 

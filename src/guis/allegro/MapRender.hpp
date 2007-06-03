@@ -6,7 +6,12 @@
   #include "winalleg.h"
 #endif
 
-#include "Map.hpp"
+#include "../../shared.h"
+
+#include "../../Map.hpp"
+#include "../../Point.hpp"
+#include "Camera.hpp"
+
 #include "ImageLoader.hpp"
 
 

@@ -3,7 +3,11 @@
 #define _MOUSE_H_
 
 #include "allegro.h"
-#include "Point.hpp"
+#ifdef WIN32
+  #include "winalleg.h"
+#endif
+
+#include "../../Point.hpp"
 
 const unsigned char STATE_NONE    = 0; // On "normal"
 const unsigned char STATE_PRESS   = 1; // On press

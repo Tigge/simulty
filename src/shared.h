@@ -16,6 +16,20 @@ const unsigned char DIR_RIGHT = 2;
 const unsigned char DIR_DOWN  = 3;
 const unsigned char DIR_LEFT  = 4;
 
+// Tools: (for now)
+
+const unsigned char SIMULTY_CLIENT_TOOL_NONE           = 0;
+const unsigned char SIMULTY_CLIENT_TOOL_LAND           = 1;
+const unsigned char SIMULTY_CLIENT_TOOL_ROAD           = 2;
+
+const unsigned char SIMULTY_CLIENT_TOOL_ZONE_RES       = 10;
+const unsigned char SIMULTY_CLIENT_TOOL_ZONE_COM       = 11;
+const unsigned char SIMULTY_CLIENT_TOOL_ZONE_IND       = 12;
+
+const unsigned char SIMULTY_CLIENT_TOOL_BUILD_POLICE   = 50;
+const unsigned char SIMULTY_CLIENT_TOOL_BUILD_HOSPITAL = 51;
+const unsigned char SIMULTY_CLIENT_TOOL_BUILD_FIRE     = 52;
+
 // Costs: (for now)
 
 const unsigned NLINT16 SIMULTY_COST_ROAD = 10;

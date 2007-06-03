@@ -4,6 +4,8 @@
 
 #include <string>
 
+#include "PlayerManager.hpp"
+
 
 // PROOF OF CONCEPT SOLUTION, NEEDS TO BE FIXED
 // PERHAPS A SERIALIZE / DESERIALIZE INTERFACE THAT CLASSES 

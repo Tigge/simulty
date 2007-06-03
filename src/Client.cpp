@@ -140,7 +140,7 @@ void Client::packet_handle(NLPacket p)
             ver << (NLINT16)0 << (NLINT16)0 << (NLINT16)1;
             net_client->packet_put(ver);
 
-            alert("Welcome message from server", welcome.c_str(), NULL, "Ok", NULL, 0, 0);
+            //alert("Welcome message from server", welcome.c_str(), NULL, "Ok", NULL, 0, 0);
 
             break;
         }

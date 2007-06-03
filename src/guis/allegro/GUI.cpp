@@ -1,15 +1,15 @@
 #include "GUI.hpp"
 
-#include "Client.hpp"
+#include "../../Client.hpp"
 #include "ImageLoader.hpp"
 
-#include "LoaderSaver.hpp"
+#include "../../LoaderSaver.hpp"
 
 int main(int argc, char *argv[]) {
 
   try {
     std::cerr << "Starting..." << std::endl;
-    GUI *gui = new GUI();
+    AllegroGUI *gui = new AllegroGUI();
     std::cerr << "New game client" << std::endl;
 
     while(gui->running()) {
@@ -44,17 +44,17 @@ int main(int argc, char *argv[]) {
 
 
 // TODO - static functions instead? yes, do static
-void GUI::handleSpeed(void *data) {
-    ((GUI *)data)->speed_counter++;
-} END_OF_FUNCTION(GUI::speedhandler)
+void AllegroGUI::handleSpeed(void *data) {
+    ((AllegroGUI *)data)->speed_counter++;
+} END_OF_FUNCTION(AllegroGUI::speedhandler)
 
-void GUI::handleFPS(void *data) {
-    ((GUI *)data)->fps    = ((GUI *)data)->frames;
-    ((GUI *)data)->frames = 0;
+void AllegroGUI::handleFPS(void *data) {
+    ((AllegroGUI *)data)->fps    = ((AllegroGUI *)data)->frames;
+    ((AllegroGUI *)data)->frames = 0;
 } END_OF_FUNCTION(fpshandler)
 
 
-GUI::GUI() {
+AllegroGUI::AllegroGUI() {
 
   // Initializing allegro (and some sub elements)
   if(install_allegro(SYSTEM_AUTODETECT, &errno, atexit) != 0) {
@@ -83,8 +83,8 @@ GUI::GUI() {
     exit(0);
   }
 
-  install_param_int_ex(GUI::handleSpeed, this, BPS_TO_TIMER(60));
-  install_param_int_ex(GUI::handleFPS,   this, BPS_TO_TIMER(1));
+  install_param_int_ex(AllegroGUI::handleSpeed, this, BPS_TO_TIMER(60));
+  install_param_int_ex(AllegroGUI::handleFPS,   this, BPS_TO_TIMER(1));
 
   fps =  speed_counter =  frames = 0;
 
@@ -198,7 +198,7 @@ GUI::GUI() {
 
 }
 
-GUI::~GUI (  ){
+AllegroGUI::~AllegroGUI(){
 
   delete client;
 
@@ -239,10 +239,10 @@ GUI::~GUI (  ){
 
 }
 
-void GUI::keyPressed(gcn::KeyEvent &keyEvent) {
+void AllegroGUI::keyPressed(gcn::KeyEvent &keyEvent) {
   std::cout << "KP: " << keyEvent.getKey().getValue() << std::endl;
 }
-void GUI::keyReleased(gcn::KeyEvent &keyEvent) {
+void AllegroGUI::keyReleased(gcn::KeyEvent &keyEvent) {
 
   if(keyEvent.getKey().getValue() == gcn::Key::ESCAPE) {
     client->state_running = false;
@@ -252,7 +252,7 @@ void GUI::keyReleased(gcn::KeyEvent &keyEvent) {
 }
 
 
-void GUI::render() {
+void AllegroGUI::render() {
 
   // Clear the double buffer:
   clear_bitmap(buffer);
@@ -387,7 +387,7 @@ void GUI::render() {
 }
 
 
-void GUI::update()
+void AllegroGUI::update()
 {
 
   gui->logic();
@@ -493,15 +493,15 @@ void GUI::update()
 }
 
 
-void GUI::console_log(std::string s) {
+void AllegroGUI::console_log(std::string s) {
     console_data.push_back(s);
 }
 
-bool GUI::needUpdate() {
+bool AllegroGUI::needUpdate() {
     return speed_counter > 0;
 }
 
-bool GUI::running() {
+bool AllegroGUI::running() {
   return client->state_running;
 }
 

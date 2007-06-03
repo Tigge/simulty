@@ -6,10 +6,10 @@
   #include "winalleg.h"
 #endif
 
-#include "Building.hpp"
-#include "BuildingManager.hpp"
+#include "../../Building.hpp"
+#include "../../BuildingManager.hpp"
 
-#include "Point.hpp"
+#include "../../Point.hpp"
 #include "Camera.hpp"
 
 #include "MapRender.hpp"

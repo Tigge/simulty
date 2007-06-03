@@ -1,7 +1,7 @@
 #ifndef _CAMERA_HPP_
 #define _CAMERA_HPP_
 
-#include "Point.hpp"
+#include "../../Point.hpp"
 
 class Camera : public Point {
 

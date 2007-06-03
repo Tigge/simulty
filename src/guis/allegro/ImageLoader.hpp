@@ -7,6 +7,8 @@
   #include "winalleg.h"
 #endif
 
+#include <string>
+
 #include "ImageLoaderException.hpp"
 
 class ImageLoader {

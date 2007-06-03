@@ -1,7 +1,7 @@
 
 
-#ifndef _GUI_H_
-#define _GUI_H_
+#ifndef _ALLEGROGUI_H_
+#define _ALLEGROGUI_H_
 
 #include <guichan.hpp>
 #include <guichan/allegro.hpp>
@@ -12,7 +12,9 @@
 
 #include <vector>
 
-#include "ImageButton.hpp"
+#include "../../GUI.hpp"
+
+#include "widgets/ImageButton.hpp"
 
 #include "Camera.hpp"
 #include "Mouse.hpp"
@@ -20,21 +22,9 @@
 #include "MapRender.hpp"
 #include "BuildingRender.hpp"
 
-const unsigned char SIMULTY_CLIENT_TOOL_NONE           = 0;
-const unsigned char SIMULTY_CLIENT_TOOL_LAND           = 1;
-const unsigned char SIMULTY_CLIENT_TOOL_ROAD           = 2;
 
-const unsigned char SIMULTY_CLIENT_TOOL_ZONE_RES       = 10;
-const unsigned char SIMULTY_CLIENT_TOOL_ZONE_COM       = 11;
-const unsigned char SIMULTY_CLIENT_TOOL_ZONE_IND       = 12;
 
-const unsigned char SIMULTY_CLIENT_TOOL_BUILD_POLICE   = 50;
-const unsigned char SIMULTY_CLIENT_TOOL_BUILD_HOSPITAL = 51;
-const unsigned char SIMULTY_CLIENT_TOOL_BUILD_FIRE     = 52;
-
-class Client;
-
-class GUI : public gcn::KeyListener {
+class AllegroGUI : public GUI, gcn::KeyListener {
   private:
 
     BITMAP *buffer;
@@ -101,8 +91,8 @@ class GUI : public gcn::KeyListener {
     
     bool pointInArea(Point p, Point a, Point b);
   
-    GUI();
-    ~GUI();
+    AllegroGUI();
+    ~AllegroGUI();
     void render();
     void update();
 
