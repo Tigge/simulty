@@ -308,104 +308,92 @@ void AllegroGUI::render() {
   // Clear the double buffer:
   clear_bitmap(buffer);
 
-    if(client->state_menu) {
+  if(client->state_menu) {
 
-        blit(menu_background, buffer, 0, 0, 0, 0, 800, 600);
+    blit(menu_background, buffer, 0, 0, 0, 0, 800, 600);
 
-        textprintf_ex(buffer, font, SCREEN_W - 200, SCREEN_H - 300, makecol(0, 0, 0), -1, "New local game");
-        textprintf_ex(buffer, font, SCREEN_W - 200, SCREEN_H - 280, makecol(0, 0, 0), -1, "New network game");
-        textprintf_ex(buffer, font, SCREEN_W - 200, SCREEN_H - 260, makecol(0, 0, 0), -1, "Join network game");
+    textprintf_ex(buffer, font, SCREEN_W - 200, SCREEN_H - 300, makecol(0, 0, 0), -1, "New local game");
+    textprintf_ex(buffer, font, SCREEN_W - 200, SCREEN_H - 280, makecol(0, 0, 0), -1, "New network game");
+    textprintf_ex(buffer, font, SCREEN_W - 200, SCREEN_H - 260, makecol(0, 0, 0), -1, "Join network game");
 
-        textprintf_ex(buffer, font, SCREEN_W - 200, SCREEN_H - 200, makecol(0, 0, 0), -1, "Quit");
-
-
-    } else if(client->state_game == SIMULTY_CLIENT_STATE_GAME_ON) {
-
-        // Render map:
-        mr->render(buffer, camera);
-
-        // Render buildings:
-        br->render(buffer, mr, camera, &client->bman);
-
-        if(mouse.getLeftButtonState() == STATE_PRESS) {
+    textprintf_ex(buffer, font, SCREEN_W - 200, SCREEN_H - 200, makecol(0, 0, 0), -1, "Quit");
 
 
-        } if(mouse.getLeftButtonState() == STATE_HOLD) {
+  } else if(client->state_game == SIMULTY_CLIENT_STATE_GAME_ON) {
 
-/*
-            //Point ms = m->val2tile_real();
-            Point c1 = mouse_down_tile;
-            Point c3 = mouse_up_tile;
+    // Render map:
+    mr->render(buffer, camera);
 
-            Point::fixOrder(c1, c3);
+    // Render buildings:
+    br->render(buffer, mr, camera, &client->bman);
 
-            Point c2 = Point(c3.getX(), c1.getY());
-            Point c4 = Point(c1.getX(), c3.getY());
-
-            c1 = mr.toScreenCoord(c1, camera); c2 = mr.toScreenCoord(c2, camera);
-            c3 = mr.toScreenCoord(c3, camera); c4 = mr.toScreenCoord(c4, camera);
-
-            //Point mt = client->map->val2tile_real(Point(mouse_x + client->cam.x, client->mapouse_y + cam.y));
-
-            int points[8] = { c1.getX() + TILE_W / 2, c1.getY() + TILE_H / 2,
-                              c2.getX() + TILE_W / 2, c2.getY() + TILE_H / 2,
-                              c3.getX() + TILE_W / 2, c3.getY() + TILE_H / 2,
-                              c4.getX() + TILE_W / 2, c4.getY() + TILE_H / 2 };
-
-            polygon(buffer, 4, points, makecol(255, 255, 255));
-
-            //Point pos = client->map->tile2val(client->map->val2tile_real(Point(mouse_x + cam.x, mouse_y + cam.y)));
-
-            //masked_blit(mouse_block, buffer, 0, 0, pos.getX() - cam.getX(), pos.getY() - cam.getY(), mouse_block->w, mouse_block->h);
-
-            textprintf_ex(buffer, font, SCREEN_W - 200, SCREEN_H - 260, makecol(0, 0, 0), -1, "%i, %i", c3.getX(), c3.getY());
+    if(mouse.getLeftButtonState() == STATE_PRESS) {
 
 
-            //rect(buffer, mouse_down_tile_x * TILE_W, , mouse_to_tile_x() * TILE_W, mouse_to_tile_y() * TILE_H / 2, makecol(255, 0, 0));
-*/
-        }
-        //blit(mouse_hint, buffer, 0, 0, (mouse_x / TILE_W) * TILE_W, (mouse_y / TILE_H) * TILE_H, mouse_hint->w, mouse_hint->h);
+    } if(mouse.getLeftButtonState() == STATE_HOLD) {
 
-        Point realtile = mr->toTileCoord(mouse.getPosition(), camera);
-        Point realscrn = mr->toScreenCoord(realtile, camera);
+      Point c1 = mouse_down_tile;
+      Point c3 = mouse_up_tile;
 
-        // Redner mouse block
-        masked_blit(mouse_block, buffer, 0, 0, realscrn.getX(), realscrn.getY(), mouse_block->w, mouse_block->h);
+      Point::fixOrder(c1, c3);
+      //c3.translate(1, 1);
 
-        // Render GUI:
-        masked_blit(gui_background, buffer, 0, 0, 0, 0, gui_background->w, gui_background->h);
+      Point c2 = Point(c3.getX(), c1.getY());
+      Point c4 = Point(c1.getX(), c3.getY());
 
-        //textprintf_ex(buffer, font, 20, SCREEN_H - 40, makecol(0, 0, 0), -1, "Money: %i", client->money);
-        textprintf_ex(buffer, font, 20, SCREEN_H - 30, makecol(0, 0, 0), -1, "Time: %i %s %i",
-            client->cal.getYear(), client->cal.getMonthAsString().c_str(), client->cal.getDay());
-        textprintf_ex(buffer, font, 20, SCREEN_H - 20, makecol(0, 0, 0), -1, "Tool: %i", tool);
+      c1 = mr->toScreenCoord(c1, camera); c2 = mr->toScreenCoord(c2, camera);
+      c3 = mr->toScreenCoord(c3, camera); c4 = mr->toScreenCoord(c4, camera);
 
-        textprintf_ex(buffer, font, 200, SCREEN_H - 20, makecol(0, 0, 0), -1, "FPS: %i", fps);
+      int points[8] = { c1.getX() + TILE_W / 2, c1.getY(), // Upper left corner
+                        c2.getX(), c2.getY() + TILE_H / 2,
+                        c3.getX() + TILE_W / 2, c3.getY() + TILE_H, // Lower right corner 
+                        c4.getX() + TILE_W, c4.getY() + TILE_H / 2};
 
-        //textprintf_ex(buffer, font, 200, SCREEN_H - 50, makecol(0, 0, 0), -1, "Camera: %i, %i", camera.getX(), camera.getY());
-        textprintf_ex(buffer, font, 200, SCREEN_H - 30, makecol(0, 0, 0), -1, "Mouse: %i, %i", realtile.getX(), realtile.getY());
-
-
-        if(realtile.getX() > 5 && realtile.getY() > 5 && realtile.getX() < 25 && realtile.getY() < 25)
-          textprintf_ex(buffer, font, 300, SCREEN_H - 30, makecol(0, 0, 0), -1, "Thrive: %i", client->bman.getThriveValue(client->map, client->player_me->getSlot(), realtile));
-
-
-        textprintf_ex(buffer, font, 600, SCREEN_H - 30, makecol(0, 0, 0), -1, "MD: %i, %i MU: %i, %i", mouse_down_tile.getX(), mouse_down_tile.getY(), mouse_up_tile.getX(), mouse_up_tile.getY());
-        textprintf_ex(buffer, font, 600, SCREEN_H - 60, makecol(0, 0, 0), -1, "SB: %i", client->bman.getSpecialBuildingCount());
-
-        // Draw console:
-        if(console_show)
-        {
-            rectfill(buffer, 0, 0, SCREEN_W, 100, makecol(50, 50, 50));
-
-            for(int i = 1; i <= 5; i++)
-            {
-                if(console_data.size() - i >= 0 && console_data.size() - i < console_data.size())
-                    textprintf_ex(buffer, font, 10, 90 - 15*i, makecol(255, 255, 255), -1, "> %s", console_data[console_data.size() - i].c_str());
-            }
-        }
+      polygon(buffer, 4, points, makecol(255, 255, 255));
 
     }
+    //blit(mouse_hint, buffer, 0, 0, (mouse_x / TILE_W) * TILE_W, (mouse_y / TILE_H) * TILE_H, mouse_hint->w, mouse_hint->h);
+
+    Point realtile = mr->toTileCoord(mouse.getPosition(), camera);
+    Point realscrn = mr->toScreenCoord(realtile, camera);
+
+    // Redner mouse block
+    masked_blit(mouse_block, buffer, 0, 0, realscrn.getX(), realscrn.getY(), mouse_block->w, mouse_block->h);
+
+    // Render GUI:
+    masked_blit(gui_background, buffer, 0, 0, 0, 0, gui_background->w, gui_background->h);
+
+    //textprintf_ex(buffer, font, 20, SCREEN_H - 40, makecol(0, 0, 0), -1, "Money: %i", client->money);
+    textprintf_ex(buffer, font, 20, SCREEN_H - 30, makecol(0, 0, 0), -1, "Time: %i %s %i",
+        client->cal.getYear(), client->cal.getMonthAsString().c_str(), client->cal.getDay());
+    textprintf_ex(buffer, font, 20, SCREEN_H - 20, makecol(0, 0, 0), -1, "Tool: %i", tool);
+
+    textprintf_ex(buffer, font, 200, SCREEN_H - 20, makecol(0, 0, 0), -1, "FPS: %i", fps);
+
+    //textprintf_ex(buffer, font, 200, SCREEN_H - 50, makecol(0, 0, 0), -1, "Camera: %i, %i", camera.getX(), camera.getY());
+    textprintf_ex(buffer, font, 200, SCREEN_H - 30, makecol(0, 0, 0), -1, "Mouse: %i, %i", realtile.getX(), realtile.getY());
+
+
+    if(realtile.getX() > 5 && realtile.getY() > 5 && realtile.getX() < 25 && realtile.getY() < 25)
+      textprintf_ex(buffer, font, 300, SCREEN_H - 30, makecol(0, 0, 0), -1, "Thrive: %i", client->bman.getThriveValue(client->map, client->player_me->getSlot(), realtile));
+
+
+    textprintf_ex(buffer, font, 600, SCREEN_H - 30, makecol(0, 0, 0), -1, "MD: %i, %i MU: %i, %i", mouse_down_tile.getX(), mouse_down_tile.getY(), mouse_up_tile.getX(), mouse_up_tile.getY());
+    textprintf_ex(buffer, font, 600, SCREEN_H - 60, makecol(0, 0, 0), -1, "SB: %i", client->bman.getSpecialBuildingCount());
+
+    // Draw console:
+    if(console_show)
+    {
+        rectfill(buffer, 0, 0, SCREEN_W, 100, makecol(50, 50, 50));
+
+        for(int i = 1; i <= 5; i++)
+        {
+            if(console_data.size() - i >= 0 && console_data.size() - i < console_data.size())
+                textprintf_ex(buffer, font, 10, 90 - 15*i, makecol(255, 255, 255), -1, "> %s", console_data[console_data.size() - i].c_str());
+        }
+    }
+
+  }
 
   gui->draw();
 
