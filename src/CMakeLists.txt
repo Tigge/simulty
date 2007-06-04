@@ -32,8 +32,13 @@ ADD_EXECUTABLE(../simulty-server Server.cpp Point.cpp Map.cpp PlayerManager.cpp
 IF(WIN32)
   TARGET_LINK_LIBRARIES(../simulty-server NL elog ${ALLEGRO} wsock32)
 ELSE(WIN32)
-  TARGET_LINK_LIBRARIES(../simulty-server NL elog ${ALLEGRO} ${ALLEGROUNSHARABLE} )
+  TARGET_LINK_LIBRARIES(../simulty-server NL elog ${ALLEGRO})
 ENDIF(WIN32)
+
+IF(ALLEGROUNSHARABLE-NOTFOUND)
+ELSE(ALLEGROUNSHARABLE-NOTFOUND)
+  TARGET_LINK_LIBRARIES(../simulty-server ${ALLEGROUNSHARABLE} )
+ENDIF(ALLEGROUNSHARABLE-NOTFOUND)
 
 # Client:
 ###############################################################################
@@ -49,6 +54,11 @@ ADD_EXECUTABLE(../simulty-client Client.cpp Point.cpp Map.cpp PlayerManager.cpp
 IF(WIN32)
   TARGET_LINK_LIBRARIES(../simulty-client NL elog ${ALLEGRO} ${GUICHAN} ${GUICHANALLEGRO} wsock32 )
 ELSE(WIN32)
-  TARGET_LINK_LIBRARIES(../simulty-client NL elog ${ALLEGRO} ${ALLEGROUNSHARABLE} ${GUICHAN} ${GUICHANALLEGRO})
+  TARGET_LINK_LIBRARIES(../simulty-client NL elog ${ALLEGRO} ${GUICHAN} ${GUICHANALLEGRO})
 ENDIF(WIN32)
+
+IF(ALLEGROUNSHARABLE-NOTFOUND)
+ELSE(ALLEGROUNSHARABLE-NOTFOUND)
+  TARGET_LINK_LIBRARIES(../simulty-client ${ALLEGROUNSHARABLE})
+ENDIF(ALLEGROUNSHARABLE-NOTFOUND)
 
