@@ -90,8 +90,12 @@ int BuildingManager::getThriveValue(Map *map, char slot, Point where) {
 
 void BuildingManager::addSpecialBuilding(Building *b) {
 
-    special_buildings.push_back(b);
+  special_buildings.push_back(b);
+}
 
+void BuildingManager::removeSpecialBuilding(unsigned int id) {
+
+  special_buildings.erase(std::vector<Building *>::iterator(special_buildings.begin() + id));
 }
 
 Building *BuildingManager::getSpecialBuilding(int i) {
@@ -147,16 +151,30 @@ bool BuildingManager::canBuildSpecialBuilding(Building *b, unsigned char slot, M
 
   return true;
 }
+
+int BuildingManager::getSpecialBuildingID(Point at) {
+
+  for(unsigned int id = 0; id < special_buildings.size(); id++) {
+    if(at.getX() >= special_buildings[id]->position.getX() && at.getX() < special_buildings[id]->position.getX() + special_buildings[id]->getWidth()
+    && at.getY() >= special_buildings[id]->position.getY() && at.getY() < special_buildings[id]->position.getY() + special_buildings[id]->getHeight()) {
+      return id;
+    }
+  }
+
+  return -1;
+}
+
 void BuildingManager::addZoneBuilding(unsigned char player_slot, int buildingType, Point p, int w, int h) {
 
+  std::cout << "Attempting to construct a " << w << "x" << h << " zone of type " << buildingType << "...";
   Building *b = BuildingFactory::getBuilding(buildingType, p, player_slot);
 
   b->setWidth(w);
   b->setHeight(h);
 
   zone_buildings.push_back(b);
-  
-  std::cout << "Build zone building" << std::endl;
+
+  std::cout << "  Success!" << std::endl;
 }
 void BuildingManager::updateZoneBuildings(unsigned char player_slot, Map *map)
 {
@@ -238,8 +256,14 @@ void BuildingManager::updateZoneBuildings(unsigned char player_slot, Map *map)
                   break;
               }
               if(good) {
-                int average_thrive = total_thrive/(w*h);
-                addZoneBuilding(player_slot, Building::TYPE_RESIDENTIAL, Point(x, y), w, h);
+                //int average_thrive = total_thrive/(w*h);
+                if(zone == SIMULTY_ZONE_RES)
+                  addZoneBuilding(player_slot, Building::TYPE_RESIDENTIAL, Point(x, y), w, h);
+                else if(zone == SIMULTY_ZONE_IND)
+                  addZoneBuilding(player_slot, Building::TYPE_INDUSTRIAL, Point(x, y), w, h);
+                else if(zone == SIMULTY_ZONE_COM)
+                  addZoneBuilding(player_slot, Building::TYPE_COMMERSIAL, Point(x, y), w, h);
+                else throw "Can't build a zonebuilding of a type which shouldn't exist!!";
               }
             }
           }

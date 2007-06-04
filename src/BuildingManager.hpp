@@ -28,9 +28,11 @@ class BuildingManager {
 
     // Buildings:
     void addSpecialBuilding(Building *);
+    void removeSpecialBuilding(unsigned int id);
 
     Building *getSpecialBuilding(int i);
-    int  getSpecialBuildingCount();
+    int getSpecialBuildingCount();
+    int getSpecialBuildingID(Point at);
 
     bool canBuildSpecialBuilding(Building *b, unsigned char slot, Map *m);
     bool canBuild(Point at, unsigned char slot, Map *m);

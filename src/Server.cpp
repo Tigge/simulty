@@ -233,17 +233,18 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
     case NPACKET_TYPE_SIMULTY_BULLDOZE: {
       NLINT32 startX, startY, endX, endY;
       pack >> startX >> startY >> endX >> endY;
-      
+
       std::cout << "Bulldozing area..." << std::endl;
-      
-      // TODO: loop special buildings, zone buildings
-      //       move to Map function?
-      
+
+      // TODO: move to Map function?
+
       for(int x = startX; x <= endX && x < map->getWidth(); x++)
         for(int y = startY; y <= endY && y < map->getHeight(); y++) {
           if(map->getTile(x, y)->getOwner() == from->getSlot()) {
             map->getTile(x, y)->setRoad(false);
             map->getTile(x, y)->setZone(0);
+            if(bman.getSpecialBuildingID(Point(x, y)) != -1)
+              bman.removeSpecialBuilding(bman.getSpecialBuildingID(Point(x, y)));
           }
         }
 
