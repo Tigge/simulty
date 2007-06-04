@@ -75,10 +75,12 @@ class Client {
 
     void packet_handle(NLPacket p);
 
-    void buy_land(Point from, Point to);
-    void buy_road(Point from, Point to);
-    void buy_zone(Point from, Point to, int type);
-    void buy_building(Point where, int type);
+    void bulldoze(Point from, Point to);
+
+    void buyLand(Point from, Point to);
+    void buyRoad(Point from, Point to);
+    void buyZone(Point from, Point to, int type);
+    void buyBuilding(Point where, int type);
 
 };
 

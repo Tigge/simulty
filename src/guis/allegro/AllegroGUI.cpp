@@ -307,6 +307,8 @@ void AllegroGUI::action(const gcn::ActionEvent &actionEvent) {
     tool = SIMULTY_CLIENT_TOOL_BUILD_FIRE;
   } else if(actionEvent.getSource() == hospitalButton) {
     tool = SIMULTY_CLIENT_TOOL_BUILD_HOSPITAL;
+  } else if(actionEvent.getSource() == bulldozerButton) {
+    tool = SIMULTY_CLIENT_TOOL_BULLDOZER;
   }
 }
 
@@ -457,22 +459,24 @@ void AllegroGUI::update()
             if(mouse.getPosition().getX() < SCREEN_W - 80) {
 
               if(tool == SIMULTY_CLIENT_TOOL_LAND) {
-                  client->buy_land(mouse_down_tile, mouse_up_tile);
+                  client->buyLand(mouse_down_tile, mouse_up_tile);
                   // buy land
               } else if(tool == SIMULTY_CLIENT_TOOL_ROAD) {
                   // draw road
-                  client->buy_road(mouse_down_tile, mouse_up_tile);
+                  client->buyRoad(mouse_down_tile, mouse_up_tile);
               } else if(tool == SIMULTY_CLIENT_TOOL_ZONE_RES ||
                       tool == SIMULTY_CLIENT_TOOL_ZONE_COM ||
                       tool == SIMULTY_CLIENT_TOOL_ZONE_IND) {
                   // zone
-                  client->buy_zone(mouse_down_tile, mouse_up_tile, tool);
+                  client->buyZone(mouse_down_tile, mouse_up_tile, tool);
               } else if(tool == SIMULTY_CLIENT_TOOL_BUILD_POLICE) {
-                client->buy_building(mouse_down_tile, Building::TYPE_POLICE);
+                client->buyBuilding(mouse_down_tile, Building::TYPE_POLICE);
               } else if(tool == SIMULTY_CLIENT_TOOL_BUILD_FIRE) {
-                client->buy_building(mouse_down_tile, Building::TYPE_FIRE);
+                client->buyBuilding(mouse_down_tile, Building::TYPE_FIRE);
               } else if(tool == SIMULTY_CLIENT_TOOL_BUILD_HOSPITAL) {
-                client->buy_building(mouse_down_tile, Building::TYPE_HOSPITAL);
+                client->buyBuilding(mouse_down_tile, Building::TYPE_HOSPITAL);
+              } else if(tool == SIMULTY_CLIENT_TOOL_BULLDOZER) {
+                client->bulldoze(mouse_down_tile, mouse_up_tile);
               }
             }
         }

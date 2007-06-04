@@ -64,6 +64,8 @@ const unsigned char NPACKET_TYPE_SIMULTY_ROAD_DESTROY     = 201;
 const unsigned char NPACKET_TYPE_SIMULTY_BUILDING_BUILD   = 204;
 const unsigned char NPACKET_TYPE_SIMULTY_BUILDING_DESTROY = 205;
 
+const unsigned char NPACKET_TYPE_SIMULTY_BULLDOZE         = 220;
+
 const unsigned char NPACKET_TYPE_SIMULTY_LAND_BUY  = 230;
 const unsigned char NPACKET_TYPE_SIMULTY_LAND_SELL = 231;
 

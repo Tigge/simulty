@@ -63,7 +63,18 @@ void Client::update() {
 }
 
 
-void Client::buy_land(Point from, Point to) {
+void Client::bulldoze(Point from, Point to) {
+
+  NLPacket bulldozePacket(NPACKET_TYPE_SIMULTY_BULLDOZE);
+
+  bulldozePacket << (NLINT32)from.getX() << (NLINT32)from.getY()
+      << (NLINT32)to.getX() << (NLINT32)to.getY();
+
+  net_client->packet_put(bulldozePacket);
+
+}
+
+void Client::buyLand(Point from, Point to) {
 
     gui->console_log("Bought land (request)");
 
@@ -78,7 +89,7 @@ void Client::buy_land(Point from, Point to) {
     net_client->packet_put(landpak);
 }
 
-void Client::buy_road(Point from, Point to) {
+void Client::buyRoad(Point from, Point to) {
 
     // Only straight lines (for now):
     if(from.getX() == to.getX() || from.getY() == to.getY()) {
@@ -92,7 +103,7 @@ void Client::buy_road(Point from, Point to) {
 
 }
 
-void Client::buy_zone(Point from, Point to, int type) {
+void Client::buyZone(Point from, Point to, int type) {
 
     gui->console_log("Bought zone (request)");
 
@@ -112,7 +123,7 @@ void Client::buy_zone(Point from, Point to, int type) {
 }
 
 
-void Client::buy_building(Point where, int type) {
+void Client::buyBuilding(Point where, int type) {
 
     NLPacket buildpak(NPACKET_TYPE_SIMULTY_BUILDING_BUILD);
 

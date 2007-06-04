@@ -177,7 +177,7 @@ void BuildingManager::updateZoneBuildings(unsigned char player_slot, Map *map)
 
         // Check for special buildings on the zone
         bool special_building = false;
-        for(int i = 0; i < special_buildings.size(); i++) {
+        for(unsigned int i = 0; i < special_buildings.size(); i++) {
           if(x < special_buildings[i]->getPosition().getX() + special_buildings[i]->getWidth()
           && x >= special_buildings[i]->getPosition().getX()
           && y < special_buildings[i]->getPosition().getY() + special_buildings[i]->getHeight()
@@ -188,7 +188,7 @@ void BuildingManager::updateZoneBuildings(unsigned char player_slot, Map *map)
         if(!special_building) {
           // Check for zone buildings on the zone
           bool zone_building = false;
-          for(int i = 0; i < zone_buildings.size(); i++) {
+          for(unsigned int i = 0; i < zone_buildings.size(); i++) {
             if(x < zone_buildings[i]->getPosition().getX() + zone_buildings[i]->getWidth()
             && x >= zone_buildings[i]->getPosition().getX()
             && y < zone_buildings[i]->getPosition().getY() + zone_buildings[i]->getHeight()

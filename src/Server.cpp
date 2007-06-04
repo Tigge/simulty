@@ -230,9 +230,30 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
         break;
     }
 
+    case NPACKET_TYPE_SIMULTY_BULLDOZE: {
+      NLINT32 startX, startY, endX, endY;
+      pack >> startX >> startY >> endX >> endY;
+      
+      std::cout << "Bulldozing area..." << std::endl;
+      
+      // TODO: loop special buildings, zone buildings
+      //       move to Map function?
+      
+      for(int x = startX; x <= endX && x < map->getWidth(); x++)
+        for(int y = startY; y <= endY && y < map->getHeight(); y++) {
+          if(map->getTile(x, y)->getOwner() == from->getSlot()) {
+            map->getTile(x, y)->setRoad(false);
+            map->getTile(x, y)->setZone(0);
+          }
+        }
+
+      packet_send_to_all(pack);
+      break;
+    }
+
     // Buy land:
-    case NPACKET_TYPE_SIMULTY_LAND_BUY:
-    {
+    case NPACKET_TYPE_SIMULTY_LAND_BUY: {
+
         // Read values from packet:
         NLINT32 startx, starty, endx, endy;
         pack >> startx >> starty >> endx >> endy;
