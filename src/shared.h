@@ -30,6 +30,8 @@ const unsigned char SIMULTY_CLIENT_TOOL_BUILD_POLICE   = 50;
 const unsigned char SIMULTY_CLIENT_TOOL_BUILD_HOSPITAL = 51;
 const unsigned char SIMULTY_CLIENT_TOOL_BUILD_FIRE     = 52;
 
+const unsigned char SIMULTY_CLIENT_TOOL_BULLDOZER      = 100;
+
 // Costs: (for now)
 
 const unsigned NLINT16 SIMULTY_COST_ROAD = 10;

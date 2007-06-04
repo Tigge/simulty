@@ -203,6 +203,11 @@ AllegroGUI::AllegroGUI() {
   hospitalButton = new gcn::ImageButton(hospitalIcon);
   hospitalButton->addActionListener(this);
   top->add(hospitalButton, SCREEN_W - 37, 116);
+  
+  bulldozerIcon  = imageLoader->load("img/menu_icon_bulldozer.pcx", true);
+  bulldozerButton = new gcn::ImageButton(bulldozerIcon);
+  bulldozerButton->addActionListener(this);
+  top->add(bulldozerButton, SCREEN_W - 74, 153);
 
   console_show = false;
   tool = 0;
@@ -249,6 +254,9 @@ AllegroGUI::~AllegroGUI(){
 
   delete hospitalIcon;
   delete hospitalButton;
+  
+  delete bulldozerIcon;
+  delete bulldozerButton;
 
   // Guichan stuff
   delete input;

@@ -146,14 +146,13 @@ int  Server::getSpeed() {
 // =====================================================================
 void Server::update () {
 
-  calendar.advance();
-
   // Wait for network updates (max 250 ms, then move on)
   net.update(100);
 
   // TODO: Give timelimit
-  if(calendar.getYear() > last_rebuilt) { // where true = timelimit
-    last_rebuilt = calendar.getYear();
+  if(calendar.getMonth() != last_rebuilt) { // where true = timelimit
+    last_rebuilt = calendar.getMonth();
+    std::cout << "Updating zones... " << last_rebuilt <<  std::endl;
     for(unsigned int i = 0; i < pman.count(); i++) {
       bman.updateZoneBuildings(pman.get_by_n(i)->getSlot(), map);
     }
@@ -161,6 +160,9 @@ void Server::update () {
 
   // New stuff happening: (TODO: move to function)
   if(time_advance) {
+
+    calendar.advance();
+
     for(unsigned int i = 0; i < pman.count(); i++) {
       player_server_network *plr = (player_server_network *)pman.get_by_n(i);
 

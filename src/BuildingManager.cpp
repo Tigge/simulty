@@ -149,12 +149,14 @@ bool BuildingManager::canBuildSpecialBuilding(Building *b, unsigned char slot, M
 }
 void BuildingManager::addZoneBuilding(unsigned char player_slot, int buildingType, Point p, int w, int h) {
 
-  /*Building *b = BuildingFactory::getBuilding(buildingType, p, player_slot);
+  Building *b = BuildingFactory::getBuilding(buildingType, p, player_slot);
 
   b->setWidth(w);
   b->setHeight(h);
 
-  zone_buildings.push_back(b);*/
+  zone_buildings.push_back(b);
+  
+  std::cout << "Build zone building" << std::endl;
 }
 void BuildingManager::updateZoneBuildings(unsigned char player_slot, Map *map)
 {

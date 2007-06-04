@@ -28,11 +28,11 @@ class Calendar {
   }
   
 
-  int         getYear() {
+  int getYear() {
     return year;
   }
 
-  int         getMonth() {
+  int getMonth() {
     return month;
   }
   const std::string getMonthAsString() {

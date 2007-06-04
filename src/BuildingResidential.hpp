@@ -1,5 +1,5 @@
-#ifndef _BUILDINGFIRE_HPP_
-#define _BUILDINGFIRE_HPP_
+#ifndef _BUILDINGRESIDENTIAL_HPP_
+#define _BUILDINGRESIDENTIAL_HPP_
 
 #include "Building.hpp"
 

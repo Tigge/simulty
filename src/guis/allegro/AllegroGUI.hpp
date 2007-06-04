@@ -53,6 +53,8 @@ class AllegroGUI : public GUI, gcn::KeyListener, gcn::ActionListener {
     gcn::Button      *policeButton;
     gcn::Button      *fireButton;
     gcn::Button      *hospitalButton;
+    
+    gcn::Button      *bulldozerButton;
 
     gcn::Image      *indIcon;
     gcn::Image      *resIcon;
@@ -64,6 +66,7 @@ class AllegroGUI : public GUI, gcn::KeyListener, gcn::ActionListener {
     gcn::Image      *policeIcon;
     gcn::Image      *fireIcon;
     gcn::Image      *hospitalIcon;
+    gcn::Image      *bulldozerIcon;
 
 
     BITMAP *menu_background;
