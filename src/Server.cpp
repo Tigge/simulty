@@ -230,6 +230,7 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
         break;
     }
 
+    // Bulldoze:
     case NPACKET_TYPE_SIMULTY_BULLDOZE: {
       NLINT32 startX, startY, endX, endY;
       pack >> startX >> startY >> endX >> endY;
