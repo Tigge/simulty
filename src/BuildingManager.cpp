@@ -20,11 +20,11 @@ int BuildingManager::getThriveValueForCrime(Map *m, char slot, Point where) {
 
   int distance = 100;
 
-  for(int i = 0; i < getSpecialBuildingCount(); i++) {
+  for(unsigned int i = 0; i < getSpecialBuildingCount(); i++) {
     if(getSpecialBuilding(i)->getType() == Building::TYPE_POLICE
         && getSpecialBuilding(i)->getOwner() == slot) {
-      for(int x = 0; x < getSpecialBuilding(i)->getWidth(); x++) {
-        for(int y = 0; y < getSpecialBuilding(i)->getHeight(); y++) {
+      for(unsigned int x = 0; x < getSpecialBuilding(i)->getWidth(); x++) {
+        for(unsigned int y = 0; y < getSpecialBuilding(i)->getHeight(); y++) {
 
           int d = Point::distance(where,
               getSpecialBuilding(i)->getPosition() + Point(x, y));
@@ -101,8 +101,15 @@ void BuildingManager::removeSpecialBuilding(unsigned int id) {
 Building *BuildingManager::getSpecialBuilding(int i) {
     return special_buildings[i];
 }
-int BuildingManager::getSpecialBuildingCount() {
+unsigned int BuildingManager::getSpecialBuildingCount() {
     return special_buildings.size();
+}
+
+Building *BuildingManager::getZoneBuilding(int i) {
+    return zone_buildings[i];
+}
+unsigned int BuildingManager::getZoneBuildingCount() {
+    return zone_buildings.size();
 }
 
 bool BuildingManager::canBuild(Point at, unsigned char slot, Map *m) {
@@ -166,7 +173,7 @@ int BuildingManager::getSpecialBuildingID(Point at) {
 
 void BuildingManager::addZoneBuilding(unsigned char player_slot, int buildingType, Point p, int w, int h) {
 
-  std::cout << "Attempting to construct a " << w << "x" << h << " zone of type " << buildingType << "...";
+  //std::cout << "Attempting to construct a " << w << "x" << h << " zone of type " << buildingType << "...";
   Building *b = BuildingFactory::getBuilding(buildingType, p, player_slot);
 
   b->setWidth(w);
@@ -174,18 +181,12 @@ void BuildingManager::addZoneBuilding(unsigned char player_slot, int buildingTyp
 
   zone_buildings.push_back(b);
 
-  std::cout << "  Success!" << std::endl;
+  //std::cout << "  Success!" << std::endl;
 }
 void BuildingManager::updateZoneBuildings(unsigned char player_slot, Map *map)
 {
-  /*//Tear down all old buildings
-  for(unsigned int i = 0; i < zone_buildings.size(); i++)
-    delete zone_buildings[i];
-  zone_buildings = std::vector<Building *>();*/
-
   int thrive_min_val = 1;
   int max_size = 3;
-  std::vector<Point> buildable_tiles;
 
   // loop through all tiles
   for(int x = 0; x < map->getWidth(); x++) {
@@ -222,7 +223,7 @@ void BuildingManager::updateZoneBuildings(unsigned char player_slot, Map *map)
 
             // Theoreticly, all zones which meats the minimum value will be inhabited
             int tries = 0;
-            while(tries < max_size) {
+            while(tries < max_size-1) {
               tries++;
               bool good = true;
               unsigned char zone = map->getTile(x, y)->getZone();

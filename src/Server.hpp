@@ -23,6 +23,13 @@
 
 #include "Calendar.hpp"
 
+#include "shared.h"
+#include "elog.h"
+
+#include "BuildingFactory.hpp"
+
+#include "LoaderSaver.hpp"
+
 const unsigned char SIMULTY_SERVER_STATE_LOBBY      = 1;
 
 const unsigned char SIMULTY_SERVER_STATE_GAME_START = 2;
@@ -52,8 +59,7 @@ class Server {
     Calendar calendar;
 
     bool time_advance;
-    int  speed;
-    int last_rebuilt;
+    int speed;
 
   public:
     NLSocket *net_server;

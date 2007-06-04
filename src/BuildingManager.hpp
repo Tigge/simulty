@@ -25,14 +25,16 @@ class BuildingManager {
 
     int getThriveValue(Map *m, char slot, Point where);
 
-
     // Buildings:
     void addSpecialBuilding(Building *);
     void removeSpecialBuilding(unsigned int id);
 
     Building *getSpecialBuilding(int i);
-    int getSpecialBuildingCount();
+    unsigned int getSpecialBuildingCount();
     int getSpecialBuildingID(Point at);
+
+    Building *getZoneBuilding(int i);
+    unsigned int getZoneBuildingCount();
 
     bool canBuildSpecialBuilding(Building *b, unsigned char slot, Map *m);
     bool canBuild(Point at, unsigned char slot, Map *m);

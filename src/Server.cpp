@@ -23,20 +23,7 @@
  * Version ##revision##
  */
 
-
-#include "shared.h"
-
 #include "Server.hpp"
-#include "elog.h"
-
-
-#include "Player.hpp"
-#include "player_server_network.h"
-#include "player_server_ai.h"
-
-#include "BuildingFactory.hpp"
-
-#include "LoaderSaver.hpp"
 
 Server *server;
 
@@ -54,10 +41,10 @@ int main(int argc, char *argv[]) {
 
     delete server;
   }
-  catch(std::exception& error)
+  catch(const char * error)
   {
     std::cerr << "Simulty encountered an error which it couldn't recover from." << std::endl;
-    std::cerr << "Error message: " << error.what() << std::endl;
+    std::cerr << "Error message: " << error << std::endl;
   }
 }
 END_OF_MAIN()
@@ -97,13 +84,11 @@ Server::Server() {
   setSpeed(1);
 
   srand(time(0));
-  last_rebuilt = 0;
 }
 
 // Destructor, cleans everything up:
 // =====================================================================
 Server::~Server() {
-
 
     // TODO: clean up more things. playes, etc, etc
 
@@ -149,17 +134,30 @@ void Server::update () {
   // Wait for network updates (max 250 ms, then move on)
   net.update(100);
 
-  // TODO: Give timelimit
-  if(calendar.getMonth() != last_rebuilt) { // where true = timelimit
-    last_rebuilt = calendar.getMonth();
-    std::cout << "Updating zones... " << last_rebuilt <<  std::endl;
-    for(unsigned int i = 0; i < pman.count(); i++) {
-      bman.updateZoneBuildings(pman.get_by_n(i)->getSlot(), map);
-    }
-  }
-
   // New stuff happening: (TODO: move to function)
   if(time_advance) {
+
+    if(calendar.isEndOfMonth()) {
+      std::cout << "It is now " << calendar.getMonthAsString() << ", time to update zones" << std::endl;
+      for(unsigned int i = 0; i < pman.count(); i++) {
+        bman.updateZoneBuildings(pman.get_by_n(i)->getSlot(), map);
+      }
+    }
+
+    if(calendar.isEndOfYear()) {
+      // TODO: Make dependent of commerce and industry
+      std::cout << "It is now " << calendar.getYear() << ", time for *ka-ching!*" << std::endl;
+      for(unsigned int p = 0; p < pman.count(); p++) {
+        int pop = 0;
+        for(unsigned int i = 0; i < bman.getZoneBuildingCount(); i++) {
+          if(bman.getZoneBuilding(i)->getOwner() == pman.get_by_n(p)->getSlot()) {
+            pop += int(pow(bman.getZoneBuilding(i)->getWidth()*bman.getZoneBuilding(i)->getHeight(), 2.0)) *
+            bman.getThriveValue(map, pman.get_by_n(p)->getSlot(), bman.getZoneBuilding(i)->getPosition());
+          }
+        }
+        pman.get_by_n(p)->setMoney(pman.get_by_n(p)->getMoney() + pop*(1+pman.get_by_n(p)->getTax()/100));
+      }
+    }
 
     calendar.advance();
 

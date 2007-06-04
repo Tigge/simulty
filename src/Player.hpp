@@ -33,6 +33,9 @@ class Player {
     virtual int getSlot();
     virtual int getType();
 
+    virtual int getTax();
+    virtual void setTax(unsigned int tax);
+
     virtual int  getMoney();
     virtual void setMoney(int m);
 
