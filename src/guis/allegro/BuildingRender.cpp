@@ -74,9 +74,9 @@ void BuildingRender::renderBuilding(BITMAP *r, Building *b, Point where) {
 void BuildingRender::render(BITMAP *r, MapRender *mr, Camera cam, BuildingManager *bm) {
 
     //Render depth by Z depth (TODO, render only visible)
-    for(int d = 0; d < (mr->getMap()->getWidth() + mr->getMap()->getHeight()); d++) {
+    for(unsigned int d = 0; d < (mr->getMap()->getWidth() + mr->getMap()->getHeight()); d++) {
 
-        for(int i = 0; i < bm->getSpecialBuildingCount(); i++) {
+        for(unsigned int i = 0; i < bm->getSpecialBuildingCount(); i++) {
 
             Building *b = bm->getSpecialBuilding(i);
             if(b->getZ() == d)

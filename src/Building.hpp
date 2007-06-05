@@ -43,8 +43,8 @@ class Building {
     virtual unsigned char getWidth();
     virtual unsigned char getHeight();
 
-    virtual void setWidth(unsigned char set_width);
-    virtual void setHeight(unsigned char set_height);
+    virtual void setWidth(unsigned char width);
+    virtual void setHeight(unsigned char height);
 
     virtual int getOwner();
 

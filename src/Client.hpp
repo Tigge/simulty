@@ -67,6 +67,7 @@ class Client {
   // Operations
   public:
     Client(GUI *);
+    
     ~Client();
 
     bool running();

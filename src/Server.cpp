@@ -23,14 +23,15 @@
  * Version ##revision##
  */
 
+#include "SimultyException.hpp"
 #include "Server.hpp"
 
-Server *server;
+Server* Server::instance = NULL;
 
 int main(int argc, char *argv[]) {
 
   try {
-    server = new Server;
+    Server *server = Server::getInstance();
 
     while(true)
     {
@@ -38,17 +39,23 @@ int main(int argc, char *argv[]) {
         rest(0);
     }
 
-
     delete server;
-  }
-  catch(const char * error)
-  {
-    std::cerr << "Simulty encountered an error which it couldn't recover from." << std::endl;
-    std::cerr << "Error message: " << error << std::endl;
-  }
-}
-END_OF_MAIN()
 
+  } catch(std::exception &e) {
+    std::cerr << "Simulty encountered an error which it couldn't recover from." << std::endl;
+    std::cerr << "Error message: " << e.what() << std::endl;
+  } catch(...) {
+    std::cerr << "Simulty encountered an unkown error which it couldn't recover from." << std::endl;
+  }
+} END_OF_MAIN()
+
+
+Server* Server::getInstance() {
+  if (instance == NULL) {  
+    instance = new Server;
+  }
+  return instance;
+}
 
 // Constructor, inits the server and starts listening after connections
 // =====================================================================
@@ -120,7 +127,7 @@ void Server::setSpeed(int speed) {
       remove_param_int(Server::time_increment, this);
     }
   } else {
-    throw "The specified speed is not valid";
+    throw SIMULTYEXCEPTION("The specified speed is not valid");
   }
 }
 int  Server::getSpeed() {
@@ -237,8 +244,8 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
 
       // TODO: move to Map function?
 
-      for(int x = startX; x <= endX && x < map->getWidth(); x++)
-        for(int y = startY; y <= endY && y < map->getHeight(); y++) {
+      for(unsigned int x = startX; x <= (unsigned int)endX && x < map->getWidth(); x++)
+        for(unsigned int y = startY; y <= (unsigned int)endY && y < map->getHeight(); y++) {
           if(map->getTile(x, y)->getOwner() == from->getSlot()) {
             map->getTile(x, y)->setRoad(false);
             map->getTile(x, y)->setZone(0);
@@ -254,39 +261,39 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
     // Buy land:
     case NPACKET_TYPE_SIMULTY_LAND_BUY: {
 
-        // Read values from packet:
-        NLINT32 startx, starty, endx, endy;
-        pack >> startx >> starty >> endx >> endy;
+      // Read values from packet:
+      NLINT32 startx, starty, endx, endy;
+      pack >> startx >> starty >> endx >> endy;
 
-        if(startx < 0 || starty < 0)break;
+      if(startx < 0 || starty < 0)break;
 
-        // Calculate cost:
-        int cost = 0;
+      // Calculate cost:
+      int cost = 0;
 
-        for(int x = startx; x <= endx && x < map->getWidth(); x++)
-            for(int y = starty; y <= endy && y < map->getHeight(); y++)
-                if(map->getTile(x, y)->getOwner() == -1)
-                    cost += SIMULTY_COST_LAND;
+      for(unsigned int x = startx; x <= (unsigned int)endx && x < map->getWidth(); x++)
+        for(unsigned int y = starty; y <= (unsigned int)endy && y < map->getHeight(); y++)
+          if(map->getTile(x, y)->getOwner() == -1)
+            cost += SIMULTY_COST_LAND;
 
-        // If player has enough money, do the change:
-        if(from->getMoney() > cost) {
-            from->setMoney(from->getMoney() - cost);
+      // If player has enough money, do the change:
+      if(from->getMoney() > cost) {
+        from->setMoney(from->getMoney() - cost);
 
-            for(int x = startx; x <= endx && x < map->getWidth(); x++)
-                for(int y = starty; y <= endy && y < map->getHeight(); y++)
-                    if(map->getTile(x, y)->getOwner() == -1)
-                        map->getTile(x, y)->setOwner(from->getSlot());
+        for(unsigned int x = startx; x <= (unsigned int)endx && x < map->getWidth(); x++)
+          for(unsigned int y = starty; y <= (unsigned int)endy && y < map->getHeight(); y++)
+            if(map->getTile(x, y)->getOwner() == -1)
+              map->getTile(x, y)->setOwner(from->getSlot());
 
 
-            // Send change to everyone else:
+        // Send change to everyone else:
 
-            NLPacket landp(NPACKET_TYPE_SIMULTY_LAND_BUY);
-            landp << (NLINT16)from->getSlot() << startx << starty << endx << endy;
+        NLPacket landp(NPACKET_TYPE_SIMULTY_LAND_BUY);
+        landp << (NLINT16)from->getSlot() << startx << starty << endx << endy;
 
-            packet_send_to_all(landp);
-        }
+        packet_send_to_all(landp);
+      }
 
-        break;
+      break;
     }
     // Buy road:
     case NPACKET_TYPE_SIMULTY_ROAD_BUILD:
@@ -296,25 +303,25 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
 
       int cost = 0;
 
-      for(int x = fromX; x <= toX && x < map->getWidth(); x++) {
-        for(int y = fromY; y <= toY && y < map->getHeight(); y++) {
+      for(unsigned int x = fromX; x <= (unsigned int)toX && x < map->getWidth(); x++) {
+        for(unsigned int y = fromY; y <= (unsigned int)toY && y < map->getHeight(); y++) {
           if(bman.canBuild(Point(x, y), from->getSlot(), map)) {
-              cost += SIMULTY_COST_ROAD;
+            cost += SIMULTY_COST_ROAD;
           }
         }
       }
       if(from->getMoney() > SIMULTY_COST_ROAD) {
         from->setMoney(from->getMoney() - cost);
 
-        for(int x = fromX; x <= toX && x < map->getWidth(); x++) {
-          for(int y = fromY; y <= toY && y < map->getHeight(); y++) {
+        for(unsigned int x = fromX; x <= (unsigned int)toX && x < map->getWidth(); x++) {
+          for(unsigned int y = fromY; y <= (unsigned int)toY && y < map->getHeight(); y++) {
 
             if(bman.canBuild(Point(x, y), from->getSlot(), map)) {
 
               map->getTile(x, y)->setRoad(true);
 
               NLPacket p(NPACKET_TYPE_SIMULTY_ROAD_BUILD);
-              p << x << y;
+              p << (NLINT32)x << (NLINT32)y;
               packet_send_to_all(p);
             }
           }
@@ -358,16 +365,16 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
 
 
 
-      for(int x = startx; x <= endx; x++)
-        for(int y = starty; y <= endy; y++)
+      for(unsigned int x = startx; x <= (unsigned int)endx; x++)
+        for(unsigned int y = starty; y <= (unsigned int)endy; y++)
           if(bman.canBuild(Point(x, y), from->getSlot(), map))
             cost += cost_per_tile;
 
       if(cost < from->getMoney()) {
         from->setMoney(from->getMoney() - cost);
 
-        for(int x = startx; x <= endx; x++)
-          for(int y = starty; y <= endy; y++)
+        for(unsigned int x = startx; x <= (unsigned int)endx; x++)
+          for(unsigned int y = starty; y <= (unsigned int)endy; y++)
             if(bman.canBuild(Point(x, y), from->getSlot(), map))
               map->getTile(x, y)->setZone(type);
 

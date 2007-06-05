@@ -88,8 +88,8 @@ class LoaderSaver {
 
     s = writeInt16(s, m->getWidth());
     s = writeInt16(s, m->getHeight());
-    for(int x = 0; x < m->getWidth(); x++) {
-      for(int y = 0; y < m->getHeight(); y++) {
+    for(unsigned int x = 0; x < m->getWidth(); x++) {
+      for(unsigned int y = 0; y < m->getHeight(); y++) {
         s = writeChar(s, m->getTile(x, y)->getOwner());
         s = writeChar(s, m->getTile(x, y)->getTerrain());
         s = writeChar(s, m->getTile(x, y)->getZone());
@@ -107,13 +107,13 @@ class LoaderSaver {
     //std::cout << "loading from string (length " << s.length() << "): " << s << std::endl;
     
     unsigned int i = 0; 
-    int w = readInt16(s, i);
-    int h = readInt16(s, i);
+    unsigned int w = readInt16(s, i);
+    unsigned int h = readInt16(s, i);
     delete m;
     m = new Map(w, h);
 
-    for(int x = 0; x < m->getWidth(); x++) {
-      for(int y = 0; y < m->getHeight(); y++) {
+    for(unsigned int x = 0; x < m->getWidth(); x++) {
+      for(unsigned int y = 0; y < m->getHeight(); y++) {
         m->getTile(x, y)->setOwner(readChar(s, i));
         readChar(s, i);
         m->getTile(x, y)->setZone(readChar(s, i));

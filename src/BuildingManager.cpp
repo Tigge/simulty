@@ -14,8 +14,9 @@ BuildingManager::~BuildingManager() {
 int BuildingManager::getThriveValueForCrime(Map *m, char slot, Point where) {
 
   // Out of bounds:
-  if(where.getX() < 0 || where.getY() < 0 || where.getX() >= m->getWidth()
-      || where.getY() >= m->getHeight())
+  if(where.getX() < 0 || where.getY() < 0 
+      || (unsigned int)where.getX() >= m->getWidth()
+      || (unsigned int)where.getY() >= m->getHeight())
     return 0;
 
   int distance = 100;
@@ -52,8 +53,9 @@ int BuildingManager::getThriveValueForCrime(Map *m, char slot, Point where) {
 int BuildingManager::getThriveValueForConnection(Map *map, char slot, Point where) {
 
   // Out of bounds:
-  if(where.getX() < 0 || where.getY() < 0 || where.getX() >= map->getWidth()
-    || where.getY() >= map->getHeight())
+  if(where.getX() < 0 || where.getY() < 0 
+      || (unsigned int)where.getX() >= map->getWidth()
+      || (unsigned int)where.getY() >= map->getHeight())
     return 0;
 
 
@@ -189,8 +191,8 @@ void BuildingManager::updateZoneBuildings(unsigned char player_slot, Map *map)
   int max_size = 3;
 
   // loop through all tiles
-  for(int x = 0; x < map->getWidth(); x++) {
-    for(int y = 0; y < map->getHeight(); y++) {
+  for(unsigned int x = 0; x < map->getWidth(); x++) {
+    for(unsigned int y = 0; y < map->getHeight(); y++) {
       // If the tile is zoned and hasn't got a road on it
       if(map->getTile(x, y)->getZone() != 0 && !map->getTile(x, y)->isRoad()) {
 

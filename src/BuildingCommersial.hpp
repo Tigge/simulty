@@ -10,11 +10,11 @@ class BuildingCommersial : public Building {
     BuildingCommersial(Point position, int owner);
 
     virtual unsigned char getType();
-    virtual unsigned char getWidth();
-    virtual unsigned char getHeight();
+//     virtual unsigned char getWidth();
+//     virtual unsigned char getHeight();
 
-    virtual void setWidth(unsigned char set_width);
-    virtual void setHeight(unsigned char set_height);
+//     virtual void setWidth(unsigned char set_width);
+//     virtual void setHeight(unsigned char set_height);
 };
 
 #endif

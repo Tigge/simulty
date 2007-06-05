@@ -182,8 +182,9 @@ void MapRender::render (BITMAP *b, Camera cam) {
     //al_trace("===============================\n");
     //al_trace("base %i,%i\n", base_x, base_y);
 
-    for(int x = base_x, y = base_y; 
-        x >= base_x - 2 - SCREEN_W / TILE_W  && y != base_y + SCREEN_W; 
+    for(unsigned int x = base_x, y = base_y; 
+        x >= (unsigned int)base_x - 2 - SCREEN_W / TILE_W  
+        && y != (unsigned int)base_y + SCREEN_W; 
         x--, y++) {
         //al_trace("p %i,%i\n", x, y);
 

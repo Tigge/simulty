@@ -39,42 +39,48 @@ const unsigned char SIMULTY_SERVER_STATE_GAME_END   = 4;
 
 
 class Server {
-  // Associations
-  // Attributes
+
   private:
-    NLNetwork net;
-    Map *map;
+  
+  static Server* instance;
+  
+  NLNetwork net;
+  Map *map;
 
-    bool player_add(unsigned char player_type);
-    bool player_remove(Player *);
+  bool player_add(unsigned char player_type);
+  bool player_remove(Player *);
 
-    bool packet_handle(player_server_network *from, NLPacket pack);
-    void packet_send(player_server_network *to, NLPacket pack);
-    void packet_send_to_all(NLPacket pack);
+  bool packet_handle(player_server_network *from, NLPacket pack);
+  void packet_send(player_server_network *to, NLPacket pack);
+  void packet_send_to_all(NLPacket pack);
 
-    PlayerManagerServer pman;
+  PlayerManagerServer pman;
 
-    BuildingManager bman;
+  BuildingManager bman;
 
-    Calendar calendar;
+  Calendar calendar;
 
-    bool time_advance;
-    int speed;
+  bool time_advance;
+  int speed;
+  NLSocket *net_server;
+
+  protected:
+
+  Server();
+  Server(const Server&);
+  Server& operator= (const Server&);
 
   public:
-    NLSocket *net_server;
-  // Operations
-  public:
 
-    Server();
-    virtual ~Server();
+  virtual ~Server();
 
-    void setSpeed(int speed);
-    int  getSpeed();
+  static Server *getInstance();
 
+  void setSpeed(int speed);
+  int  getSpeed();
 
-    void static time_increment(void *);
-    void update (  );
+  void static time_increment(void *);
+  void update();
 };
 
 extern Server *server;

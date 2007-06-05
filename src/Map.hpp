@@ -13,22 +13,22 @@
 class Map {
   // Attributes
   private:
-    int width;
-    int height;
+    unsigned int width;
+    unsigned int height;
 
     std::vector<Tile> tiles;
 
   // Operations
   public:
 
-    Map(int width, int height);
+    Map(unsigned int width, unsigned int height);
     virtual ~Map();
 
-    virtual Tile *getTile(int x, int y);
+    virtual Tile *getTile(unsigned int x, unsigned int y);
     virtual Tile *getTile(Point p);
 
-    virtual int getWidth();
-    virtual int getHeight();
+    virtual unsigned int getWidth();
+    virtual unsigned int getHeight();
 
 };
 
