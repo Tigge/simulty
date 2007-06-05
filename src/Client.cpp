@@ -180,13 +180,18 @@ void Client::packet_handle(NLPacket p)
       break;
     }
     case NPACKET_TYPE_SIMULTY_ROAD_BUILD: {
+      NLINT32 fromX, fromY, toX, toY;
+      p >> fromX >> fromY >> toX >> toY;
+      
+      Point from = Point(fromX, fromY);
+      Point to   = Point(toX, toY);
 
-      NLINT32 x, y; p >> x >> y;
-      map->getTile(x, y)->setRoad(true);
-
+      // TODO
+      map->buildRoad(0, from, to);
       gui->console_log("Built road");
       break;
     }
+
     case NPACKET_TYPE_SIMULTY_TIME_INCR: {
 
       cal.advance();
@@ -275,7 +280,16 @@ void Client::packet_handle(NLPacket p)
       break;
     }
     case NPACKET_TYPE_SIMULTY_BULLDOZE: {
+      NLINT32 fromX, fromY, toX, toY;
+      p >> fromX >> fromY >> toX >> toY;
+      
+      Point from = Point(fromX, fromY);
+      Point to   = Point(toX, toY);
+      
+      map->bulldoze(0, from, to);
+    
       std::cerr << "** I want to bulldoze, but don't know how to!" << std::endl;
+      break;
     }
     default: {
 

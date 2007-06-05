@@ -34,11 +34,12 @@ class NLPacket {
     // 32 bit numbers (4 chars)
     NLPacket &operator<< (const NLINT32 &val);
     NLPacket &operator>> (NLINT32 &val);
-
+    NLINT32 nextInt32();
 
     // 16 bit numbers (2 chars)
     NLPacket &operator<< (const NLINT16 &val);
     NLPacket &operator>> (NLINT16 &val);
+    NLINT16 nextInt16();
    
     // Single chars (1 char)
     NLPacket &operator<< (const char &val);
@@ -46,15 +47,15 @@ class NLPacket {
 
     NLPacket &operator>> (char &val);
     NLPacket &operator>> (unsigned char &val);
-
+    char nextChar();
 
     // Strings (n chars, end with \0)
     NLPacket &operator<< (const std::string &val);
     NLPacket &operator>> (std::string &val);
+    std::string nextString();
 
     // DEBUG, todo remove
-    void print()
-    {
+    void print() {
         std::cout << "-Content of packet: ";
         for(unsigned int i = 0; i < buffer.size(); i++) std::cout << buffer[i];
         std::cout << std::endl;

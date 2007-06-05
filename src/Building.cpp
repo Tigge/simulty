@@ -40,9 +40,9 @@ void Building::update(){
 }
 
 
-int Building::getZ() {
+unsigned int Building::getZ() {
 
-  int base = getPosition().getX() + getPosition().getY();
+  unsigned int base = getPosition().getX() + getPosition().getY();
   if(getWidth() > getHeight())
     return base - 1 + getWidth();
   else

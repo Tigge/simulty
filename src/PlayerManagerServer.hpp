@@ -5,6 +5,8 @@
 
 class PlayerManagerServer : public PlayerManager {
 
+    //TODO, add slot information
+
     public:
    
     PlayerManagerServer();

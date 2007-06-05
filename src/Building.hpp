@@ -48,7 +48,7 @@ class Building {
 
     virtual int getOwner();
 
-    virtual int getZ();
+    virtual unsigned int getZ();
 
     virtual void render();
     virtual void update();

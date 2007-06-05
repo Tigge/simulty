@@ -243,6 +243,13 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
       std::cout << "Bulldozing area..." << std::endl;
 
       // TODO: move to Map function?
+      
+      Point fr = Point(startX, startY);
+      Point to = Point(endX, endY);
+      
+      if(map->bulldozeCost(from->getSlot(), fr ,to) <= from->getMoney()) {
+        map->bulldoze(from->getSlot(), fr, to);
+      }
 
       for(unsigned int x = startX; x <= (unsigned int)endX && x < map->getWidth(); x++)
         for(unsigned int y = startY; y <= (unsigned int)endY && y < map->getHeight(); y++) {
@@ -262,80 +269,45 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
     case NPACKET_TYPE_SIMULTY_LAND_BUY: {
 
       // Read values from packet:
-      NLINT32 startx, starty, endx, endy;
-      pack >> startx >> starty >> endx >> endy;
+      NLINT32 fromX, fromY, toX, toY;
+      pack >> fromX >> fromY >> toX >> toY;
 
-      if(startx < 0 || starty < 0)break;
+      Point fr = Point(fromX, fromY);
+      Point to = Point(toX, toY);
 
-      // Calculate cost:
-      int cost = 0;
-
-      for(unsigned int x = startx; x <= (unsigned int)endx && x < map->getWidth(); x++)
-        for(unsigned int y = starty; y <= (unsigned int)endy && y < map->getHeight(); y++)
-          if(map->getTile(x, y)->getOwner() == -1)
-            cost += SIMULTY_COST_LAND;
-
+      if(map->buyLandCost(from->getSlot(), fr, to) <= from->getMoney()) {
+        map->buyLand(from->getSlot(), fr, to);
+      }
+      /*
       // If player has enough money, do the change:
       if(from->getMoney() > cost) {
         from->setMoney(from->getMoney() - cost);
 
-        for(unsigned int x = startx; x <= (unsigned int)endx && x < map->getWidth(); x++)
-          for(unsigned int y = starty; y <= (unsigned int)endy && y < map->getHeight(); y++)
-            if(map->getTile(x, y)->getOwner() == -1)
-              map->getTile(x, y)->setOwner(from->getSlot());
-
-
         // Send change to everyone else:
 
         NLPacket landp(NPACKET_TYPE_SIMULTY_LAND_BUY);
-        landp << (NLINT16)from->getSlot() << startx << starty << endx << endy;
+        landp << (NLINT16)from->getSlot() << fromX << fromY << toX << toY;
 
         packet_send_to_all(landp);
       }
-
+      */
       break;
     }
     // Buy road:
-    case NPACKET_TYPE_SIMULTY_ROAD_BUILD:
-    {
+    case NPACKET_TYPE_SIMULTY_ROAD_BUILD: {
+    
       NLINT32 fromX, fromY, toX, toY; NLPacket roadp = pack;
-      roadp >> fromX >> fromY >> toX >> toY;
+      pack >> fromX >> fromY >> toX >> toY;
+      
+      Point fr = Point(fromX, fromY);
+      Point to = Point(toX, toY);
 
-      int cost = 0;
-
-      for(unsigned int x = fromX; x <= (unsigned int)toX && x < map->getWidth(); x++) {
-        for(unsigned int y = fromY; y <= (unsigned int)toY && y < map->getHeight(); y++) {
-          if(bman.canBuild(Point(x, y), from->getSlot(), map)) {
-            cost += SIMULTY_COST_ROAD;
-          }
-        }
+      if(map->buildRoadCost(from->getSlot(), fr, to) <= from->getMoney()) {
+        map->buildRoad(from->getSlot(), fr, to);
       }
-      if(from->getMoney() > SIMULTY_COST_ROAD) {
-        from->setMoney(from->getMoney() - cost);
+      
+      packet_send_to_all(roadp);
 
-        for(unsigned int x = fromX; x <= (unsigned int)toX && x < map->getWidth(); x++) {
-          for(unsigned int y = fromY; y <= (unsigned int)toY && y < map->getHeight(); y++) {
-
-            if(bman.canBuild(Point(x, y), from->getSlot(), map)) {
-
-              map->getTile(x, y)->setRoad(true);
-
-              NLPacket p(NPACKET_TYPE_SIMULTY_ROAD_BUILD);
-              p << (NLINT32)x << (NLINT32)y;
-              packet_send_to_all(p);
-            }
-          }
-        }
-
-        /*
-        NLPacket mupd(NPACKET_TYPE_SIMULTY_MONEY_CHANGE);
-        from->money -= 20; mupd << from->money;
-        from->socket->packet_put(mupd);
-        */
-
-
-        //packet_send_to_all(pack);
-      }
       break;
     }
 

@@ -29,6 +29,18 @@ class Map {
 
     virtual unsigned int getWidth();
     virtual unsigned int getHeight();
+    
+    virtual void buyLand(unsigned char owner, Point from, Point to);
+    virtual int  buyLandCost(unsigned char owner, Point from, Point to);
+    
+    virtual void bulldoze(unsigned char owner, Point from, Point to);
+    virtual int  bulldozeCost(unsigned char owner, Point from, Point to);
+    
+    virtual void buildRoad(unsigned char owner, Point from, Point to);
+    virtual int  buildRoadCost(unsigned char owner, Point from, Point to);
+    
+    virtual void buildZone(unsigned char owner, Point from, Point to);
+    virtual int  buildZoneCost(unsigned char owner, Point from, Point to);
 
 };
 

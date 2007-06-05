@@ -1,25 +1,21 @@
 
 #include "NL.hpp"
 
-NLPacket::NLPacket()
-{
-    type = NLPACKET_TYPE_NONE;
-    buffer.reserve(10);
+NLPacket::NLPacket() {
+  type = NLPACKET_TYPE_NONE;
+  buffer.reserve(10);
 }
 
-NLPacket::NLPacket(int t)
-{
-    setType(t);
+NLPacket::NLPacket(int t) {
+setType(t);
 }
 
-NLPacket::~NLPacket()
-{
+NLPacket::~NLPacket() {
     
 }
 
-int NLPacket::getType()
-{
-    return type;
+int NLPacket::getType() {
+return type;
 }
 
 bool NLPacket::setType(int val)
@@ -34,16 +30,25 @@ int NLPacket::getSize()
 }
 
 // 32 bit numbers (4 chars)
-NLPacket &NLPacket::operator<< (const NLINT32 &val)
-{ 
+NLPacket &NLPacket::operator<< (const NLINT32 &val) { 
     unsigned char b[4]; *((NLINT32 *)b) = htonl(val);
     for(int i = 0; i < 4; i++)buffer.push_back((char)b[i]);
 
     return *this; 
 }
 
-NLPacket &NLPacket::operator>> (NLINT32 &val)
-{
+NLINT32 NLPacket::nextInt32() {
+  if(buffer.size() >= 4) {
+    NLINT32 val = ntohl(*((NLINT32 *)&buffer[0]));
+    buffer.erase(buffer.begin(), buffer.begin() + 4);
+    return val;
+  } 
+  throw NLException();
+}
+
+
+NLPacket &NLPacket::operator>> (NLINT32 &val) {
+
     unsigned char b[4]; for(int i = 0; i < 4; i++)b[i] = buffer[i];
     val = ntohl( *((NLINT32 *)b) );
 
@@ -71,6 +76,15 @@ NLPacket &NLPacket::operator>> (NLINT16 &val)
     return *this;
 }
 
+NLINT16 NLPacket::nextInt16() {
+  if(buffer.size() >= 2) {
+    NLINT16 val = ntohs(*((NLINT16 *)&buffer[0]));
+    buffer.erase(buffer.begin(), buffer.begin() + 2);
+    return val;
+  } 
+  throw NLException();
+}
+
 
 NLPacket &NLPacket::operator<< (const char &val) 
 { 
@@ -96,6 +110,15 @@ NLPacket &NLPacket::operator>> (unsigned char &val)
     //std::cout << "output unsigned char (" << buffer.size() << ")" << std::endl;
     val = buffer[0]; buffer.erase(buffer.begin()); 
     return *this; 
+}
+
+char NLPacket::nextChar() {
+  if(buffer.size() >= 1) {
+    char val = buffer[0];
+    buffer.erase(buffer.begin(), buffer.begin() + 1);
+    return val;
+  } 
+  throw NLException();
 }
 
 
@@ -131,4 +154,23 @@ NLPacket &NLPacket::operator>> (std::string &val)
     //std::cerr << "..." << std::endl;
 
     return *this;
+}
+
+std::string NLPacket::nextString() {
+
+  // Find end of string:
+  unsigned int pos;
+  for(pos = 0;pos < buffer.size(); pos++) {
+    if(buffer[pos] == '\0')break;
+  }
+  
+  // No end of string.. weird
+  if(pos == buffer.size())throw NLException();
+
+  // Fill and return string:
+  std::string val;
+  for(unsigned int i = 0; i < pos; i++) {
+    val.push_back(buffer[i]);
+  }  
+  return val;
 }
