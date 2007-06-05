@@ -7,9 +7,19 @@
 #include <string>
 #include <sstream>
 
+#ifdef __GNUC__
+#include <execinfo.h>
+#endif
+
 class SimultyException: public std::exception {
 
   private:
+  
+  #ifdef __GNUC__
+  void *backtraceArray[30];
+  size_t backtraceSize;
+  char **backtraceStrings;
+  #endif
   
   std::string output;
 
@@ -20,15 +30,27 @@ class SimultyException: public std::exception {
   public:
 
   SimultyException(std::string message, std::string file, int line) throw() {
+  
     this->message = message;
     this->file    = file;
     this->line    = line;
     
     std::stringstream ss; ss << message << " - " << file << ":" << line;
+
+    #ifdef __GNUC__
+    backtraceSize    = backtrace(backtraceArray, 30);
+    backtraceStrings = backtrace_symbols(backtraceArray, backtraceSize);    
+    ss << std::endl << std::endl;    
+    for (unsigned int i = 0; i < backtraceSize; i++)
+      ss << backtraceStrings[i] << std::endl;
+    #endif
+    
     this->output  = ss.str();
   }
   virtual ~SimultyException() throw() {
-  
+    #ifdef __GNUC__
+    free(backtraceStrings);
+    #endif
   }
   
   virtual std::string getOuptut() throw() {
