@@ -182,7 +182,7 @@ void Client::packet_handle(NLPacket p)
     case NPACKET_TYPE_SIMULTY_ROAD_BUILD: {
       NLINT32 fromX, fromY, toX, toY;
       p >> fromX >> fromY >> toX >> toY;
-      
+
       Point from = Point(fromX, fromY);
       Point to   = Point(toX, toY);
 
@@ -202,6 +202,10 @@ void Client::packet_handle(NLPacket p)
 
       NLINT16 player_affected; NLINT32 money_new;
       p >> player_affected >> money_new;
+
+      if(player_affected == player_me->getId()) {
+        player_me->setMoney(money_new);
+      }
 
       gui->console_log("Money changed");
 
@@ -282,12 +286,12 @@ void Client::packet_handle(NLPacket p)
     case NPACKET_TYPE_SIMULTY_BULLDOZE: {
       NLINT32 fromX, fromY, toX, toY;
       p >> fromX >> fromY >> toX >> toY;
-      
+
       Point from = Point(fromX, fromY);
       Point to   = Point(toX, toY);
-      
+
       map->bulldoze(0, from, to);
-    
+
       std::cerr << "** I want to bulldoze, but don't know how to!" << std::endl;
       break;
     }

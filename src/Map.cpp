@@ -83,7 +83,7 @@ void Map::buildRoad(unsigned char owner, Point from, Point to) {
 }
 int Map::buildRoadCost(unsigned char owner, Point from, Point to) {
   int cost = 0;
-  
+
   for(unsigned int x = from.getX(); x <= (unsigned int)to.getX(); x++) {
     for(unsigned int y = from.getY(); y <= (unsigned int)to.getY(); y++) {
       if(getTile(x, y)->isRoad() == false && getTile(x, y)->getZone() == 0) {
@@ -94,7 +94,7 @@ int Map::buildRoadCost(unsigned char owner, Point from, Point to) {
   return cost;
 
 }
-    
+
 void Map::buildZone(unsigned char owner, Point from, Point to) {
 
 }
@@ -116,10 +116,81 @@ Map::Map(unsigned int height, unsigned int width) {
   }
 }
 
-Map::~Map()
-{
-
-
+Map::~Map() {
 }
 
+unsigned char Map::getAdjacentRoads(Point at) {
+  unsigned char maskMe = 0;
+  if(getTile(at.getX(),   at.getY()+1))
+    maskMe |= ROAD_UP;
+
+  if(getTile(at.getX()+1, at.getY()))
+    maskMe |= ROAD_RIGHT;
+
+  if(getTile(at.getX(),   at.getY()-1))
+    maskMe |= ROAD_DOWN;
+
+  if(getTile(at.getX()-1, at.getY()))
+    maskMe |= ROAD_LEFT;
+
+  return maskMe;
+}
+
+/*bool Map::isConnectedToZone(Point start, unsigned char zone) {
+
+  for(int x = start.getX()-3; x < start.getX()+3; x++) {
+    for(int y = start.getY()-3; y < start.getY()+3; y++) {
+      if(getTile(x, y)->isRoad()) {
+          if(walkRoad(Point road, DIR_NONE, unsigned char zone))
+            return true;
+        }
+      }
+    }
+  }
+}*/
+
+bool Map::walkRoad(Point road, unsigned char direction, bool lookFor(Point)) {
+
+  if(lookFor(road) == true)
+    return true;
+
+  unsigned char maskedRoads = getAdjacentRoads(road);
+
+  bool roads[4] = {
+    maskedRoads & ROAD_UP     == ROAD_UP,
+    maskedRoads & ROAD_RIGHT  == ROAD_RIGHT,
+    maskedRoads & ROAD_DOWN   == ROAD_DOWN,
+    maskedRoads & ROAD_LEFT   == ROAD_LEFT
+  };
+
+  if(!lookFor(road)) {
+
+    if(roads[DIR_UP] == false && roads[DIR_RIGHT] == false && roads[DIR_DOWN] == false && roads[DIR_LEFT] == false)
+      return false;
+
+    switch(direction) {
+      case DIR_UP:
+        return walkRoad(Point(road.getX(), road.getY()+1), DIR_UP, lookFor);
+        break;
+      case DIR_RIGHT:
+        return walkRoad(Point(road.getX()+1, road.getY()), DIR_RIGHT, lookFor);
+        break;
+      case DIR_DOWN:
+        return walkRoad(Point(road.getX(), road.getY()-1), DIR_DOWN, lookFor);
+        break;
+      case DIR_LEFT:
+        return walkRoad(Point(road.getX()-1, road.getY()), DIR_LEFT, lookFor);
+        break;
+      case DIR_NONE:
+        return (walkRoad(Point(road.getX(),   road.getY()+1), DIR_UP,    lookFor)
+             || walkRoad(Point(road.getX()+1, road.getY()),   DIR_RIGHT, lookFor)
+             || walkRoad(Point(road.getX(),   road.getY()-1), DIR_DOWN,  lookFor)
+             || walkRoad(Point(road.getX()-1, road.getY()),   DIR_LEFT,  lookFor));
+        break;
+      default:
+        return false;
+        break;
+    }
+  }
+}
 

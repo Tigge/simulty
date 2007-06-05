@@ -242,13 +242,13 @@ void BuildingManager::updateZoneBuildings(unsigned char player_slot, Map *map)
                   || map->getTile(tile_x, tile_y)->isRoad()) {
                     good = false; break;
                   }
-                  for(unsigned int i = 0; i < special_buildings.size(); i++) {
+                  for(int i = 0; i < special_buildings.size(); i++) {
                     if(tile_x >= special_buildings[i]->position.getX() && tile_x < special_buildings[i]->position.getX() + special_buildings[i]->getWidth()
                     && tile_y >= special_buildings[i]->position.getY() && tile_y < special_buildings[i]->position.getY() + special_buildings[i]->getHeight()) {
                       good = false; break;
                     }
                   }
-                  for(unsigned int i = 0; i < zone_buildings.size(); i++) {
+                  for(int i = 0; i < zone_buildings.size(); i++) {
                     if(tile_x >= zone_buildings[i]->position.getX() && tile_x < zone_buildings[i]->position.getX() + zone_buildings[i]->getWidth()
                     && tile_y >= zone_buildings[i]->position.getY() && tile_y < zone_buildings[i]->position.getY() + zone_buildings[i]->getHeight()) {
                       good = false; break;

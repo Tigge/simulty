@@ -51,7 +51,7 @@ int main(int argc, char *argv[]) {
 
 
 Server* Server::getInstance() {
-  if (instance == NULL) {  
+  if (instance == NULL) {
     instance = new Server;
   }
   return instance;
@@ -243,10 +243,10 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
       std::cout << "Bulldozing area..." << std::endl;
 
       // TODO: move to Map function?
-      
+
       Point fr = Point(startX, startY);
       Point to = Point(endX, endY);
-      
+
       if(map->bulldozeCost(from->getSlot(), fr ,to) <= from->getMoney()) {
         map->bulldoze(from->getSlot(), fr, to);
       }
@@ -295,17 +295,17 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
     }
     // Buy road:
     case NPACKET_TYPE_SIMULTY_ROAD_BUILD: {
-    
+
       NLINT32 fromX, fromY, toX, toY; NLPacket roadp = pack;
       pack >> fromX >> fromY >> toX >> toY;
-      
+
       Point fr = Point(fromX, fromY);
       Point to = Point(toX, toY);
 
       if(map->buildRoadCost(from->getSlot(), fr, to) <= from->getMoney()) {
         map->buildRoad(from->getSlot(), fr, to);
       }
-      
+
       packet_send_to_all(roadp);
 
       break;
@@ -334,8 +334,6 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
           cost_per_tile = 0xffff; // Shouldn't end up here, but just in case - make 'em pay!
           break;
       }
-
-
 
       for(unsigned int x = startx; x <= (unsigned int)endx; x++)
         for(unsigned int y = starty; y <= (unsigned int)endy; y++)

@@ -10,11 +10,12 @@ const unsigned char SIMULTY_MAX_PLAYERS = 16;
 
 // Directions:
 
-const unsigned char DIR_NONE  = 0;
-const unsigned char DIR_UP    = 1;
-const unsigned char DIR_RIGHT = 2;
-const unsigned char DIR_DOWN  = 3;
-const unsigned char DIR_LEFT  = 4;
+const unsigned char DIR_UP    = 0;
+const unsigned char DIR_RIGHT = 1;
+const unsigned char DIR_DOWN  = 2;
+const unsigned char DIR_LEFT  = 3;
+
+const unsigned char DIR_NONE  = 4;
 
 // Tools: (for now)
 
