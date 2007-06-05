@@ -120,19 +120,19 @@ bool BuildingManager::canBuild(Point at, unsigned char slot, Map *m) {
   Tile *t = m->getTile(x, y);
 
   if(t->getOwner() != slot) {
-    //std::cerr << "The tile " << x << ", " << y << " is not owned by player " << slot << std::endl;
+    std::cerr << "The tile " << x << ", " << y << " is not owned by player " << (int)slot << " but " << (int)t->getOwner() << std::endl;
     return false;
   }
   if(t->isRoad()) {
-    //std::cerr << "The tile " << x << ", " << y << " has a road on it" << std::endl;
+    std::cerr << "The tile " << x << ", " << y << " has a road on it" << std::endl;
     return false;
   }
   if(t->getHouse() != 0) {
-    //std::cerr << "The tile " << x << ", " << y << " has a building on it" << std::endl;
+    std::cerr << "The tile " << x << ", " << y << " has a building on it" << std::endl;
     return false;
   }
   if(t->getZone() != 0) {
-    //std::cerr << "The tile " << x << ", " << y << " is zoned" << std::endl;
+    std::cerr << "The tile " << x << ", " << y << " is zoned" << std::endl;
     return false;
   }
 
@@ -154,7 +154,7 @@ bool BuildingManager::canBuildSpecialBuilding(Building *b, unsigned char slot, M
     for(int y = b->getPosition().getY(); y < b->getPosition().getY() + b->getHeight(); y++)
       if(!canBuild(Point(x, y), slot, m))
       {
-        //std::cerr << "Unable to build at " << x << ", " << y << std::endl;
+        std::cerr << "Unable to build at " << x << ", " << y << " " << (int)slot << std::endl;
         return false;
       }
 

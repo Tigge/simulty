@@ -4,6 +4,8 @@
 #include <ostream>
 #include <cmath>
 
+#include "NL.hpp"
+
 /** 
  * Simple class representation of a point. 
  * 
@@ -92,6 +94,8 @@ class Point {
   
   static void fixOrder(Point &a, Point &b);
   static bool inArea(Point p, Point a, int w, int h);
+  
+  static Point fromPacket(NLPacket &);
   
   // For output in streams:
   friend std::ostream& operator<<(std::ostream& output, const Point& p);

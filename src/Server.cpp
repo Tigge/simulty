@@ -240,8 +240,8 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
 
       std::cout << "Bulldozing area..." << std::endl;
       
-      Point fr = Point(pack.nextInt32(), pack.nextInt32());
-      Point to = Point(pack.nextInt32(), pack.nextInt32());
+      Point fr = Point::fromPacket(pack);
+      Point to = Point::fromPacket(pack);
       
       if(map->bulldozeCost(from->getSlot(), fr ,to) <= from->getMoney()) {
         map->bulldoze(from->getSlot(), fr, to);
@@ -273,11 +273,13 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
     // Buy land:
     case NLPACKET_TYPE_SIMULTY_REQUEST_LAND: {
 
-      Point fr = Point(pack.nextInt32(), pack.nextInt32());
-      Point to = Point(pack.nextInt32(), pack.nextInt32());
+      Point fr = Point::fromPacket(pack);
+      Point to = Point::fromPacket(pack);
 
       if(map->buyLandCost(from->getSlot(), fr, to) <= from->getMoney()) {
         map->buyLand(from->getSlot(), fr, to);
+        
+        std::cout << (int)(map->getTile(fr)->getOwner()) << std::endl;
         
         NLPacket packet(NLPACKET_TYPE_SIMULTY_LAND);
         packet << (NLINT16)from->getSlot() << (NLINT32)fr.getX() 
@@ -292,8 +294,9 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
     // Buy road:
     case NLPACKET_TYPE_SIMULTY_REQUEST_ROAD: {
 
-      Point fr = Point(pack.nextInt32(), pack.nextInt32());
-      Point to = Point(pack.nextInt32(), pack.nextInt32());
+      Point fr = Point::fromPacket(pack);
+      std::cout << fr << std::endl;
+      Point to = Point::fromPacket(pack);
 
       if(map->buildRoadCost(from->getSlot(), fr, to) <= from->getMoney()) {
         map->buildRoad(from->getSlot(), fr, to);
@@ -312,8 +315,8 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
 
     case NLPACKET_TYPE_SIMULTY_REQUEST_ZONE: {
       NLINT32 tp = pack.nextInt16();
-      Point fr   = Point(pack.nextInt32(), pack.nextInt32());
-      Point to   = Point(pack.nextInt32(), pack.nextInt32());
+      Point fr   = Point::fromPacket(pack);
+      Point to   = Point::fromPacket(pack);
 
       if(map->buildZoneCost(from->getSlot(), tp, fr, to) <= from->getMoney()) {
 
@@ -354,20 +357,25 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
                 cost = SIMULTY_COST_FIRE;
                 break;
               default:
-                cost = 0xffff; // Shouldn't end up here, but just in case - make 'em pay! (65k)
+                throw SIMULTYEXCEPTION("Unkown building type");
                 break;
             }
 
             std::cerr << cost << std::endl;
+            if(bman.canBuildSpecialBuilding(b, from->getSlot(), map)) {
+              std::cerr << "Space is good" << std::endl;
+            } else {
+              std::cerr << "Space is not good" << std::endl;
+            } 
 
-            if( from->getMoney() >= cost && bman.canBuildSpecialBuilding(b, from->getSlot(), map)) {
+            if(cost <= from->getMoney()  && bman.canBuildSpecialBuilding(b, from->getSlot(), map)) {
               from->setMoney(from->getMoney() - cost);
 
               bman.addSpecialBuilding(b);
 
-              NLPacket buildingPack(NLPACKET_TYPE_SIMULTY_SPECIAL_BUILDING);
-              buildingPack << (NLINT16)from->getSlot() << buildingType << x << y;
-              packet_send_to_all(buildingPack);
+              NLPacket packet(NLPACKET_TYPE_SIMULTY_SPECIAL_BUILDING);
+              packet << (NLINT16)from->getSlot() << buildingType << x << y;
+              packet_send_to_all(packet);
 
               std::cerr << "Building!" << std::endl;
             } else {

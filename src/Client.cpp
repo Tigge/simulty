@@ -140,8 +140,8 @@ void Client::packet_handle(NLPacket p) {
 
       std::string data;
       data = p.getData();
-      //p.print();
-      //std::cout << "The data is " << data.length() << " chars long and packet is " << p.getSize() << std::endl;
+      p.print();
+      std::cout << "The data is " << data.length() << " chars long and packet is " << p.getSize() << std::endl;
       LoaderSaver::loadGame(p.getData(), map, NULL, NULL);
       break;
     }
@@ -171,8 +171,8 @@ void Client::packet_handle(NLPacket p) {
     case NLPACKET_TYPE_SIMULTY_ROAD: {
 
       int   sl = p.nextInt16();
-      Point fr = Point(p.nextInt32(), p.nextInt32());
-      Point to = Point(p.nextInt32(), p.nextInt32());
+      Point fr = Point::fromPacket(p);
+      Point to = Point::fromPacket(p);
       
       // TODO
       map->buildRoad(sl, fr, to);
@@ -202,8 +202,8 @@ void Client::packet_handle(NLPacket p) {
     case NLPACKET_TYPE_SIMULTY_LAND: {
 
       int   sl = p.nextInt16();
-      Point fr = Point(p.nextInt32(), p.nextInt32());
-      Point to = Point(p.nextInt32(), p.nextInt32());
+      Point fr = Point::fromPacket(p);
+      Point to = Point::fromPacket(p);
       map->buyLand(sl, fr, to);
       gui->console_log("Bought land");
 
@@ -213,8 +213,8 @@ void Client::packet_handle(NLPacket p) {
 
       int   sl = p.nextInt16();
       int   zt = p.nextInt16();
-      Point fr = Point(p.nextInt32(), p.nextInt32());
-      Point to = Point(p.nextInt32(), p.nextInt32());
+      Point fr = Point::fromPacket(p);
+      Point to = Point::fromPacket(p);
 
       map->buildZone(sl, zt, fr, to);
 
@@ -259,8 +259,8 @@ void Client::packet_handle(NLPacket p) {
     case NLPACKET_TYPE_SIMULTY_BULLDOZE: {
 
       int   sl = p.nextInt16();
-      Point fr = Point(p.nextInt32(), p.nextInt32());
-      Point to = Point(p.nextInt32(), p.nextInt32());
+      Point fr = Point::fromPacket(p);
+      Point to = Point::fromPacket(p);
       
       map->bulldoze(sl, fr, to);
     

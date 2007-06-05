@@ -28,10 +28,10 @@ int main(int argc, char *argv[]) {
     delete gui;
 
     std::cerr << "Ending..." << std::endl;
-  } catch (gcn::Exception e) {
+  } catch (gcn::Exception &e) {
     std::cerr << e.getMessage() << std::endl;
     return 1;
-  } catch (std::exception e) {
+  } catch (std::exception &e) {
     std::cerr << "Std exception: " << e.what() << std::endl;
     return 1;
   } catch (...) {
