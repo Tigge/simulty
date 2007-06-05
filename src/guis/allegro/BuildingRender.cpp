@@ -28,22 +28,21 @@ BuildingRender::~BuildingRender() {
 
 void BuildingRender::renderBuilding(BITMAP *r, Building *b, Point where) {
 
-  if(b->getType() == Building::TYPE_RESIDENTIAL
-      || b->getType() == Building::TYPE_COMMERSIAL
-      || b->getType() == Building::TYPE_INDUSTRIAL) {
-    
+  if(b->getType() == Building::TYPE_COMMERSIAL
+  || b->getType() == Building::TYPE_INDUSTRIAL) {
+
     int color = makecol(255, 255, 255);
-    
+
     switch(b->getType()) {
       case Building::TYPE_RESIDENTIAL: color = makecol(100, 255, 100); break;
       case Building::TYPE_COMMERSIAL:  color = makecol(100, 100, 255); break;
       case Building::TYPE_INDUSTRIAL:  color = makecol(255, 100, 100); break;
     }
-    
+
     int x = b->getPosition().getX();
     int y = b->getPosition().getY();
-    
-    int points[8] = { x + TILE_W / 2 + 2, y + 2, 
+
+    int points[8] = { x + TILE_W / 2 + 2, y + 2,
                       x + (TILE_W / 2) * (b->getWidth() + 1) - 2, y + (TILE_W / 2) * b->getHeight(),
                       x + TILE_W / 2 - 2, y * TILE_H * b->getHeight() - 2,
                       x + (TILE_W / 2) * (b->getWidth() - 1) + 2, y + (TILE_W / 2) * b->getHeight() };
@@ -55,10 +54,10 @@ void BuildingRender::renderBuilding(BITMAP *r, Building *b, Point where) {
 
     switch(b->getType()) {
 
-        case Building::TYPE_POLICE:   image = buildingPolice;   break;
-        case Building::TYPE_FIRE:     image = buildingFire;     break;
-        case Building::TYPE_HOSPITAL: image = buildingHospital; break;
-        case Building::TYPE_RESIDENTIAL: image = buildingResidential; break;
+        case Building::TYPE_POLICE:     image = buildingPolice;   break;
+        case Building::TYPE_FIRE:       image = buildingFire;     break;
+        case Building::TYPE_HOSPITAL:   image = buildingHospital; break;
+        case Building::TYPE_RESIDENTIAL: image = buildingResidential; std::cerr << "HEJ"; break;
         default: throw "BuildingRender: No image loaded for building type";
     }
 
@@ -74,11 +73,14 @@ void BuildingRender::renderBuilding(BITMAP *r, Building *b, Point where) {
 void BuildingRender::render(BITMAP *r, MapRender *mr, Camera cam, BuildingManager *bm) {
 
     //Render depth by Z depth (TODO, render only visible)
-    for(unsigned int d = 0; d < (mr->getMap()->getWidth() + mr->getMap()->getHeight()); d++) {
-
+    for(int d = 0; d < (mr->getMap()->getWidth() + mr->getMap()->getHeight()); d++) {
         for(unsigned int i = 0; i < bm->getSpecialBuildingCount(); i++) {
-
             Building *b = bm->getSpecialBuilding(i);
+            if(b->getZ() == d)
+                renderBuilding(r, b, mr->toScreenCoord(b->getPosition(), cam));
+        }
+        for(unsigned int i = 0; i < bm->getZoneBuildingCount(); i++) {
+            Building *b = bm->getZoneBuilding(i);
             if(b->getZ() == d)
                 renderBuilding(r, b, mr->toScreenCoord(b->getPosition(), cam));
         }

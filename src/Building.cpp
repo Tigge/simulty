@@ -7,7 +7,7 @@ Building::Building(Point position, int owner) {
   this->position = position;
   this->owner    = owner;
 
-  std::cerr << "Pos is: " << getPosition() << std::endl;
+  //std::cerr << "Pos is: " << getPosition() << std::endl;
 }
 
 
