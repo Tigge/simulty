@@ -16,7 +16,7 @@ void player_server_network::setMoney(int money_new)
     money = money_new;
 
     // Update remote money:
-    NLPacket money_update(NPACKET_TYPE_SIMULTY_MONEY_CHANGE);
+    NLPacket money_update(NLPACKET_TYPE_SIMULTY_MONEY_CHANGE);
     money_update << getId() << money_new;
     socket->packet_put(money_update);
 

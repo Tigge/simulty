@@ -59,12 +59,12 @@ void Client::update() {
 
 void Client::bulldoze(Point from, Point to) {
 
-  NLPacket bulldozePacket(NPACKET_TYPE_SIMULTY_BULLDOZE);
+  NLPacket packet(NLPACKET_TYPE_SIMULTY_REQUEST_BULLDOZE);
 
-  bulldozePacket << (NLINT32)from.getX() << (NLINT32)from.getY()
-      << (NLINT32)to.getX() << (NLINT32)to.getY();
+  packet << (NLINT32)from.getX() << (NLINT32)from.getY()
+         << (NLINT32)to.getX()   << (NLINT32)to.getY();
 
-  net_client->packet_put(bulldozePacket);
+  net_client->packet_put(packet);
 
 }
 
@@ -72,26 +72,22 @@ void Client::buyLand(Point from, Point to) {
 
   gui->console_log("Bought land (request)");
 
-  std::cout << "buy from "
-            << from.getX() << ", " << from.getY() << " to "
-            << to.getX() << ", "   << to.getY() << std::endl;
+  NLPacket packet(NLPACKET_TYPE_SIMULTY_REQUEST_LAND);
+  packet << (NLINT32)from.getX() << (NLINT32)from.getY()
+         << (NLINT32)to.getX()   << (NLINT32)to.getY();
 
-  NLPacket landpak(NPACKET_TYPE_SIMULTY_LAND_BUY);
-  landpak << (NLINT32)from.getX() << (NLINT32)from.getY()
-          << (NLINT32)to.getX()   << (NLINT32)to.getY();
-
-  net_client->packet_put(landpak);
+  net_client->packet_put(packet);
 }
 
 void Client::buyRoad(Point from, Point to) {
 
   // Only straight lines (for now):
   if(from.getX() == to.getX() || from.getY() == to.getY()) {
+    NLPacket packet(NLPACKET_TYPE_SIMULTY_REQUEST_ROAD);
+    packet << (NLINT32)from.getX() << (NLINT32)from.getY()
+           << (NLINT32)to.getX()   << (NLINT32)to.getY();
 
-    NLPacket roadpak(NPACKET_TYPE_SIMULTY_ROAD_BUILD);
-    roadpak << (NLINT32)from.getX() << (NLINT32)from.getY()
-            << (NLINT32)to.getX()   << (NLINT32)to.getY();
-    net_client->packet_put(roadpak);
+    net_client->packet_put(packet);
   }
 }
 
@@ -99,47 +95,40 @@ void Client::buyZone(Point from, Point to, int type) {
 
   gui->console_log("Bought zone (request)");
 
-  NLPacket zonepak(NPACKET_TYPE_SIMULTY_LAND_ZONE);
+  NLPacket packet(NLPACKET_TYPE_SIMULTY_REQUEST_ZONE);
 
-  zonepak << (NLINT16)type
-          << (NLINT32)from.getX() << (NLINT32)from.getY()
-          << (NLINT32)to.getX()   << (NLINT32)to.getY();
+  packet << (NLINT16)type
+         << (NLINT32)from.getX() << (NLINT32)from.getY()
+         << (NLINT32)to.getX()   << (NLINT32)to.getY();
 
-  net_client->packet_put(zonepak);
-
-
-  std::cout << (NLINT16)type
-            << (NLINT32)from.getX() << (NLINT32)from.getY()
-            << (NLINT32)to.getX()   << (NLINT32)to.getY();
+  net_client->packet_put(packet);
 
 }
 
 
 void Client::buyBuilding(Point where, int type) {
 
-  NLPacket buildpak(NPACKET_TYPE_SIMULTY_BUILDING_BUILD);
+  NLPacket packet(NLPACKET_TYPE_SIMULTY_REQUEST_SPECIAL_BUILDING);
 
-  buildpak << (NLINT16)type
-           << (NLINT32)where.getX() << (NLINT32)where.getY();
+  packet << (NLINT16)type
+         << (NLINT32)where.getX() << (NLINT32)where.getY();
 
-  std::cerr << "B: " << where << " - " << type << std::endl;
-
-  net_client->packet_put(buildpak);
+  net_client->packet_put(packet);
 
   gui->console_log("Built building (request)");
 }
 
-void Client::packet_handle(NLPacket p)
-{
+void Client::packet_handle(NLPacket p) {
+
   switch(p.getType()) {
 
-    case NPACKET_TYPE_SIMULTY_WELCOME: {
+    case NLPACKET_TYPE_SIMULTY_WELCOME: {
 
       std::cerr << "** Got welcome message" << std::endl;
 
       std::string welcome; p >> welcome;
 
-      NLPacket ver(NPACKET_TYPE_SIMULTY_VERSION_CLIENT);
+      NLPacket ver(NLPACKET_TYPE_SIMULTY_VERSION_CLIENT);
       ver << (NLINT16)0 << (NLINT16)0 << (NLINT16)1;
       net_client->packet_put(ver);
 
@@ -147,7 +136,7 @@ void Client::packet_handle(NLPacket p)
 
       break;
     }
-    case NPACKET_TYPE_SIMULTY_GAMEDATA: {
+    case NLPACKET_TYPE_SIMULTY_GAMEDATA: {
 
       std::string data;
       data = p.getData();
@@ -156,7 +145,7 @@ void Client::packet_handle(NLPacket p)
       LoaderSaver::loadGame(p.getData(), map, NULL, NULL);
       break;
     }
-    case NPACKET_TYPE_SIMULTY_ID: {
+    case NLPACKET_TYPE_SIMULTY_ID: {
 
       std::cerr << "** Got id message (update)" << std::endl;
 
@@ -179,26 +168,25 @@ void Client::packet_handle(NLPacket p)
 
       break;
     }
-    case NPACKET_TYPE_SIMULTY_ROAD_BUILD: {
-      NLINT32 fromX, fromY, toX, toY;
-      p >> fromX >> fromY >> toX >> toY;
+    case NLPACKET_TYPE_SIMULTY_ROAD: {
 
-      Point from = Point(fromX, fromY);
-      Point to   = Point(toX, toY);
-
+      int   sl = p.nextInt16();
+      Point fr = Point(p.nextInt32(), p.nextInt32());
+      Point to = Point(p.nextInt32(), p.nextInt32());
+      
       // TODO
-      map->buildRoad(0, from, to);
+      map->buildRoad(sl, fr, to);
       gui->console_log("Built road");
       break;
     }
 
-    case NPACKET_TYPE_SIMULTY_TIME_INCR: {
+    case NLPACKET_TYPE_SIMULTY_TIME_INCR: {
 
       cal.advance();
       time++;
       break;
     }
-    case NPACKET_TYPE_SIMULTY_MONEY_CHANGE: {
+    case NLPACKET_TYPE_SIMULTY_MONEY_CHANGE: {
 
       NLINT16 player_affected; NLINT32 money_new;
       p >> player_affected >> money_new;
@@ -211,45 +199,30 @@ void Client::packet_handle(NLPacket p)
 
       break;
     }
-    case NPACKET_TYPE_SIMULTY_LAND_BUY: {
+    case NLPACKET_TYPE_SIMULTY_LAND: {
 
-      gui->console_log("Land is bought!");
-
-      // Fetch area:
-      NLINT16 pl_slot; NLINT32 x1, y1, x2, y2;
-      p >> pl_slot >> x1 >> y1 >> x2 >> y2;
-
-      for(int x = x1; x <= x2; x++) {
-        for(int y = y1; y <= y2; y++) {
-          if(map->getTile(x, y)->getOwner() == -1) {
-            map->getTile(x, y)->setOwner(pl_slot);
-          }
-        }
-      }
-
+      int   sl = p.nextInt16();
+      Point fr = Point(p.nextInt32(), p.nextInt32());
+      Point to = Point(p.nextInt32(), p.nextInt32());
+      map->buyLand(sl, fr, to);
       gui->console_log("Bought land");
 
       break;
     }
-    case NPACKET_TYPE_SIMULTY_LAND_ZONE: {
+    case NLPACKET_TYPE_SIMULTY_ZONE: {
 
-      // Fetch area:
-      NLINT16 pl_slot, ztype; NLINT32 x1, y1, x2, y2;
-      p >> pl_slot >> ztype >> x1 >> y1 >> x2 >> y2;
+      int   sl = p.nextInt16();
+      int   zt = p.nextInt16();
+      Point fr = Point(p.nextInt32(), p.nextInt32());
+      Point to = Point(p.nextInt32(), p.nextInt32());
 
-      for(int x = x1; x <= x2; x++) {
-        for(int y = y1; y <= y2; y++) {
-          if(map->getTile(x, y)->getZone() == 0) {
-            map->getTile(x, y)->setZone(ztype);
-          }
-        }
-      }
+      map->buildZone(sl, zt, fr, to);
 
       gui->console_log("Bought zone");
 
       break;
     }
-    case NPACKET_TYPE_SIMULTY_PLAYER_JOINED: {
+    case NLPACKET_TYPE_SIMULTY_PLAYER_JOINED: {
 
       std::string nick; NLINT32 id; NLINT16 slot;
       p >> id >> slot >> nick;
@@ -260,7 +233,7 @@ void Client::packet_handle(NLPacket p)
       break;
 
     }
-    case NPACKET_TYPE_SIMULTY_PLAYER_LEFT: {
+    case NLPACKET_TYPE_SIMULTY_PLAYER_LEFT: {
 
       NLINT32 id;
       p >> id;
@@ -269,7 +242,7 @@ void Client::packet_handle(NLPacket p)
 
       break;
     }
-    case NPACKET_TYPE_SIMULTY_BUILDING_BUILD: {
+    case NLPACKET_TYPE_SIMULTY_SPECIAL_BUILDING: {
 
       NLINT16 buildingType, slot; NLINT32 x, y;
       p >> slot >> buildingType >> x >> y;
@@ -283,15 +256,14 @@ void Client::packet_handle(NLPacket p)
 
       break;
     }
-    case NPACKET_TYPE_SIMULTY_BULLDOZE: {
-      NLINT32 fromX, fromY, toX, toY;
-      p >> fromX >> fromY >> toX >> toY;
+    case NLPACKET_TYPE_SIMULTY_BULLDOZE: {
 
-      Point from = Point(fromX, fromY);
-      Point to   = Point(toX, toY);
-
-      map->bulldoze(0, from, to);
-
+      int   sl = p.nextInt16();
+      Point fr = Point(p.nextInt32(), p.nextInt32());
+      Point to = Point(p.nextInt32(), p.nextInt32());
+      
+      map->bulldoze(sl, fr, to);
+    
       std::cerr << "** I want to bulldoze, but don't know how to!" << std::endl;
       break;
     }

@@ -35,30 +35,49 @@ const unsigned char SIMULTY_CLIENT_TOOL_BULLDOZER      = 100;
 
 // Costs: (for now)
 
-const unsigned NLINT16 SIMULTY_COST_ROAD = 10;
-const unsigned NLINT16 SIMULTY_COST_LAND = 10;
+const unsigned NLINT16 SIMULTY_COST_ROAD     = 10;
+const unsigned NLINT16 SIMULTY_COST_LAND     = 10;
 
-const unsigned NLINT16 SIMULTY_COST_IND = 100;
-const unsigned NLINT16 SIMULTY_COST_COM = 120;
-const unsigned NLINT16 SIMULTY_COST_RES = 80;
+const unsigned NLINT16 SIMULTY_COST_IND      = 100;
+const unsigned NLINT16 SIMULTY_COST_COM      = 120;
+const unsigned NLINT16 SIMULTY_COST_RES      = 80;
 
-const unsigned NLINT16 SIMULTY_COST_POLICE = 3000;
+const unsigned NLINT16 SIMULTY_COST_POLICE   = 3000;
 const unsigned NLINT16 SIMULTY_COST_HOSPITAL = 2600;
-const unsigned NLINT16 SIMULTY_COST_FIRE = 1800;
+const unsigned NLINT16 SIMULTY_COST_FIRE     = 1800;
 
 // Packets:
+// =============================================================================
 
-const unsigned char NPACKET_TYPE_SIMULTY_WELCOME          = 100;
-const unsigned char NPACKET_TYPE_SIMULTY_VERSION_CLIENT   = 101;
-const unsigned char NPACKET_TYPE_SIMULTY_VERSION_SERVER   = 102;
+const unsigned char NLPACKET_TYPE_SIMULTY_WELCOME                  = 100;
+const unsigned char NLPACKET_TYPE_SIMULTY_VERSION_CLIENT           = 101;
+const unsigned char NLPACKET_TYPE_SIMULTY_VERSION_SERVER           = 102;
 
-const unsigned char NPACKET_TYPE_SIMULTY_ID               = 103;
-const unsigned char NPACKET_TYPE_SIMULTY_GAMEDATA         = 104;
+const unsigned char NLPACKET_TYPE_SIMULTY_ID                       = 103;
+const unsigned char NLPACKET_TYPE_SIMULTY_GAMEDATA                 = 104;
 
-const unsigned char NPACKET_TYPE_SIMULTY_PLAYER_JOINED    = 120;
-const unsigned char NPACKET_TYPE_SIMULTY_PLAYER_LEFT      = 121;
+const unsigned char NLPACKET_TYPE_SIMULTY_PLAYER_JOINED            = 120;
+const unsigned char NLPACKET_TYPE_SIMULTY_PLAYER_LEFT              = 121;
 
+// Requests:
 
+const unsigned char NLPACKET_TYPE_SIMULTY_REQUEST_ROAD             = 150;
+const unsigned char NLPACKET_TYPE_SIMULTY_REQUEST_ZONE             = 151;
+const unsigned char NLPACKET_TYPE_SIMULTY_REQUEST_LAND             = 152;
+const unsigned char NLPACKET_TYPE_SIMULTY_REQUEST_CHAT             = 153;
+const unsigned char NLPACKET_TYPE_SIMULTY_REQUEST_SPECIAL_BUILDING = 154;
+const unsigned char NLPACKET_TYPE_SIMULTY_REQUEST_BULLDOZE         = 160;
+
+// Responese:
+
+const unsigned char NLPACKET_TYPE_SIMULTY_ROAD                     = 200;
+const unsigned char NLPACKET_TYPE_SIMULTY_ZONE                     = 201;
+const unsigned char NLPACKET_TYPE_SIMULTY_LAND                     = 202;
+const unsigned char NLPACKET_TYPE_SIMULTY_CHAT                     = 203;
+const unsigned char NLPACKET_TYPE_SIMULTY_SPECIAL_BUILDING         = 204;
+const unsigned char NLPACKET_TYPE_SIMULTY_BULLDOZE                 = 210;
+
+/*
 const unsigned char NPACKET_TYPE_SIMULTY_ROAD_BUILD       = 200;
 const unsigned char NPACKET_TYPE_SIMULTY_ROAD_DESTROY     = 201;
 
@@ -72,12 +91,12 @@ const unsigned char NPACKET_TYPE_SIMULTY_LAND_SELL = 231;
 
 const unsigned char NPACKET_TYPE_SIMULTY_LAND_ZONE   = 232;
 const unsigned char NPACKET_TYPE_SIMULTY_LAND_DEZONE = 233;
+*/
 
+const unsigned char NLPACKET_TYPE_SIMULTY_TIME_INCR  = 230;
+const unsigned char NLPACKET_TYPE_SIMULTY_TIME_SPEED = 231;
 
-const unsigned char NPACKET_TYPE_SIMULTY_TIME_INCR  = 210;
-const unsigned char NPACKET_TYPE_SIMULTY_TIME_SPEED = 211;
-
-const unsigned char NPACKET_TYPE_SIMULTY_MONEY_CHANGE = 130;
+const unsigned char NLPACKET_TYPE_SIMULTY_MONEY_CHANGE = 132;
 
 
 

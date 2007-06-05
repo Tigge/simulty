@@ -44,8 +44,8 @@ class Map {
     virtual void buildRoad(unsigned char owner, Point from, Point to);
     virtual int  buildRoadCost(unsigned char owner, Point from, Point to);
 
-    virtual void buildZone(unsigned char owner, Point from, Point to);
-    virtual int  buildZoneCost(unsigned char owner, Point from, Point to);
+    virtual void buildZone(unsigned char owner, int type, Point from, Point to);
+    virtual int  buildZoneCost(unsigned char owner, int type, Point from, Point to);
 
     virtual unsigned char getAdjacentRoads(Point at);
     //virtual bool isConnectedToZone(Point start, unsigned char zone);
