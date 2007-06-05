@@ -73,7 +73,6 @@ MapRender::~MapRender() {
     destroy_bitmap(t_border[i]);
   delete [] t_border;
 
-
   for(int i = 0; i < 1; i++)
     destroy_bitmap(t_terrain[i]);
   delete [] t_terrain;
@@ -224,7 +223,7 @@ void MapRender::render (BITMAP *b, Camera cam) {
               if(x > 0 && m->getTile(x - 1, y)->getOwner() != m->getTile(x, y)->getOwner())
                   masked_blit(t_border[DIR_UP], b, 1, 1, pos.getX(), pos.getY(), TILE_W, TILE_H);
 
-              //textprintf_ex(b, font, place.x + 20 - cam.x, place.y + 10 - cam.y, makecol(0, 0, 0), -1, "O");
+              //textprintf_ex(b, font, pos.getX() + 10 , pos.getY() + 16, makecol(0, 0, 0), -1, "%i,%i", tile->getOwner(), tile->getZone());
               }
 
             //textprintf_ex(b, font, place.x + 20 - cam.x, place.y + 10 - cam.y, makecol(0, 0, 0), -1, "%i,%i", x, y);

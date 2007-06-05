@@ -310,17 +310,13 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
       break;
     }
 
-    case NLPACKET_TYPE_SIMULTY_REQUEST_ZONE:
-    {
+    case NLPACKET_TYPE_SIMULTY_REQUEST_ZONE: {
       NLINT32 tp = pack.nextInt16();
       Point fr   = Point(pack.nextInt32(), pack.nextInt32());
       Point to   = Point(pack.nextInt32(), pack.nextInt32());
 
-      // TODO: move to Map
-
-      std::cout << map->buildZoneCost(from->getSlot(), tp, fr, to) << std::endl;
-
       if(map->buildZoneCost(from->getSlot(), tp, fr, to) <= from->getMoney()) {
+
         map->buildZone(from->getSlot(), tp, fr, to);
 
         NLPacket zonepak(NLPACKET_TYPE_SIMULTY_ZONE);

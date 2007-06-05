@@ -96,12 +96,13 @@ int Map::buildRoadCost(unsigned char owner, Point from, Point to) {
 }
 
 void Map::buildZone(unsigned char owner, int type, Point from, Point to) {
-  for(unsigned int x = from.getX(); x <= (unsigned int)from.getY(); x++)
-    for(unsigned int y = to.getX(); y <= (unsigned int)to.getY(); y++)
+  for(unsigned int x = from.getX(); x <= (unsigned int)to.getX(); x++)
+    for(unsigned int y = from.getY(); y <= (unsigned int)to.getY(); y++)
       if(getTile(x, y)->getOwner() == owner && getTile(x,y)->getZone() == 0) {
         getTile(x,y)->setZone(type);
       }
 }
+
 int  Map::buildZoneCost(unsigned char owner, int type, Point from, Point to) {
   int cost = 0;
   int cost_per_tile;
@@ -119,8 +120,8 @@ int  Map::buildZoneCost(unsigned char owner, int type, Point from, Point to) {
       throw SIMULTYEXCEPTION("Unknown zone type");
   }
 
-  for(unsigned int x = from.getX(); x <= (unsigned int)from.getY(); x++)
-    for(unsigned int y = to.getX(); y <= (unsigned int)to.getY(); y++)
+  for(unsigned int x = from.getX(); x <= (unsigned int)to.getX(); x++)
+    for(unsigned int y = from.getY(); y <= (unsigned int)to.getY(); y++)
       if(getTile(x, y)->getOwner() == owner && getTile(x,y)->getZone() == 0) {
         cost += cost_per_tile;
       }

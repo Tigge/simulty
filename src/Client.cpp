@@ -191,7 +191,7 @@ void Client::packet_handle(NLPacket p) {
       NLINT16 player_affected; NLINT32 money_new;
       p >> player_affected >> money_new;
 
-      if(player_affected == player_me->getId()) {
+      if(player_affected == player_me->getSlot()) {
         player_me->setMoney(money_new);
       }
 

@@ -284,6 +284,8 @@ void AllegroGUI::keyReleased(gcn::KeyEvent &keyEvent) {
 
   if(keyEvent.getKey().getValue() == gcn::Key::ESCAPE) {
     client->state_running = false;
+  } else if(keyEvent.getKey().getValue() == gcn::Key::F1) {
+    console_show = !console_show;
   }
 
   std::cout << "KR: " << keyEvent.getKey().getValue() << std::endl;
