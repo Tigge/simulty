@@ -14,11 +14,11 @@ MapRender::MapRender() {
 
     t_owned      = ImageLoader::getImage("img/terrain_owned_2.pcx");
 
-    t_border     = new BITMAP *[5];
-    t_border[1]  = ImageLoader::getImage("img/line_up_terrain.pcx");
-    t_border[2]  = ImageLoader::getImage("img/line_right_terrain.pcx");
-    t_border[3]  = ImageLoader::getImage("img/line_down_terrain.pcx");
-    t_border[4]  = ImageLoader::getImage("img/line_left_terrain.pcx");
+    t_border     = new BITMAP *[4];
+    t_border[DIR_UP]    = ImageLoader::getImage("img/line_up_terrain.pcx");
+    t_border[DIR_RIGHT] = ImageLoader::getImage("img/line_right_terrain.pcx");
+    t_border[DIR_DOWN]  = ImageLoader::getImage("img/line_down_terrain.pcx");
+    t_border[DIR_LEFT]  = ImageLoader::getImage("img/line_left_terrain.pcx");
 
     mouse_hint   = ImageLoader::getImage("img/mouse_hint.pcx");
 
@@ -69,7 +69,7 @@ MapRender::~MapRender() {
 
   // TODO: destroy all images
 
-  for(int i = 1; i < 5; i++)
+  for(int i = 0; i < 4; i++)
     destroy_bitmap(t_border[i]);
   delete [] t_border;
 
