@@ -82,13 +82,13 @@ void Client::buyLand(Point from, Point to) {
 void Client::buyRoad(Point from, Point to) {
 
   // Only straight lines (for now):
-  if(from.getX() == to.getX() || from.getY() == to.getY()) {
-    NLPacket packet(NLPACKET_TYPE_SIMULTY_REQUEST_ROAD);
-    packet << (NLINT32)from.getX() << (NLINT32)from.getY()
-           << (NLINT32)to.getX()   << (NLINT32)to.getY();
+  //if(from.getX() == to.getX() || from.getY() == to.getY()) {
+  NLPacket packet(NLPACKET_TYPE_SIMULTY_REQUEST_ROAD);
+  packet << (NLINT32)from.getX() << (NLINT32)from.getY()
+         << (NLINT32)to.getX()   << (NLINT32)to.getY();
 
-    net_client->packet_put(packet);
-  }
+  net_client->packet_put(packet);
+  //}
 }
 
 void Client::buyZone(Point from, Point to, int type) {
@@ -173,7 +173,7 @@ void Client::packet_handle(NLPacket p) {
       int   sl = p.nextInt16();
       Point fr = Point::fromPacket(p);
       Point to = Point::fromPacket(p);
-      
+
       // TODO
       map->buildRoad(sl, fr, to);
       gui->console_log("Built road");
@@ -257,7 +257,7 @@ void Client::packet_handle(NLPacket p) {
       break;
     }
     case NLPACKET_TYPE_SIMULTY_ZONE_BUILDING: {
-  
+
       int playerSlot   = p.nextInt16();
       int buildingType = p.nextInt16();
       Point where      = Point::fromPacket(p);
@@ -273,9 +273,9 @@ void Client::packet_handle(NLPacket p) {
       int   sl = p.nextInt16();
       Point fr = Point::fromPacket(p);
       Point to = Point::fromPacket(p);
-      
+
       map->bulldoze(sl, fr, to);
-    
+
       std::cerr << "** I want to bulldoze, but don't know how to!" << std::endl;
       break;
     }

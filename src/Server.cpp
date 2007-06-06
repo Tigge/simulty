@@ -219,7 +219,6 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
     {
         std::cerr << "** Got version info from client" << std::endl;
 
-
         NLPacket pgd(NLPACKET_TYPE_SIMULTY_GAMEDATA);
         std::string data = LoaderSaver::saveGame(map, NULL, NULL);
         pgd << data;
@@ -277,9 +276,9 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
       Point to = Point::fromPacket(pack);
 
       if(map->buyLandCost(from->getSlot(), fr, to) <= from->getMoney()) {
-        map->buyLand(from->getSlot(), fr, to);
+        from->setMoney(from->getMoney() - map->buyLandCost(from->getSlot(), fr, to));
 
-        //std::cout << (int)(map->getTile(fr)->getOwner()) << std::endl;
+        map->buyLand(from->getSlot(), fr, to);
 
         NLPacket packet(NLPACKET_TYPE_SIMULTY_LAND);
         packet << (NLINT16)from->getSlot() << (NLINT32)fr.getX()
@@ -295,10 +294,12 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
     case NLPACKET_TYPE_SIMULTY_REQUEST_ROAD: {
 
       Point fr = Point::fromPacket(pack);
-      std::cout << fr << std::endl;
       Point to = Point::fromPacket(pack);
 
+      std::cerr << "(" << fr.getX() << ", " << fr.getY() << ") -> (" << to.getX() << ", " << to.getY() << ")" << std::endl;
       if(map->buildRoadCost(from->getSlot(), fr, to) <= from->getMoney()) {
+        from->setMoney(from->getMoney() - map->buildRoadCost(from->getSlot(), fr, to));
+
         map->buildRoad(from->getSlot(), fr, to);
 
         NLPacket packet(NLPACKET_TYPE_SIMULTY_ROAD);
@@ -308,17 +309,17 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
         packet_send_to_all(packet);
       }
 
-      //packet_send_to_all(roadp);
-
       break;
     }
 
+    // Buy zone:
     case NLPACKET_TYPE_SIMULTY_REQUEST_ZONE: {
       NLINT32 tp = pack.nextInt16();
       Point fr   = Point::fromPacket(pack);
       Point to   = Point::fromPacket(pack);
 
       if(map->buildZoneCost(from->getSlot(), tp, fr, to) <= from->getMoney()) {
+        from->setMoney(from->getMoney() - map->buildZoneCost(from->getSlot(), tp, fr, to));
 
         map->buildZone(from->getSlot(), tp, fr, to);
 

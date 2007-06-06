@@ -81,15 +81,40 @@ int Map::bulldozeCost(unsigned char owner, Point from, Point to) {
 }
 
 void Map::buildRoad(unsigned char owner, Point from, Point to) {
+
+  Point line;
+
+  if(from.getX() - to.getX() > from.getY() - to.getY()) {
+     line.setX(to.getX());
+     line.setY(from.getY());
+  }
+  else {
+     line.setX(from.getX());
+     line.setY(to.getY());
+  }
+
+  // Horizontal
   for(unsigned int x = from.getX(); x <= (unsigned int)to.getX(); x++) {
-    for(unsigned int y = from.getY(); y <= (unsigned int)to.getY(); y++) {
-      if(!outOfBounds(Point(x, y))) {
-        if(getTile(x, y)->isRoad() == false && getTile(x, y)->getZone() == 0) {
-          getTile(x, y)->setRoad(true);
-        }
+    if(!outOfBounds(Point(x, line.getY()))) {
+      if(getTile(x, line.getY())->isRoad() == false
+      && getTile(x, line.getY())->getZone() == 0
+      && getTile(x, line.getY())->getOwner() == owner) {
+        getTile(x, line.getY())->setRoad(true);
       }
     }
   }
+  // Vertical
+  for(unsigned int y = from.getY(); y <= (unsigned int)to.getY(); y++) {
+    if(!outOfBounds(Point(line.getX(), y))) {
+      if(getTile(line.getX(), y)->isRoad() == false
+      && getTile(line.getX(), y)->getZone() == 0
+      && getTile(line.getX(), y)->getOwner() == owner) {
+        getTile(line.getX(), y)->setRoad(true);
+      }
+    }
+  }
+
+  // Vertical
 }
 int Map::buildRoadCost(unsigned char owner, Point from, Point to) {
   int cost = 0;
