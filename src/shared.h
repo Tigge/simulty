@@ -75,6 +75,7 @@ const unsigned char NLPACKET_TYPE_SIMULTY_ZONE                     = 201;
 const unsigned char NLPACKET_TYPE_SIMULTY_LAND                     = 202;
 const unsigned char NLPACKET_TYPE_SIMULTY_CHAT                     = 203;
 const unsigned char NLPACKET_TYPE_SIMULTY_SPECIAL_BUILDING         = 204;
+const unsigned char NLPACKET_TYPE_SIMULTY_ZONE_BUILDING            = 205;
 const unsigned char NLPACKET_TYPE_SIMULTY_BULLDOZE                 = 210;
 
 /*

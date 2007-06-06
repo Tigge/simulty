@@ -1,6 +1,6 @@
 
-#ifndef _BUILDING_MANAGER_H_
-#define _BUILDING_MANAGER_H_
+#ifndef _BUILDINGMANAGER_H_
+#define _BUILDINGMANAGER_H_
 
 #include <vector>
 #include "Map.hpp"
@@ -15,7 +15,8 @@ class BuildingManager {
     std::vector<Building *> special_buildings;
 
   public:
-    ~BuildingManager();
+    
+    virtual ~BuildingManager();
 
     // Thrive values:
     int getThriveValueForCrime(Map *m, char slot, Point where);
@@ -40,7 +41,7 @@ class BuildingManager {
     bool canBuild(Point at, unsigned char slot, Map *m);
 
     void updateZoneBuildings(unsigned char player_slot, Map *map);
-    void addZoneBuilding(unsigned char player_slot, int buildingType, Point p, int w, int h);
+    virtual void addZoneBuilding(unsigned char player_slot, int buildingType, Point p, int w, int h);
 };
 
 #endif

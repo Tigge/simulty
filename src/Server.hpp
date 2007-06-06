@@ -17,7 +17,7 @@
 #include "player_server_network.h"
 #include "player_server_ai.h"
 
-#include "BuildingManager.hpp"
+#include "BuildingManagerServer.hpp"
 
 #include "Point.hpp"
 
@@ -51,12 +51,11 @@ class Server {
   bool player_remove(Player *);
 
   bool packet_handle(player_server_network *from, NLPacket pack);
-  void packet_send(player_server_network *to, NLPacket pack);
-  void packet_send_to_all(NLPacket pack);
 
-  PlayerManagerServer pman;
 
-  BuildingManager bman;
+  PlayerManagerServer   pman;
+
+  BuildingManagerServer bman;
 
   Calendar calendar;
 
@@ -73,8 +72,10 @@ class Server {
   public:
 
   virtual ~Server();
-
   static Server *getInstance();
+
+  void packet_send(player_server_network *to, NLPacket pack);
+  void packet_send_to_all(NLPacket pack);
 
   void setSpeed(int speed);
   int  getSpeed();

@@ -256,6 +256,18 @@ void Client::packet_handle(NLPacket p) {
 
       break;
     }
+    case NLPACKET_TYPE_SIMULTY_ZONE_BUILDING: {
+  
+      int playerSlot   = p.nextInt16();
+      int buildingType = p.nextInt16();
+      Point where      = Point::fromPacket(p);
+      int w            = p.nextInt16();
+      int h            = p.nextInt16();
+
+      bman.addZoneBuilding(playerSlot, buildingType, where, w, h);
+
+      break;
+    }
     case NLPACKET_TYPE_SIMULTY_BULLDOZE: {
 
       int   sl = p.nextInt16();
