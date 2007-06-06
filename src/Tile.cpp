@@ -3,7 +3,6 @@
 #include <iostream>
 Tile::Tile (  ){
 
-
     owner = -1;
     terrain = 0;
     zone = 0;
@@ -15,9 +14,6 @@ Tile::Tile (  ){
 
 Tile::~Tile (  ){
 }
-
-
-
 
 char Tile::getOwner() {
     return owner;
@@ -40,7 +36,7 @@ void Tile::setZone(unsigned char zone) {
 unsigned char Tile::getHouse() {
     return house;
 }
-    
+
 bool Tile::isRoad() {
     return road;
 }

@@ -80,13 +80,13 @@ MapRender::~MapRender() {
   for(int i = 0; i < 16; i++)
     destroy_bitmap(t_roads[i]);
   delete [] t_roads;
-  
+
   destroy_bitmap(t_owned);
-    
+
   destroy_bitmap(t_zone_res);
   destroy_bitmap(t_zone_com);
   destroy_bitmap(t_zone_ind);
-    
+
   destroy_bitmap(mouse_hint);
 
 }
@@ -101,10 +101,10 @@ void MapRender::setMap(Map *m) {
 
 BITMAP *MapRender::getRoadBitmap(int x, int y)
 {
-  int n = 1 * (int)m->getTile(x - 1, y)->isRoad();
-  int e = 2 * (int)m->getTile(x, y + 1)->isRoad();
-  int s = 4 * (int)m->getTile(x + 1, y)->isRoad();
-  int w = 8 * (int)m->getTile(x, y - 1)->isRoad();
+  int n = (m->outOfBounds(Point(x-1, y)) ? 0 : 1 * (int)m->getTile(x - 1, y)->isRoad());
+  int e = (m->outOfBounds(Point(x, y+1)) ? 0 : 2 * (int)m->getTile(x, y + 1)->isRoad());
+  int s = (m->outOfBounds(Point(x+1, y)) ? 0 : 4 * (int)m->getTile(x + 1, y)->isRoad());
+  int w = (m->outOfBounds(Point(x, y-1)) ? 0 : 8 * (int)m->getTile(x, y - 1)->isRoad());
   return t_roads[n + e + s + w];
 
 }
@@ -114,10 +114,10 @@ Point MapRender::toTileCoord(Point screenCoord) {
 
   Point tileCoord;
 
-  tileCoord.setY(screenCoord.getX() / TILE_W 
+  tileCoord.setY(screenCoord.getX() / TILE_W
       + screenCoord.getY() / TILE_H - (m->getHeight()) / 2);
-  tileCoord.setX(screenCoord.getY() / TILE_H * 2 
-      - (screenCoord.getX() / TILE_W 
+  tileCoord.setX(screenCoord.getY() / TILE_H * 2
+      - (screenCoord.getX() / TILE_W
       + screenCoord.getY() / TILE_H - (m->getHeight()) / 2));
 
   Point shavedScreenCoord = toScreenCoord(tileCoord);
@@ -181,9 +181,9 @@ void MapRender::render (BITMAP *b, Camera cam) {
     //al_trace("===============================\n");
     //al_trace("base %i,%i\n", base_x, base_y);
 
-    for(unsigned int x = base_x, y = base_y; 
-        x >= (unsigned int)base_x - 2 - SCREEN_W / TILE_W  
-        && y != (unsigned int)base_y + SCREEN_W; 
+    for(unsigned int x = base_x, y = base_y;
+        x >= (unsigned int)base_x - 2 - SCREEN_W / TILE_W
+        && y != (unsigned int)base_y + SCREEN_W;
         x--, y++) {
         //al_trace("p %i,%i\n", x, y);
 

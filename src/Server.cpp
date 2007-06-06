@@ -51,7 +51,7 @@ int main(int argc, char *argv[]) {
 
 
 Server* Server::getInstance() {
-  if (instance == NULL) {  
+  if (instance == NULL) {
     instance = new Server;
   }
   return instance;
@@ -239,18 +239,18 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
     case NLPACKET_TYPE_SIMULTY_REQUEST_BULLDOZE: {
 
       std::cout << "Bulldozing area..." << std::endl;
-      
+
       Point fr = Point::fromPacket(pack);
       Point to = Point::fromPacket(pack);
-      
+
       if(map->bulldozeCost(from->getSlot(), fr ,to) <= from->getMoney()) {
         map->bulldoze(from->getSlot(), fr, to);
-        
+
         NLPacket packet(NLPACKET_TYPE_SIMULTY_BULLDOZE);
-        packet << (NLINT16)from->getSlot() << (NLINT32)fr.getX() 
+        packet << (NLINT16)from->getSlot() << (NLINT32)fr.getX()
                << (NLINT32)fr.getY()       << (NLINT32)to.getX()
                << (NLINT32)to.getY();
-               
+
         packet_send_to_all(packet);
       }
 
@@ -266,7 +266,7 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
           }
         }
       */
-      
+
       break;
     }
 
@@ -278,14 +278,14 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
 
       if(map->buyLandCost(from->getSlot(), fr, to) <= from->getMoney()) {
         map->buyLand(from->getSlot(), fr, to);
-        
-        std::cout << (int)(map->getTile(fr)->getOwner()) << std::endl;
-        
+
+        //std::cout << (int)(map->getTile(fr)->getOwner()) << std::endl;
+
         NLPacket packet(NLPACKET_TYPE_SIMULTY_LAND);
-        packet << (NLINT16)from->getSlot() << (NLINT32)fr.getX() 
+        packet << (NLINT16)from->getSlot() << (NLINT32)fr.getX()
                << (NLINT32)fr.getY()       << (NLINT32)to.getX()
                << (NLINT32)to.getY();
-               
+
         packet_send_to_all(packet);
       }
 
@@ -300,14 +300,14 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
 
       if(map->buildRoadCost(from->getSlot(), fr, to) <= from->getMoney()) {
         map->buildRoad(from->getSlot(), fr, to);
-        
+
         NLPacket packet(NLPACKET_TYPE_SIMULTY_ROAD);
-        packet << (NLINT16)from->getSlot() << (NLINT32)fr.getX() 
+        packet << (NLINT16)from->getSlot() << (NLINT32)fr.getX()
                << (NLINT32)fr.getY()       << (NLINT32)to.getX()
                << (NLINT32)to.getY();
         packet_send_to_all(packet);
       }
-      
+
       //packet_send_to_all(roadp);
 
       break;
@@ -323,15 +323,15 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
         map->buildZone(from->getSlot(), tp, fr, to);
 
         NLPacket zonepak(NLPACKET_TYPE_SIMULTY_ZONE);
-        zonepak << (NLINT16)from->getSlot() << (NLINT16)tp 
-                << (NLINT32)fr.getX() << (NLINT32)fr.getY() 
+        zonepak << (NLINT16)from->getSlot() << (NLINT16)tp
+                << (NLINT32)fr.getX() << (NLINT32)fr.getY()
                 << (NLINT32)to.getX() << (NLINT32)to.getY();
 
         packet_send_to_all(zonepak);
       }
 
 
-    
+
     break;
 
     } case NLPACKET_TYPE_SIMULTY_REQUEST_SPECIAL_BUILDING: {
@@ -366,7 +366,7 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
               std::cerr << "Space is good" << std::endl;
             } else {
               std::cerr << "Space is not good" << std::endl;
-            } 
+            }
 
             if(cost <= from->getMoney()  && bman.canBuildSpecialBuilding(b, from->getSlot(), map)) {
               from->setMoney(from->getMoney() - cost);

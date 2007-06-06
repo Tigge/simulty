@@ -9,20 +9,18 @@
 
 class BuildingManager {
 
-  private:
-
+  protected:
     std::vector<Building *> zone_buildings;
     std::vector<Building *> special_buildings;
 
   public:
-    
     virtual ~BuildingManager();
 
     // Thrive values:
-    int getThriveValueForCrime(Map *m, char slot, Point where);
-    int getThriveValueForConnection(Map *m, char slot, Point where);
-    int getThriveValueForElectricity(Map *m, char slot, Point where);
-    int getThriveValueForTaxes(char slot);
+    int getCrimeThrive(Map *m, char slot, Point where);
+    int getConnectionThrive(Map *m, char slot, Point where);
+    int getElectricityThrive(Map *m, char slot, Point where);
+    int getTaxesThrive(char slot);
 
     int getThriveValue(Map *m, char slot, Point where);
 

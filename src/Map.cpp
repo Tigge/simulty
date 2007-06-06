@@ -26,9 +26,7 @@ unsigned int Map::getHeight() {
 void Map::buyLand(unsigned char owner, Point from, Point to) {
   for(unsigned int x = from.getX(); x <= (unsigned int)to.getX(); x++) {
     for(unsigned int y = from.getY(); y <= (unsigned int)to.getY(); y++) {
-      if(x >= 0 && y >= 0
-      && (unsigned int)x < width
-      && (unsigned int)y < height) {
+      if(!outOfBounds(Point(x, y))) {
         if(getTile(x, y)->getOwner() == -1) {
           getTile(x, y)->setOwner(owner);
         }
@@ -40,9 +38,7 @@ int  Map::buyLandCost(unsigned char owner, Point from, Point to) {
   int cost = 0;
   for(unsigned int x = from.getX(); x <= (unsigned int)to.getX(); x++) {
     for(unsigned int y = from.getY(); y <= (unsigned int)to.getY(); y++) {
-      if(x >= 0 && y >= 0
-      && (unsigned int)x < width
-      && (unsigned int)y < height) {
+      if(!outOfBounds(Point(x, y))) {
         if(getTile(x, y)->getOwner() == -1) {
           cost += SIMULTY_COST_LAND;
         }
@@ -59,9 +55,7 @@ void Map::bulldoze(unsigned char owner, Point from, Point to) {
 
   for(unsigned int x = from.getX(); x <= (unsigned int)to.getX(); x++) {
     for(unsigned int y = from.getY(); y <= (unsigned int)to.getY(); y++) {
-      if(x >= 0 && y >= 0
-      && (unsigned int)x < width
-      && (unsigned int)y < height) {
+      if(!outOfBounds(Point(x, y))) {
         if(getTile(x, y)->getOwner() == owner) {
           getTile(x, y)->setRoad(false);
           getTile(x, y)->setZone(0);
@@ -75,9 +69,7 @@ int Map::bulldozeCost(unsigned char owner, Point from, Point to) {
   int cost = 0;
   for(unsigned int x = from.getX(); x <= (unsigned int)to.getX(); x++) {
     for(unsigned int y = from.getY(); y <= (unsigned int)to.getY(); y++) {
-      if(x >= 0 && y >= 0
-      && (unsigned int)x < width
-      && (unsigned int)y < height) {
+      if(!outOfBounds(Point(x, y))) {
         if(getTile(x, y)->getOwner() == owner) {
           if(getTile(x, y)->isRoad())cost += 10;
           if(getTile(x, y)->getZone() != 0)cost += 5;
@@ -91,9 +83,7 @@ int Map::bulldozeCost(unsigned char owner, Point from, Point to) {
 void Map::buildRoad(unsigned char owner, Point from, Point to) {
   for(unsigned int x = from.getX(); x <= (unsigned int)to.getX(); x++) {
     for(unsigned int y = from.getY(); y <= (unsigned int)to.getY(); y++) {
-      if(x >= 0 && y >= 0
-      && (unsigned int)x < width
-      && (unsigned int)y < height) {
+      if(!outOfBounds(Point(x, y))) {
         if(getTile(x, y)->isRoad() == false && getTile(x, y)->getZone() == 0) {
           getTile(x, y)->setRoad(true);
         }
@@ -106,9 +96,7 @@ int Map::buildRoadCost(unsigned char owner, Point from, Point to) {
 
   for(unsigned int x = from.getX(); x <= (unsigned int)to.getX(); x++) {
     for(unsigned int y = from.getY(); y <= (unsigned int)to.getY(); y++) {
-      if(x >= 0 && y >= 0
-      && (unsigned int)x < width
-      && (unsigned int)y < height) {
+      if(!outOfBounds(Point(x, y))) {
         if(getTile(x, y)->isRoad() == false && getTile(x, y)->getZone() == 0) {
           cost += SIMULTY_COST_ROAD;
         }
@@ -122,9 +110,7 @@ int Map::buildRoadCost(unsigned char owner, Point from, Point to) {
 void Map::buildZone(unsigned char owner, int type, Point from, Point to) {
   for(unsigned int x = from.getX(); x <= (unsigned int)to.getX(); x++) {
     for(unsigned int y = from.getY(); y <= (unsigned int)to.getY(); y++) {
-    if(x >= 0 && y >= 0
-      && (unsigned int)x < width
-      && (unsigned int)y < height) {
+    if(!outOfBounds(Point(x, y))) {
         if(getTile(x, y)->getOwner() == owner && getTile(x,y)->getZone() == 0) {
           getTile(x,y)->setZone(type);
         }
@@ -152,9 +138,7 @@ int  Map::buildZoneCost(unsigned char owner, int type, Point from, Point to) {
 
   for(unsigned int x = from.getX(); x <= (unsigned int)to.getX(); x++) {
     for(unsigned int y = from.getY(); y <= (unsigned int)to.getY(); y++) {
-      if(x >= 0 && y >= 0
-      && (unsigned int)x < width
-      && (unsigned int)y < height) {
+      if(!outOfBounds(Point(x, y))) {
         if(getTile(x, y)->getOwner() == owner && getTile(x,y)->getZone() == 0) {
           cost += cost_per_tile;
         }

@@ -35,6 +35,12 @@ class Map {
     virtual unsigned int getWidth();
     virtual unsigned int getHeight();
 
+    virtual inline bool outOfBounds(Point p) {
+      return (p.getX() < 0 || p.getY() < 0
+      || (unsigned int)p.getX() >= width
+      || (unsigned int)p.getY() >= height);
+    };
+
     virtual void buyLand(unsigned char owner, Point from, Point to);
     virtual int  buyLandCost(unsigned char owner, Point from, Point to);
 

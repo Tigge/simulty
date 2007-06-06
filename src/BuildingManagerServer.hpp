@@ -18,6 +18,9 @@ class BuildingManagerServer : public BuildingManager {
 
     virtual void updateZoneBuildings(unsigned char player_slot, Map *map);
     virtual void addZoneBuilding(unsigned char player_slot, int buildingType, Point p, int w, int h);
+
+    Building *getZoneBuilding(int i);
+    unsigned int getZoneBuildingCount();
 };
 
 #endif
