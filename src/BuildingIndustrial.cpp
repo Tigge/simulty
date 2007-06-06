@@ -9,20 +9,7 @@ BuildingIndustrial::BuildingIndustrial(Point position, int owner)
 
 
 unsigned char BuildingIndustrial::getType() {
-    return Building::TYPE_RESIDENTIAL;
+    return Building::TYPE_INDUSTRIAL;
 }
 
-unsigned char BuildingIndustrial::getWidth() {
-    return width;
-}
-unsigned char BuildingIndustrial::getHeight() {
-    return height;
-}
 
-void BuildingIndustrial::setWidth(unsigned char set_width) {
-  width = set_width;
-}
-
-void BuildingIndustrial::setHeight(unsigned char set_height) {
-  height = set_height;
-}
