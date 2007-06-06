@@ -18,8 +18,8 @@ void BuildingManagerServer::updateZoneBuildings(unsigned char player_slot, Map *
   int max_size = 3;
 
   // loop through all tiles
-  for(int x = 0; x < map->getWidth(); x++) {
-    for(int y = 0; y < map->getHeight(); y++) {
+  for(int x = 0; (unsigned int)x < map->getWidth(); x++) {
+    for(int y = 0; (unsigned int)y < map->getHeight(); y++) {
       // If the tile is zoned and hasn't got a road on it
       if(map->getTile(x, y)->getZone() != 0 && !map->getTile(x, y)->isRoad()) {
 
@@ -69,13 +69,13 @@ void BuildingManagerServer::updateZoneBuildings(unsigned char player_slot, Map *
                   || map->getTile(tile_x, tile_y)->isRoad()) {
                     good = false; break;
                   }
-                  for(int i = 0; i < getSpecialBuildingCount(); i++) {
+                  for(unsigned int i = 0; i < getSpecialBuildingCount(); i++) {
                     if(tile_x >= getSpecialBuilding(i)->position.getX() && tile_x < getSpecialBuilding(i)->position.getX() + getSpecialBuilding(i)->getWidth()
                     && tile_y >= getSpecialBuilding(i)->position.getY() && tile_y < getSpecialBuilding(i)->position.getY() + getSpecialBuilding(i)->getHeight()) {
                       good = false; break;
                     }
                   }
-                  for(int i = 0; i < getZoneBuildingCount(); i++) {
+                  for(unsigned int i = 0; i < getZoneBuildingCount(); i++) {
                     if(tile_x >= getZoneBuilding(i)->position.getX() && tile_x < getZoneBuilding(i)->position.getX() + getZoneBuilding(i)->getWidth()
                     && tile_y >= getZoneBuilding(i)->position.getY() && tile_y < getZoneBuilding(i)->position.getY() + getZoneBuilding(i)->getHeight()) {
                       good = false; break;
@@ -106,13 +106,13 @@ void BuildingManagerServer::updateZoneBuildings(unsigned char player_slot, Map *
 void BuildingManagerServer::addZoneBuilding(unsigned char playerSlot, int buildingType, Point p, int w, int h) {
 
   BuildingManager::addZoneBuilding(playerSlot, buildingType, p, w, h);
-  
+
   Server *server = Server::getInstance();
-  
+
   NLPacket packet(NLPACKET_TYPE_SIMULTY_ZONE_BUILDING);
   packet << (NLINT16)playerSlot << (NLINT16)buildingType << (NLINT32)p.getX()
          << (NLINT32)p.getY()   << (NLINT16)w            << (NLINT16)h;
-         
+
   server->packet_send_to_all(packet);
 
 }

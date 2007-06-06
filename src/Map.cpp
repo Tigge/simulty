@@ -26,8 +26,12 @@ unsigned int Map::getHeight() {
 void Map::buyLand(unsigned char owner, Point from, Point to) {
   for(unsigned int x = from.getX(); x <= (unsigned int)to.getX(); x++) {
     for(unsigned int y = from.getY(); y <= (unsigned int)to.getY(); y++) {
-      if(getTile(x, y)->getOwner() == -1) {
-        getTile(x, y)->setOwner(owner);
+      if(x >= 0 && y >= 0
+      && (unsigned int)x < width
+      && (unsigned int)y < height) {
+        if(getTile(x, y)->getOwner() == -1) {
+          getTile(x, y)->setOwner(owner);
+        }
       }
     }
   }
@@ -36,8 +40,12 @@ int  Map::buyLandCost(unsigned char owner, Point from, Point to) {
   int cost = 0;
   for(unsigned int x = from.getX(); x <= (unsigned int)to.getX(); x++) {
     for(unsigned int y = from.getY(); y <= (unsigned int)to.getY(); y++) {
-      if(getTile(x, y)->getOwner() == -1) {
-        cost += SIMULTY_COST_LAND;
+      if(x >= 0 && y >= 0
+      && (unsigned int)x < width
+      && (unsigned int)y < height) {
+        if(getTile(x, y)->getOwner() == -1) {
+          cost += SIMULTY_COST_LAND;
+        }
       }
     }
   }
@@ -51,9 +59,13 @@ void Map::bulldoze(unsigned char owner, Point from, Point to) {
 
   for(unsigned int x = from.getX(); x <= (unsigned int)to.getX(); x++) {
     for(unsigned int y = from.getY(); y <= (unsigned int)to.getY(); y++) {
-      if(getTile(x, y)->getOwner() == owner) {
-        getTile(x, y)->setRoad(false);
-        getTile(x, y)->setZone(0);
+      if(x >= 0 && y >= 0
+      && (unsigned int)x < width
+      && (unsigned int)y < height) {
+        if(getTile(x, y)->getOwner() == owner) {
+          getTile(x, y)->setRoad(false);
+          getTile(x, y)->setZone(0);
+        }
       }
     }
   }
@@ -63,9 +75,13 @@ int Map::bulldozeCost(unsigned char owner, Point from, Point to) {
   int cost = 0;
   for(unsigned int x = from.getX(); x <= (unsigned int)to.getX(); x++) {
     for(unsigned int y = from.getY(); y <= (unsigned int)to.getY(); y++) {
-      if(getTile(x, y)->getOwner() == owner) {
-        if(getTile(x, y)->isRoad())cost += 10;
-        if(getTile(x, y)->getZone() != 0)cost += 5;
+      if(x >= 0 && y >= 0
+      && (unsigned int)x < width
+      && (unsigned int)y < height) {
+        if(getTile(x, y)->getOwner() == owner) {
+          if(getTile(x, y)->isRoad())cost += 10;
+          if(getTile(x, y)->getZone() != 0)cost += 5;
+        }
       }
     }
   }
@@ -75,8 +91,12 @@ int Map::bulldozeCost(unsigned char owner, Point from, Point to) {
 void Map::buildRoad(unsigned char owner, Point from, Point to) {
   for(unsigned int x = from.getX(); x <= (unsigned int)to.getX(); x++) {
     for(unsigned int y = from.getY(); y <= (unsigned int)to.getY(); y++) {
-      if(getTile(x, y)->isRoad() == false && getTile(x, y)->getZone() == 0) {
-        getTile(x, y)->setRoad(true);
+      if(x >= 0 && y >= 0
+      && (unsigned int)x < width
+      && (unsigned int)y < height) {
+        if(getTile(x, y)->isRoad() == false && getTile(x, y)->getZone() == 0) {
+          getTile(x, y)->setRoad(true);
+        }
       }
     }
   }
@@ -86,8 +106,12 @@ int Map::buildRoadCost(unsigned char owner, Point from, Point to) {
 
   for(unsigned int x = from.getX(); x <= (unsigned int)to.getX(); x++) {
     for(unsigned int y = from.getY(); y <= (unsigned int)to.getY(); y++) {
-      if(getTile(x, y)->isRoad() == false && getTile(x, y)->getZone() == 0) {
-        cost += SIMULTY_COST_ROAD;
+      if(x >= 0 && y >= 0
+      && (unsigned int)x < width
+      && (unsigned int)y < height) {
+        if(getTile(x, y)->isRoad() == false && getTile(x, y)->getZone() == 0) {
+          cost += SIMULTY_COST_ROAD;
+        }
       }
     }
   }
@@ -96,11 +120,17 @@ int Map::buildRoadCost(unsigned char owner, Point from, Point to) {
 }
 
 void Map::buildZone(unsigned char owner, int type, Point from, Point to) {
-  for(unsigned int x = from.getX(); x <= (unsigned int)to.getX(); x++)
-    for(unsigned int y = from.getY(); y <= (unsigned int)to.getY(); y++)
-      if(getTile(x, y)->getOwner() == owner && getTile(x,y)->getZone() == 0) {
-        getTile(x,y)->setZone(type);
+  for(unsigned int x = from.getX(); x <= (unsigned int)to.getX(); x++) {
+    for(unsigned int y = from.getY(); y <= (unsigned int)to.getY(); y++) {
+    if(x >= 0 && y >= 0
+      && (unsigned int)x < width
+      && (unsigned int)y < height) {
+        if(getTile(x, y)->getOwner() == owner && getTile(x,y)->getZone() == 0) {
+          getTile(x,y)->setZone(type);
+        }
       }
+    }
+  }
 }
 
 int  Map::buildZoneCost(unsigned char owner, int type, Point from, Point to) {
@@ -120,11 +150,17 @@ int  Map::buildZoneCost(unsigned char owner, int type, Point from, Point to) {
       throw SIMULTYEXCEPTION("Unknown zone type");
   }
 
-  for(unsigned int x = from.getX(); x <= (unsigned int)to.getX(); x++)
-    for(unsigned int y = from.getY(); y <= (unsigned int)to.getY(); y++)
-      if(getTile(x, y)->getOwner() == owner && getTile(x,y)->getZone() == 0) {
-        cost += cost_per_tile;
+  for(unsigned int x = from.getX(); x <= (unsigned int)to.getX(); x++) {
+    for(unsigned int y = from.getY(); y <= (unsigned int)to.getY(); y++) {
+      if(x >= 0 && y >= 0
+      && (unsigned int)x < width
+      && (unsigned int)y < height) {
+        if(getTile(x, y)->getOwner() == owner && getTile(x,y)->getZone() == 0) {
+          cost += cost_per_tile;
+        }
       }
+    }
+  }
 
   return cost;
 }
@@ -178,6 +214,17 @@ unsigned char Map::getAdjacentRoads(Point at) {
 
 bool Map::walkRoad(Point road, unsigned char direction, bool lookFor(Point)) {
 
+  /*char DIR_UP_RIGHT_DOWN   = 5,
+       DIR_UP_RIGHT_LEFT   = 6,
+       DIR_UP_DOWN_LEFT    = 6,
+       DIR_UP_RIGHT        = 7;
+       DIR_UP_DOWN         = 8;
+       DIR_UP_LEFT         = 9;
+       DIR_RIGHT_DOWN_LEFT = 10;
+       DIR_RIGHT_DOWN      = 11;
+       DIR_RIGHT_LEFT      = 12;
+       DIR_DOWN_LEFT       = 13;*/
+
   if(lookFor(road) == true)
     return true;
 
@@ -194,6 +241,73 @@ bool Map::walkRoad(Point road, unsigned char direction, bool lookFor(Point)) {
 
     if(roads[DIR_UP] == false && roads[DIR_RIGHT] == false && roads[DIR_DOWN] == false && roads[DIR_LEFT] == false)
       return false;
+
+    if(!roads[direction]) {
+
+      if(roads[DIR_UP]) {
+        if(roads[DIR_RIGHT]) {
+          if(roads[DIR_DOWN]) {
+            return (walkRoad(Point(road.getX(),   road.getY()+1), DIR_UP,    lookFor)
+                 || walkRoad(Point(road.getX()+1, road.getY()),   DIR_RIGHT, lookFor)
+                 || walkRoad(Point(road.getX(),   road.getY()-1), DIR_DOWN,  lookFor));
+          }
+          else if(roads[DIR_LEFT]) {
+            return (walkRoad(Point(road.getX(),   road.getY()+1), DIR_UP,    lookFor)
+                 || walkRoad(Point(road.getX()+1, road.getY()),   DIR_RIGHT, lookFor)
+                 || walkRoad(Point(road.getX()-1, road.getY()),   DIR_LEFT,  lookFor));
+          }
+        }
+        else if(roads[DIR_DOWN]) {
+          if(roads[DIR_LEFT]) {
+            return (walkRoad(Point(road.getX(),   road.getY()+1), DIR_UP,    lookFor)
+                 || walkRoad(Point(road.getX(),   road.getY()-1), DIR_DOWN,  lookFor)
+                 || walkRoad(Point(road.getX()-1, road.getY()),   DIR_LEFT,  lookFor));
+          }
+        }
+        else if(roads[DIR_LEFT]) {
+          return (walkRoad(Point(road.getX(),   road.getY()+1), DIR_UP,    lookFor)
+               || walkRoad(Point(road.getX()+1, road.getY()),   DIR_RIGHT, lookFor)
+               || walkRoad(Point(road.getX(),   road.getY()-1), DIR_DOWN,  lookFor)
+               || walkRoad(Point(road.getX()-1, road.getY()),   DIR_LEFT,  lookFor));
+        }
+        else {
+          return (walkRoad(Point(road.getX(),   road.getY()+1), DIR_UP,    lookFor)
+               || walkRoad(Point(road.getX()+1, road.getY()),   DIR_RIGHT, lookFor));
+        }
+      }
+
+      else if(roads[DIR_RIGHT]) {
+        if(roads[DIR_DOWN]) {
+          if(roads[DIR_LEFT]) {
+            return (walkRoad(Point(road.getX()+1, road.getY()),   DIR_RIGHT, lookFor)
+                 || walkRoad(Point(road.getX(),   road.getY()-1), DIR_DOWN,  lookFor)
+                 || walkRoad(Point(road.getX()-1, road.getY()),   DIR_LEFT,  lookFor));
+          }
+          else {
+            return (walkRoad(Point(road.getX()+1, road.getY()),   DIR_RIGHT, lookFor)
+                 || walkRoad(Point(road.getX(),   road.getY()-1), DIR_DOWN,  lookFor));
+          }
+        }
+        else if(roads[DIR_LEFT]) {
+          return (walkRoad(Point(road.getX()+1, road.getY()),   DIR_RIGHT, lookFor)
+               || walkRoad(Point(road.getX()-1, road.getY()),   DIR_LEFT,  lookFor));
+        }
+        else {
+          return walkRoad(Point(road.getX()+1, road.getY()),   DIR_RIGHT, lookFor);
+        }
+      }
+
+      else if(roads[DIR_DOWN]) {
+        if(roads[DIR_LEFT]) {
+          return (walkRoad(Point(road.getX(),   road.getY()-1), DIR_DOWN,  lookFor)
+               || walkRoad(Point(road.getX()-1, road.getY()),   DIR_LEFT,  lookFor));
+        }
+      }
+
+      else {  // Genuine left turn
+        return walkRoad(Point(road.getX()-1, road.getY()),   DIR_LEFT,  lookFor);
+      }
+    }
 
     switch(direction) {
       case DIR_UP:
@@ -215,9 +329,11 @@ bool Map::walkRoad(Point road, unsigned char direction, bool lookFor(Point)) {
              || walkRoad(Point(road.getX()-1, road.getY()),   DIR_LEFT,  lookFor));
         break;
       default:
-        return false;
+        throw "You so drunk you can't even walk straight! (Map::walkRoad)";
         break;
     }
   }
+
+  return true; // We found what we looked for!
 }
 
