@@ -13,7 +13,7 @@ int main(int argc, char *argv[]) {
     std::cerr << "New game client" << std::endl;
 
     while(gui->running()) {
-    
+
         //cerr << ".";
         while(gui->needUpdate())
         {
@@ -70,7 +70,7 @@ AllegroGUI::AllegroGUI() {
   set_color_conversion(COLORCONV_TOTAL | COLORCONV_KEEP_TRANS);
 
   // No mouse, bitte!
-  show_mouse(NULL); 
+  show_mouse(NULL);
 
   if(install_timer() != 0) {
     allegro_message("* Timers could not be inited:\n  %s", allegro_error);
@@ -98,7 +98,7 @@ AllegroGUI::AllegroGUI() {
 
   // Setting color depth
   std::cout << "Allegro inited..." << std::endl;
-  
+
   // Create new client to work on
   client = new Client(this);
 
@@ -109,10 +109,10 @@ AllegroGUI::AllegroGUI() {
     allegro_message("Couldn't load / create some images");
     exit(1);
   }
-  
+
   mr = new MapRender();
   mr->setMap(client->map);
-  
+
   br = new BuildingRender();
 
   try {
@@ -131,8 +131,8 @@ AllegroGUI::AllegroGUI() {
   }
 
   // Set up guichan:
-  
-  
+
+
   imageLoader = new gcn::AllegroImageLoader();
   gcn::Image::setImageLoader(imageLoader);
 
@@ -140,13 +140,13 @@ AllegroGUI::AllegroGUI() {
   graphics->setTarget(buffer);
 
   input = new gcn::AllegroInput();
-  
+
   top = new gcn::Container();
   // Set the dimension of the top container to match the screen.
   top->setDimension(gcn::Rectangle(0, 0, SCREEN_W, SCREEN_H));
   // Make it transparent
   top->setOpaque(false);
-  
+
   gui = new gcn::Gui();
   // Set gui to use the AllegroGraphics object.
   gui->setGraphics(graphics);
@@ -154,7 +154,7 @@ AllegroGUI::AllegroGUI() {
   gui->setInput(input);
   // Set the top container
   gui->setTop(top);
-  
+
   gui->addGlobalKeyListener(this);
   // Load the image font.
   //guiFont = new gcn::ImageFont("fixedfont.bmp", " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789");
@@ -175,14 +175,14 @@ AllegroGUI::AllegroGUI() {
   resIcon   = imageLoader->load("img/menu_icon_res.pcx", true);
   resButton = new gcn::ImageButton(resIcon);
   resButton->addActionListener(this);
-  top->add(resButton, SCREEN_W - 74, 42);  
+  top->add(resButton, SCREEN_W - 74, 42);
 
 
   roadIcon  = imageLoader->load("img/menu_icon_road.pcx", true);
   roadButton = new gcn::ImageButton(roadIcon);
   roadButton->addActionListener(this);
   top->add(roadButton, SCREEN_W - 37, 42);
-  
+
   landIcon  = imageLoader->load("img/menu_icon_land.pcx", true);
   landButton = new gcn::ImageButton(landIcon);
   landButton->addActionListener(this);
@@ -203,7 +203,7 @@ AllegroGUI::AllegroGUI() {
   hospitalButton = new gcn::ImageButton(hospitalIcon);
   hospitalButton->addActionListener(this);
   top->add(hospitalButton, SCREEN_W - 37, 116);
-  
+
   bulldozerIcon  = imageLoader->load("img/menu_icon_bulldozer.pcx", true);
   bulldozerButton = new gcn::ImageButton(bulldozerIcon);
   bulldozerButton->addActionListener(this);
@@ -218,10 +218,10 @@ AllegroGUI::AllegroGUI() {
 
   gcn::Slider *s = new gcn::Slider(0.0, 100.0);
   s->setSize(100, 10);
-  
+
   w->add(s);
   top->add(w, 100, 100);
-  
+
 
 }
 
@@ -242,7 +242,7 @@ AllegroGUI::~AllegroGUI(){
 
   delete roadIcon;
   delete roadButton;
-  
+
   delete landIcon;
   delete landButton;
 
@@ -254,7 +254,7 @@ AllegroGUI::~AllegroGUI(){
 
   delete hospitalIcon;
   delete hospitalButton;
-  
+
   delete bulldozerIcon;
   delete bulldozerButton;
 
@@ -262,15 +262,15 @@ AllegroGUI::~AllegroGUI(){
   delete input;
   delete graphics;
   delete imageLoader;
-  
+
   delete resButton;
   delete comButton;
   delete indButton;
-  
+
   delete resIcon;
   delete comIcon;
   delete indIcon;
-  
+
   //delete guiFont;
   delete top;
   delete gui;
@@ -322,7 +322,7 @@ void AllegroGUI::render() {
 
   if(client->state_menu) {
 
-    blit(menu_background, buffer, 0, 0, SCREEN_W - menu_background->w, 
+    blit(menu_background, buffer, 0, 0, SCREEN_W - menu_background->w,
         SCREEN_H - menu_background->h, menu_background->w, menu_background->h);
 
     textprintf_ex(buffer, font, SCREEN_W - 200, SCREEN_H - 300, makecol(0, 0, 0), -1, "New local game");
@@ -348,22 +348,39 @@ void AllegroGUI::render() {
       Point c1 = mouse_down_tile;
       Point c3 = mouse_up_tile;
 
-      Point::fixOrder(c1, c3);
-      //c3.translate(1, 1);
+      if(true) {//tool != SIMULTY_CLIENT_TOOL_ROAD) {
 
-      Point c2 = Point(c3.getX(), c1.getY());
-      Point c4 = Point(c1.getX(), c3.getY());
+        Point::fixOrder(c1, c3);
+        //c3.translate(1, 1);
 
-      c1 = mr->toScreenCoord(c1, camera); c2 = mr->toScreenCoord(c2, camera);
-      c3 = mr->toScreenCoord(c3, camera); c4 = mr->toScreenCoord(c4, camera);
+        Point c2 = Point(c3.getX(), c1.getY());
+        Point c4 = Point(c1.getX(), c3.getY());
 
-      int points[8] = { c1.getX() + TILE_W / 2, c1.getY(), // Upper left corner
-                        c2.getX(), c2.getY() + TILE_H / 2,
-                        c3.getX() + TILE_W / 2, c3.getY() + TILE_H, // Lower right corner 
-                        c4.getX() + TILE_W, c4.getY() + TILE_H / 2};
+        c1 = mr->toScreenCoord(c1, camera); c2 = mr->toScreenCoord(c2, camera);
+        c3 = mr->toScreenCoord(c3, camera); c4 = mr->toScreenCoord(c4, camera);
 
-      polygon(buffer, 4, points, makecol(255, 255, 255));
+        int points[8] = { c1.getX() + TILE_W / 2, c1.getY(), // Upper left corner
+                          c2.getX(), c2.getY() + TILE_H / 2,
+                          c3.getX() + TILE_W / 2, c3.getY() + TILE_H, // Lower right corner
+                          c4.getX() + TILE_W, c4.getY() + TILE_H / 2};
 
+        polygon(buffer, 4, points, makecol(255, 255, 255));
+      }
+      else {
+        Point c2 = Point(c3.getX(), c1.getY());
+
+        c1 = mr->toScreenCoord(c1, camera); c2 = mr->toScreenCoord(c2, camera);
+        c3 = mr->toScreenCoord(c3, camera);
+
+        int horizontalRoad[8] = { c2.getX(), c1.getY()+ TILE_H/2,
+                                  c2.getX(), c1.getY(),
+                                  c1.getX() + TILE_W, c1.getY() + TILE_H/2,
+                                  c1.getX() + TILE_W/2, c1.getY()
+                                  };
+
+        //polygon(buffer, 4, verticalRoad, makecol(255, 255, 255));
+        polygon(buffer, 4, horizontalRoad, makecol(255, 255, 255));
+      }
     }
     //blit(mouse_hint, buffer, 0, 0, (mouse_x / TILE_W) * TILE_W, (mouse_y / TILE_H) * TILE_H, mouse_hint->w, mouse_hint->h);
 
@@ -374,7 +391,7 @@ void AllegroGUI::render() {
     masked_blit(mouse_block, buffer, 0, 0, realscrn.getX(), realscrn.getY(), mouse_block->w, mouse_block->h);
 
     // Render GUI:
-    masked_blit(gui_background, buffer, 0, 0, SCREEN_W - gui_background->w, 
+    masked_blit(gui_background, buffer, 0, 0, SCREEN_W - gui_background->w,
         SCREEN_H - gui_background->h, gui_background->w, gui_background->h);
 
     //textprintf_ex(buffer, font, 20, SCREEN_H - 40, makecol(0, 0, 0), -1, "Money: %i", client->money);
@@ -433,7 +450,7 @@ void AllegroGUI::update()
 
     if(client->state_menu) {
       if(mouse.getLeftButtonState() == STATE_PRESS) {
-        client->state_menu = false; client->state_game = SIMULTY_CLIENT_STATE_GAME_START; 
+        client->state_menu = false; client->state_game = SIMULTY_CLIENT_STATE_GAME_START;
       }
     } else if(client->state_game == SIMULTY_CLIENT_STATE_GAME_ON) {
 
@@ -456,7 +473,7 @@ void AllegroGUI::update()
 
             //std::cout << "mouse release event" << std::endl;
 
-            Point::fixOrder(mouse_down_tile, mouse_up_tile);
+            //Point::fixOrder(mouse_down_tile, mouse_up_tile);
 
             if(mouse.getPosition().getX() < SCREEN_W - 80) {
 

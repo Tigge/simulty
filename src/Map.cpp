@@ -84,14 +84,17 @@ void Map::buildRoad(unsigned char owner, Point from, Point to) {
 
   Point line;
 
-  if(from.getX() - to.getX() > from.getY() - to.getY()) {
-     line.setX(to.getX());
-     line.setY(from.getY());
+  if((from.getX() - to.getX())*(from.getX() - to.getX() < 0 ? -1 : 1)
+   > (from.getY() - to.getY())*(from.getY() - to.getY() < 0 ? -1 : 1)) {  // delta x > delta y
+    line.setY(from.getY());
+    line.setX(to.getX());
   }
   else {
-     line.setX(from.getX());
-     line.setY(to.getY());
+    line.setX(from.getX());
+    line.setY(to.getY());
   }
+
+  Point::fixOrder(from, to);
 
   // Horizontal
   for(unsigned int x = from.getX(); x <= (unsigned int)to.getX(); x++) {
@@ -103,6 +106,7 @@ void Map::buildRoad(unsigned char owner, Point from, Point to) {
       }
     }
   }
+
   // Vertical
   for(unsigned int y = from.getY(); y <= (unsigned int)to.getY(); y++) {
     if(!outOfBounds(Point(line.getX(), y))) {
@@ -113,8 +117,6 @@ void Map::buildRoad(unsigned char owner, Point from, Point to) {
       }
     }
   }
-
-  // Vertical
 }
 int Map::buildRoadCost(unsigned char owner, Point from, Point to) {
   int cost = 0;
