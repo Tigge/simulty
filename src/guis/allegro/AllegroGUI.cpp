@@ -394,23 +394,31 @@ void AllegroGUI::render() {
     masked_blit(gui_background, buffer, 0, 0, SCREEN_W - gui_background->w,
         SCREEN_H - gui_background->h, gui_background->w, gui_background->h);
 
-    //textprintf_ex(buffer, font, 20, SCREEN_H - 40, makecol(0, 0, 0), -1, "Money: %i", client->money);
-    textprintf_ex(buffer, font, 20, SCREEN_H - 30, makecol(0, 0, 0), -1, "Time: %i %s %i",
-        client->cal.getYear(), client->cal.getMonthAsString().c_str(), client->cal.getDay());
-    textprintf_ex(buffer, font, 20, SCREEN_H - 20, makecol(0, 0, 0), -1, "Tool: %i", tool);
+    textprintf_ex(buffer, font, 20, SCREEN_H - 40, makecol(0, 0, 0), -1, 
+        "Money: %i", client->getMyPlayer()->getMoney());
+    textprintf_ex(buffer, font, 20, SCREEN_H - 30, makecol(0, 0, 0), -1, 
+        "Time: %i %s %i", client->cal.getYear(), 
+        client->cal.getMonthAsString().c_str(), client->cal.getDay());
+    textprintf_ex(buffer, font, 20, SCREEN_H - 20, makecol(0, 0, 0), -1, 
+        "Tool: %i", tool);
 
-    textprintf_ex(buffer, font, 200, SCREEN_H - 20, makecol(0, 0, 0), -1, "FPS: %i", fps);
+    textprintf_ex(buffer, font, 200, SCREEN_H - 20, makecol(0, 0, 0), -1, 
+        "FPS: %i", fps);
+    textprintf_ex(buffer, font, 200, SCREEN_H - 50, makecol(0, 0, 0), -1, 
+        "Camera: %i, %i", camera.getX(), camera.getY());
+    textprintf_ex(buffer, font, 200, SCREEN_H - 30, makecol(0, 0, 0), -1, 
+        "Mouse: %i, %i", realtile.getX(), realtile.getY());
 
-    //textprintf_ex(buffer, font, 200, SCREEN_H - 50, makecol(0, 0, 0), -1, "Camera: %i, %i", camera.getX(), camera.getY());
-    textprintf_ex(buffer, font, 200, SCREEN_H - 30, makecol(0, 0, 0), -1, "Mouse: %i, %i", realtile.getX(), realtile.getY());
+    textprintf_ex(buffer, font, 400, SCREEN_H - 30, makecol(0, 0, 0), -1, 
+        "Thrive: %i", client->bman.getThriveValue(client->map, 
+        client->getMyPlayer()->getSlot(), realtile));
 
 
-    if(realtile.getX() > 5 && realtile.getY() > 5 && realtile.getX() < 25 && realtile.getY() < 25)
-      textprintf_ex(buffer, font, 300, SCREEN_H - 30, makecol(0, 0, 0), -1, "Thrive: %i", client->bman.getThriveValue(client->map, client->player_me->getSlot(), realtile));
-
-
-    textprintf_ex(buffer, font, 600, SCREEN_H - 30, makecol(0, 0, 0), -1, "MD: %i, %i MU: %i, %i", mouse_down_tile.getX(), mouse_down_tile.getY(), mouse_up_tile.getX(), mouse_up_tile.getY());
-    textprintf_ex(buffer, font, 600, SCREEN_H - 60, makecol(0, 0, 0), -1, "SB: %i", client->bman.getSpecialBuildingCount());
+    textprintf_ex(buffer, font, 600, SCREEN_H - 30, makecol(0, 0, 0), -1, 
+        "MD: %i, %i MU: %i, %i", mouse_down_tile.getX(), 
+        mouse_down_tile.getY(), mouse_up_tile.getX(), mouse_up_tile.getY());
+    textprintf_ex(buffer, font, 600, SCREEN_H - 60, makecol(0, 0, 0), -1, 
+        "SB: %i", client->bman.getSpecialBuildingCount());
 
     // Draw console:
     if(console_show)

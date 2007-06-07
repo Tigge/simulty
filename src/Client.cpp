@@ -26,11 +26,7 @@ Client::Client(GUI *gui) {
 
     map = new Map(50, 50);
 
-    time = 0;
-
-    // Set max players and set up all slots:
-
-    player_me = NULL;
+    myPlayer = NULL;
 
 }
 
@@ -56,6 +52,9 @@ void Client::update() {
   }
 }
 
+player_client_local *Client::getMyPlayer() {
+  return myPlayer;
+}
 
 void Client::bulldoze(Point from, Point to) {
 
@@ -160,7 +159,7 @@ void Client::packet_handle(NLPacket p) {
       pman.add(pl);
 
       // Set the player to our local player:
-      player_me = pl;
+      myPlayer = pl;
 
       state_game = SIMULTY_CLIENT_STATE_GAME_ON;
 
@@ -181,9 +180,7 @@ void Client::packet_handle(NLPacket p) {
     }
 
     case NLPACKET_TYPE_SIMULTY_TIME_INCR: {
-
       cal.advance();
-      time++;
       break;
     }
     case NLPACKET_TYPE_SIMULTY_MONEY_CHANGE: {
@@ -191,8 +188,8 @@ void Client::packet_handle(NLPacket p) {
       NLINT16 player_affected; NLINT32 money_new;
       p >> player_affected >> money_new;
 
-      if(player_affected == player_me->getSlot()) {
-        player_me->setMoney(money_new);
+      if(player_affected == getMyPlayer()->getSlot()) {
+        getMyPlayer()->setMoney(money_new);
       }
 
       gui->console_log("Money changed");

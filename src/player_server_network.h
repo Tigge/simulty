@@ -16,7 +16,7 @@ class player_server_network: public Player {
   // Operations
   public:
 
-    virtual void setMoney(int money_new);
+    //virtual void setMoney(int money_new);
 
     player_server_network(NLINT32, NLINT16);
     virtual ~player_server_network (  );

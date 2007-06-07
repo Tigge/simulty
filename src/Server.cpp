@@ -144,13 +144,14 @@ void Server::update () {
   // New stuff happening: (TODO: move to function)
   if(time_advance) {
 
+    // Do every new month:
     if(calendar.isEndOfMonth()) {
       std::cout << "It is now " << calendar.getMonthAsString() << ", time to update zones" << std::endl;
       for(unsigned int i = 0; i < pman.count(); i++) {
         bman.updateZoneBuildings(pman.get_by_n(i)->getSlot(), map);
       }
     }
-
+    // Do every new year:
     if(calendar.isEndOfYear()) {
       // TODO: Make dependent of commerce and industry
       std::cout << "It is now " << calendar.getYear() << ", time for *ka-ching!*" << std::endl;
@@ -162,7 +163,10 @@ void Server::update () {
             bman.getThriveValue(map, pman.get_by_n(p)->getSlot(), bman.getZoneBuilding(i)->getPosition());
           }
         }
-        pman.get_by_n(p)->setMoney(pman.get_by_n(p)->getMoney() + pop*(1+pman.get_by_n(p)->getTax()/100));
+        int income = pop * (1 + pman.get_by_n(p)->getTax() / 100);
+        int money  = pman.get_by_n(p)->getMoney();
+         std::cout << "P " << p << " " << money << " + " << income << std::endl;
+        pman.changeMoney(pman.get_by_n(p)->getSlot(), money + income);
       }
     }
 
@@ -242,7 +246,8 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
       Point fr = Point::fromPacket(pack);
       Point to = Point::fromPacket(pack);
 
-      if(map->bulldozeCost(from->getSlot(), fr ,to) <= from->getMoney()) {
+      int cost = map->bulldozeCost(from->getSlot(), fr ,to);
+      if(cost <= from->getMoney()) {
         map->bulldoze(from->getSlot(), fr, to);
 
         NLPacket packet(NLPACKET_TYPE_SIMULTY_BULLDOZE);
@@ -251,6 +256,7 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
                << (NLINT32)to.getY();
 
         packet_send_to_all(packet);
+        pman.changeMoney(from->getSlot(), from->getMoney() - cost);
       }
 
       // TODO: move to building manager
@@ -275,9 +281,8 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
       Point fr = Point::fromPacket(pack);
       Point to = Point::fromPacket(pack);
 
-      if(map->buyLandCost(from->getSlot(), fr, to) <= from->getMoney()) {
-        from->setMoney(from->getMoney() - map->buyLandCost(from->getSlot(), fr, to));
-
+      int cost = map->buyLandCost(from->getSlot(), fr, to);
+      if(cost <= from->getMoney()) {
         map->buyLand(from->getSlot(), fr, to);
 
         NLPacket packet(NLPACKET_TYPE_SIMULTY_LAND);
@@ -286,6 +291,7 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
                << (NLINT32)to.getY();
 
         packet_send_to_all(packet);
+        pman.changeMoney(from->getSlot(), from->getMoney() - cost);
       }
 
       break;
@@ -297,9 +303,8 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
       Point to = Point::fromPacket(pack);
 
       std::cerr << "(" << fr.getX() << ", " << fr.getY() << ") -> (" << to.getX() << ", " << to.getY() << ")" << std::endl;
-      if(map->buildRoadCost(from->getSlot(), fr, to) <= from->getMoney()) {
-        from->setMoney(from->getMoney() - map->buildRoadCost(from->getSlot(), fr, to));
-
+      int cost = map->buildRoadCost(from->getSlot(), fr, to);
+      if(cost <= from->getMoney()) {
         map->buildRoad(from->getSlot(), fr, to);
 
         NLPacket packet(NLPACKET_TYPE_SIMULTY_ROAD);
@@ -307,6 +312,7 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
                << (NLINT32)fr.getY()       << (NLINT32)to.getX()
                << (NLINT32)to.getY();
         packet_send_to_all(packet);
+        pman.changeMoney(from->getSlot(), from->getMoney() - cost);
       }
 
       break;
@@ -318,8 +324,9 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
       Point fr   = Point::fromPacket(pack);
       Point to   = Point::fromPacket(pack);
 
-      if(map->buildZoneCost(from->getSlot(), tp, fr, to) <= from->getMoney()) {
-        from->setMoney(from->getMoney() - map->buildZoneCost(from->getSlot(), tp, fr, to));
+      int cost = map->buildZoneCost(from->getSlot(), tp, fr, to);
+
+      if(cost <= from->getMoney()) {
 
         map->buildZone(from->getSlot(), tp, fr, to);
 
@@ -327,8 +334,9 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
         zonepak << (NLINT16)from->getSlot() << (NLINT16)tp
                 << (NLINT32)fr.getX() << (NLINT32)fr.getY()
                 << (NLINT32)to.getX() << (NLINT32)to.getY();
-
+                
         packet_send_to_all(zonepak);
+        pman.changeMoney(from->getSlot(), from->getMoney() - cost);
       }
 
 
@@ -370,7 +378,6 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
             }
 
             if(cost <= from->getMoney()  && bman.canBuildSpecialBuilding(b, from->getSlot(), map)) {
-              from->setMoney(from->getMoney() - cost);
 
               bman.addSpecialBuilding(b);
 
@@ -378,7 +385,7 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
               packet << (NLINT16)from->getSlot() << buildingType << x << y;
               packet_send_to_all(packet);
 
-              std::cerr << "Building!" << std::endl;
+              pman.changeMoney(from->getSlot(), from->getMoney() - cost);
             } else {
               delete b;
             }
@@ -438,7 +445,7 @@ bool Server::player_add(unsigned char type)
 
 
     // Get free slot:
-    int slot = pman.slot_next();
+    int slot = pman.nextSlot();
 
     Player *player_tmp;
 

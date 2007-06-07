@@ -40,7 +40,7 @@ class Client {
     Calendar      cal;
 
     PlayerManager pman;
-    player_client_local *player_me;
+    player_client_local *myPlayer;
 
     BuildingManager bman;
 
@@ -55,9 +55,6 @@ class Client {
 
     unsigned char state_menu;
     unsigned char state_game;
-
-    int time;
-    //int money;
 
     //Point cam;
     GUI *gui;
@@ -82,6 +79,8 @@ class Client {
     void buyRoad(Point from, Point to);
     void buyZone(Point from, Point to, int type);
     void buyBuilding(Point where, int type);
+
+    player_client_local *getMyPlayer();
 
 };
 

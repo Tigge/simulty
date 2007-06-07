@@ -9,7 +9,7 @@ player_server_network::~player_server_network()
 {
 
 }
-
+/*
 void player_server_network::setMoney(int money_new)
 {
     // Update money locally:
@@ -21,7 +21,7 @@ void player_server_network::setMoney(int money_new)
     socket->packet_put(money_update);
 
 
-}
+}*/
 
 void player_server_network::update (  ){
 }

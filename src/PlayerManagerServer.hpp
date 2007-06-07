@@ -12,7 +12,9 @@ class PlayerManagerServer : public PlayerManager {
     PlayerManagerServer();
     virtual ~PlayerManagerServer();
   
-    virtual int  slot_next();
+    virtual int  nextSlot();
+    
+    virtual void changeMoney(int slot, int money);
 };
 
 #endif
