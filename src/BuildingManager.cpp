@@ -53,11 +53,11 @@ int BuildingManager::getConnectionThrive(Map *map, char slot, Point where) {
   if(map->outOfBounds(where))
     return 0;
 
-
   for(int x = where.getX() - 3; x <= where.getX() + 3; x++)
     for(int y = where.getY() - 3; y <= where.getY() + 3; y++)
-      if(!map->outOfBounds(Point(x, y)))
-        if(map->getTile(x, y)->getOwner() == slot
+      if(abs(where.getX() - x) + abs(where.getY() - y) <= 3
+          && !map->outOfBounds(Point(x, y))
+          && map->getTile(x, y)->getOwner() == slot
           && map->getTile(x, y)->isRoad()) return 20;
 
   return 0;

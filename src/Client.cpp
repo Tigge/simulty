@@ -44,7 +44,7 @@ void Client::update() {
 
     net.update(0);
 
-    if(net_client->packet_exists()) {
+    while(net_client->packet_exists()) {
       //err << "* Client have recieved a package... " << endl;
       packet_handle(net_client->packet_get());
 

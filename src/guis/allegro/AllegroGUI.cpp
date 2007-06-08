@@ -63,7 +63,7 @@ AllegroGUI::AllegroGUI() {
   }
 
   set_color_depth(16);
-  if(set_gfx_mode(GFX_AUTODETECT_WINDOWED, 1024, 768, 0, 0) != 0) {
+  if(set_gfx_mode(GFX_AUTODETECT, 1024, 768, 0, 0) != 0) {
     allegro_message("* Graphics could not be inited:\n  %s", allegro_error);
     exit(0);
   }
@@ -198,6 +198,7 @@ AllegroGUI::AllegroGUI() {
   fireButton = new gcn::ImageButton(fireIcon);
   fireButton->addActionListener(this);
   top->add(fireButton, SCREEN_W - 74, 116);
+  top->addMouseListener(this);
 
   hospitalIcon  = imageLoader->load("img/menu_icon_hospital.pcx", true);
   hospitalButton = new gcn::ImageButton(hospitalIcon);
@@ -210,7 +211,8 @@ AllegroGUI::AllegroGUI() {
   top->add(bulldozerButton, SCREEN_W - 74, 153);
 
   console_show = false;
-  tool = 0;
+  usingTool    = false;
+  tool         = 0;
 
   gcn::Window *w = new gcn::Window("Economy");
   w->setDimension(gcn::Rectangle(0, 0, 300, 300));
@@ -277,6 +279,47 @@ AllegroGUI::~AllegroGUI(){
 
 }
 
+void AllegroGUI::mouseDragged (gcn::MouseEvent &e) {
+  if(e.getSource() == top)
+    mouse_up_tile = mr->toTileCoord(Point(e.getX(), e.getY()), camera);
+}
+
+void AllegroGUI::mousePressed (gcn::MouseEvent &e) {
+  if(e.getSource() == top) {
+    mouse_down_tile = mr->toTileCoord(Point(e.getX(), e.getY()), camera);
+    mouse_up_tile   = mr->toTileCoord(Point(e.getX(), e.getY()), camera);
+    usingTool       = true;
+  }
+}
+void AllegroGUI::mouseReleased (gcn::MouseEvent &e) {
+  if(e.getSource() == top) {  
+    if(usingTool) {
+      if(tool == SIMULTY_CLIENT_TOOL_LAND) {
+          client->buyLand(mouse_down_tile, mouse_up_tile);
+          // buy land
+      } else if(tool == SIMULTY_CLIENT_TOOL_ROAD) {
+          // draw road
+          client->buyRoad(mouse_down_tile, mouse_up_tile);
+      } else if(tool == SIMULTY_CLIENT_TOOL_ZONE_RES ||
+              tool == SIMULTY_CLIENT_TOOL_ZONE_COM ||
+              tool == SIMULTY_CLIENT_TOOL_ZONE_IND) {
+            // zone
+          client->buyZone(mouse_down_tile, mouse_up_tile, tool);
+      } else if(tool == SIMULTY_CLIENT_TOOL_BUILD_POLICE) {
+        client->buyBuilding(mouse_down_tile, Building::TYPE_POLICE);
+      } else if(tool == SIMULTY_CLIENT_TOOL_BUILD_FIRE) {
+        client->buyBuilding(mouse_down_tile, Building::TYPE_FIRE);
+      } else if(tool == SIMULTY_CLIENT_TOOL_BUILD_HOSPITAL) {
+        client->buyBuilding(mouse_down_tile, Building::TYPE_HOSPITAL);
+      } else if(tool == SIMULTY_CLIENT_TOOL_BULLDOZER) {
+        client->bulldoze(mouse_down_tile, mouse_up_tile);
+      }
+      usingTool = false;
+    }
+  }
+}
+
+
 void AllegroGUI::keyPressed(gcn::KeyEvent &keyEvent) {
 
   if(keyEvent.getKey().getValue() == gcn::Key::UP) {
@@ -298,9 +341,16 @@ void AllegroGUI::keyPressed(gcn::KeyEvent &keyEvent) {
 void AllegroGUI::keyReleased(gcn::KeyEvent &keyEvent) {
 
   if(keyEvent.getKey().getValue() == gcn::Key::ESCAPE) {
-    client->state_running = false;
+    if(usingTool)
+      usingTool = false;
+    else
+      client->state_running = false;
   } else if(keyEvent.getKey().getValue() == gcn::Key::F1) {
     console_show = !console_show;
+  } else if(keyEvent.getKey().getValue() == 's') {
+    test = LoaderSaver::saveGame(client->map, NULL, NULL);
+  } else if(keyEvent.getKey().getValue() == 'l') {
+     LoaderSaver::loadGame(test, client->map, NULL, NULL);
   }
 
   std::cout << "KR: " << keyEvent.getKey().getValue() << std::endl;
@@ -351,19 +401,19 @@ void AllegroGUI::render() {
 
     // Render map:
     mr->render(buffer, camera);
-
     // Render buildings:
     br->render(buffer, mr, camera, &client->bman);
 
-    if(mouse.getLeftButtonState() == STATE_PRESS) {
-
-
-    } if(mouse.getLeftButtonState() == STATE_HOLD) {
+    if(usingTool) {
 
       Point c1 = mouse_down_tile;
       Point c3 = mouse_up_tile;
 
-      if(true) {//tool != SIMULTY_CLIENT_TOOL_ROAD) {
+      if(tool == SIMULTY_CLIENT_TOOL_ZONE_COM
+          || tool == SIMULTY_CLIENT_TOOL_ZONE_RES 
+          || tool == SIMULTY_CLIENT_TOOL_ZONE_IND
+          || tool == SIMULTY_CLIENT_TOOL_BULLDOZER
+          || tool == SIMULTY_CLIENT_TOOL_LAND) {
 
         Point::fixOrder(c1, c3);
         //c3.translate(1, 1);
@@ -379,22 +429,31 @@ void AllegroGUI::render() {
                           c3.getX() + TILE_W / 2, c3.getY() + TILE_H, // Lower right corner
                           c4.getX() + TILE_W, c4.getY() + TILE_H / 2};
 
-        polygon(buffer, 4, points, makecol(255, 255, 255));
-      }
-      else {
-        Point c2 = Point(c3.getX(), c1.getY());
-
-        c1 = mr->toScreenCoord(c1, camera); c2 = mr->toScreenCoord(c2, camera);
-        c3 = mr->toScreenCoord(c3, camera);
-
-        int horizontalRoad[8] = { c2.getX(), c1.getY()+ TILE_H/2,
-                                  c2.getX(), c1.getY(),
-                                  c1.getX() + TILE_W, c1.getY() + TILE_H/2,
-                                  c1.getX() + TILE_W/2, c1.getY()
-                                  };
-
-        //polygon(buffer, 4, verticalRoad, makecol(255, 255, 255));
-        polygon(buffer, 4, horizontalRoad, makecol(255, 255, 255));
+        int color = makecol(255, 255, 255);
+        switch(tool) {
+          case SIMULTY_CLIENT_TOOL_ZONE_COM: 
+            color = makecol(0, 0, 255);
+            break;
+          case SIMULTY_CLIENT_TOOL_ZONE_RES: 
+            color = makecol(0, 255, 0);
+            break;
+          case SIMULTY_CLIENT_TOOL_ZONE_IND: 
+            color = makecol(255, 0, 0);
+            break;
+          case SIMULTY_CLIENT_TOOL_LAND: 
+            color = makecol(255, 255, 255);
+            break;
+          case SIMULTY_CLIENT_TOOL_BULLDOZER: 
+            color = makecol(0, 0, 0);
+            break;
+        }
+        set_trans_blender(255, 255, 255, 100); 
+        drawing_mode(DRAW_MODE_TRANS, NULL, 0, 0);
+        polygon(buffer, 4, points, color);
+        solid_mode();
+      } else if(tool == SIMULTY_CLIENT_TOOL_BUILD_POLICE) {
+      
+        // TODO
       }
     }
     //blit(mouse_hint, buffer, 0, 0, (mouse_x / TILE_W) * TILE_W, (mouse_y / TILE_H) * TILE_H, mouse_hint->w, mouse_hint->h);
@@ -439,13 +498,15 @@ void AllegroGUI::render() {
     // Draw console:
     if(console_show)
     {
+        set_trans_blender(255, 255, 255, 100); 
+        drawing_mode(DRAW_MODE_TRANS, NULL, 0, 0);
         rectfill(buffer, 0, 0, SCREEN_W, 100, makecol(50, 50, 50));
-
         for(int i = 1; i <= 5; i++)
         {
             if(console_data.size() - i >= 0 && console_data.size() - i < console_data.size())
                 textprintf_ex(buffer, font, 10, 90 - 15*i, makecol(255, 255, 255), -1, "> %s", console_data[console_data.size() - i].c_str());
         }
+        solid_mode();
     }
 
   }
@@ -464,8 +525,7 @@ void AllegroGUI::render() {
 }
 
 
-void AllegroGUI::update()
-{
+void AllegroGUI::update() {
 
   gui->logic();
   client->update();
@@ -477,52 +537,6 @@ void AllegroGUI::update()
         client->state_menu = false; client->state_game = SIMULTY_CLIENT_STATE_GAME_START;
       }
     } else if(client->state_game == SIMULTY_CLIENT_STATE_GAME_ON) {
-
-        // Mouse input:
-        if(mouse.getLeftButtonState() == STATE_PRESS) {
-
-            mouse_down_tile = mr->toTileCoord(mouse.getPressPosition(), camera);
-
-
-
-            //std::cout << "mouse press event" << std::endl;
-
-        } else if(mouse.getLeftButtonState() == STATE_HOLD) {
-
-            mouse_up_tile = mr->toTileCoord(mouse.getPosition(), camera);
-
-            //std::cout << "mouse hold event" << std::endl;
-
-        } else if(mouse.getLeftButtonState() == STATE_RELEASE) {
-
-            //std::cout << "mouse release event" << std::endl;
-
-            //Point::fixOrder(mouse_down_tile, mouse_up_tile);
-
-            if(mouse.getPosition().getX() < SCREEN_W - 80) {
-
-              if(tool == SIMULTY_CLIENT_TOOL_LAND) {
-                  client->buyLand(mouse_down_tile, mouse_up_tile);
-                  // buy land
-              } else if(tool == SIMULTY_CLIENT_TOOL_ROAD) {
-                  // draw road
-                  client->buyRoad(mouse_down_tile, mouse_up_tile);
-              } else if(tool == SIMULTY_CLIENT_TOOL_ZONE_RES ||
-                      tool == SIMULTY_CLIENT_TOOL_ZONE_COM ||
-                      tool == SIMULTY_CLIENT_TOOL_ZONE_IND) {
-                  // zone
-                  client->buyZone(mouse_down_tile, mouse_up_tile, tool);
-              } else if(tool == SIMULTY_CLIENT_TOOL_BUILD_POLICE) {
-                client->buyBuilding(mouse_down_tile, Building::TYPE_POLICE);
-              } else if(tool == SIMULTY_CLIENT_TOOL_BUILD_FIRE) {
-                client->buyBuilding(mouse_down_tile, Building::TYPE_FIRE);
-              } else if(tool == SIMULTY_CLIENT_TOOL_BUILD_HOSPITAL) {
-                client->buyBuilding(mouse_down_tile, Building::TYPE_HOSPITAL);
-              } else if(tool == SIMULTY_CLIENT_TOOL_BULLDOZER) {
-                client->bulldoze(mouse_down_tile, mouse_up_tile);
-              }
-            }
-        }
 
         if(mouse_y < 15)
           camera.step(DIR_UP, scrollSpeed, client->map->getWidth() * TILE_W
@@ -539,16 +553,7 @@ void AllegroGUI::update()
 
         if(keypressed()) {
 
-            if(key[KEY_S]) {
-              std::cout << "Saving..." << std::endl;
-              test = LoaderSaver::saveGame(client->map, NULL, NULL);
-              //std::cout << test << std::endl;
-            }
-            if(key[KEY_L]) {
-              std::cout << "Loading..." << std::endl;
-              LoaderSaver::loadGame(test, client->map, NULL, NULL);
-            }
-            //clear_keybuf();
+
         }
 
     }

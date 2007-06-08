@@ -24,7 +24,8 @@
 
 
 
-class AllegroGUI : public GUI, gcn::KeyListener, gcn::ActionListener {
+class AllegroGUI : public GUI, gcn::KeyListener, gcn::ActionListener, 
+    gcn::MouseListener {
   private:
 
     BITMAP *buffer;
@@ -91,13 +92,22 @@ class AllegroGUI : public GUI, gcn::KeyListener, gcn::ActionListener {
     Point           mouse_down_tile;
     Point           mouse_up_tile;
     
-    int tool;
+    bool usingTool;
+    int  tool;
+    
     int scrollSpeed;
         
   public:
 
     virtual void keyPressed(gcn::KeyEvent &keyEvent);
     virtual void keyReleased(gcn::KeyEvent &keyEvent);
+
+    virtual void mouseDragged (gcn::MouseEvent &mouseEvent);
+
+    virtual void mousePressed (gcn::MouseEvent &mouseEvent);
+    virtual void mouseReleased (gcn::MouseEvent &mouseEvent);
+
+
 
     virtual void action(const gcn::ActionEvent &actionEvent);
 
