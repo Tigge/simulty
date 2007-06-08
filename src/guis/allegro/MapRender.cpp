@@ -173,26 +173,24 @@ void MapRender::render (BITMAP *b, Camera cam) {
 
   int base_x = start.getX() - 1;
   int base_y = start.getY() - 2;
+  
+  //std::cout << "Rendering from " << start << std::endl;
 
   //if(cam.y % TILE_H > TILE_H / 2){ base_y--; base_x--; }
 
-  for(int i = 0; i <= SCREEN_H / TILE_H * 2 + 6; i++) {
+  for(int i = 0; i <= SCREEN_H / (TILE_H / 2) + 6; i++) {
 
     //al_trace("===============================\n");
     //al_trace("base %i,%i\n", base_x, base_y);
 
-    for(unsigned int x = base_x, y = base_y;
-        x >= (unsigned int)base_x - 2 - SCREEN_W / TILE_W
-        && y != (unsigned int)base_y + SCREEN_W;
-        x--, y++) {
+    for(int x = base_x, y = base_y;
+        y - base_y < (SCREEN_W / TILE_W) + 2; x--, y++) {
         //al_trace("p %i,%i\n", x, y);
-
-
+        
         //textprintf_ex(b, font, place.x + 20 - cam.x, place.y + 10 - cam.y, makecol(255, 255, 255), -1, "%i,%i", x, y);
 
         // If tile is a valid one, then we draw it:
-        if(y >= 0 && x >= 0 && y < m->getHeight() && x < m->getWidth())
-        {
+        if(y >= 0 && x >= 0 && y < (int)m->getHeight() && x < (int)m->getWidth()) {
             Point pos = toScreenCoord(Point(x, y)) - cam;
             Tile *tile = m->getTile(x, y);
 
@@ -216,9 +214,9 @@ void MapRender::render (BITMAP *b, Camera cam) {
 
               if(y > 0 && m->getTile(x, y - 1)->getOwner() != m->getTile(x, y)->getOwner())
                   masked_blit(t_border[DIR_LEFT], b, 1, 1, pos.getX(), pos.getY(), TILE_W, TILE_H);
-              if(x < m->getWidth() - 1 && m->getTile(x + 1, y)->getOwner() != m->getTile(x, y)->getOwner())
+              if(x < (int)m->getWidth() - 1 && m->getTile(x + 1, y)->getOwner() != m->getTile(x, y)->getOwner())
                   masked_blit(t_border[DIR_DOWN], b, 1, 1, pos.getX(), pos.getY(), TILE_W, TILE_H);
-              if(y < m->getHeight() - 1 && m->getTile(x, y + 1)->getOwner() != m->getTile(x, y)->getOwner())
+              if(y < (int)m->getHeight() - 1 && m->getTile(x, y + 1)->getOwner() != m->getTile(x, y)->getOwner())
                   masked_blit(t_border[DIR_RIGHT], b, 1, 1, pos.getX(), pos.getY(), TILE_W, TILE_H);
               if(x > 0 && m->getTile(x - 1, y)->getOwner() != m->getTile(x, y)->getOwner())
                   masked_blit(t_border[DIR_UP], b, 1, 1, pos.getX(), pos.getY(), TILE_W, TILE_H);

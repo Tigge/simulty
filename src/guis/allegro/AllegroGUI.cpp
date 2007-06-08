@@ -115,6 +115,8 @@ AllegroGUI::AllegroGUI() {
 
   br = new BuildingRender();
 
+  scrollSpeed = 5;
+
   try {
 
     menu_background = ImageLoader::getImage("img/menubg.pcx");
@@ -122,8 +124,6 @@ AllegroGUI::AllegroGUI() {
 
     mouse_pointer   = ImageLoader::getImage("img/cursor.pcx");
     mouse_block     = ImageLoader::getImage("img/mouse_block.pcx");
-
-
 
   } catch(ImageLoaderException e) {
     allegro_message("Error: %s", e.what());
@@ -278,6 +278,21 @@ AllegroGUI::~AllegroGUI(){
 }
 
 void AllegroGUI::keyPressed(gcn::KeyEvent &keyEvent) {
+
+  if(keyEvent.getKey().getValue() == gcn::Key::UP) {
+    camera.step(DIR_UP, 3, client->map->getWidth() * TILE_W - SCREEN_W, 
+        client->map->getHeight() * TILE_H - SCREEN_H);
+  } else if(keyEvent.getKey().getValue() == gcn::Key::RIGHT) {
+    camera.step(DIR_RIGHT, 3, client->map->getWidth() * TILE_W - SCREEN_W, 
+        client->map->getHeight() * TILE_H - SCREEN_H);
+  } else if(keyEvent.getKey().getValue() == gcn::Key::DOWN) {
+    camera.step(DIR_DOWN, 3, client->map->getWidth() * TILE_W - SCREEN_W, 
+        client->map->getHeight() * TILE_H - SCREEN_H);
+  } else if(keyEvent.getKey().getValue() == gcn::Key::LEFT) {
+    camera.step(DIR_LEFT, 3, client->map->getWidth() * TILE_W - SCREEN_W, 
+        client->map->getHeight() * TILE_H - SCREEN_H);
+  }
+
   std::cout << "KP: " << keyEvent.getKey().getValue() << std::endl;
 }
 void AllegroGUI::keyReleased(gcn::KeyEvent &keyEvent) {
@@ -405,7 +420,8 @@ void AllegroGUI::render() {
     textprintf_ex(buffer, font, 200, SCREEN_H - 20, makecol(0, 0, 0), -1, 
         "FPS: %i", fps);
     textprintf_ex(buffer, font, 200, SCREEN_H - 50, makecol(0, 0, 0), -1, 
-        "Camera: %i, %i", camera.getX(), camera.getY());
+        "Camera: %i, %i (%i, %i)", camera.getX(), camera.getY(),
+        mr->toTileCoord(camera).getX(), mr->toTileCoord(camera).getY());
     textprintf_ex(buffer, font, 200, SCREEN_H - 30, makecol(0, 0, 0), -1, 
         "Mouse: %i, %i", realtile.getX(), realtile.getY());
 
@@ -508,17 +524,20 @@ void AllegroGUI::update()
             }
         }
 
-        if(key[KEY_UP]    || mouse_y < 15           )camera.step(DIR_UP,    3, client->map->getWidth() * TILE_W / 2, client->map->getHeight() * TILE_H / 2);
-        if(key[KEY_RIGHT] || mouse_x > SCREEN_W - 15)camera.step(DIR_RIGHT, 3, client->map->getWidth() * TILE_W / 2, client->map->getHeight() * TILE_H / 2);
-        if(key[KEY_DOWN]  || mouse_y > SCREEN_H - 15)camera.step(DIR_DOWN,  3, client->map->getWidth() * TILE_W / 2, client->map->getHeight() * TILE_H / 2);
-        if(key[KEY_LEFT]  || mouse_x < 15           )camera.step(DIR_LEFT,  3, client->map->getWidth() * TILE_W / 2, client->map->getHeight() * TILE_H / 2);
+        if(mouse_y < 15)
+          camera.step(DIR_UP, scrollSpeed, client->map->getWidth() * TILE_W
+              - SCREEN_W, client->map->getHeight() * TILE_H - SCREEN_H);
+        if(mouse_x > SCREEN_W - 15)
+          camera.step(DIR_RIGHT, scrollSpeed, client->map->getWidth() * TILE_W
+              - SCREEN_W, client->map->getHeight() * TILE_H - SCREEN_H);
+        if(mouse_y > SCREEN_H - 15)
+          camera.step(DIR_DOWN, scrollSpeed, client->map->getWidth() * TILE_W
+              - SCREEN_W, client->map->getHeight() * TILE_H - SCREEN_H);
+        if(mouse_x < 15)
+          camera.step(DIR_LEFT, scrollSpeed, client->map->getWidth() * TILE_W
+              - SCREEN_W, client->map->getHeight() * TILE_H - SCREEN_H);
 
         if(keypressed()) {
-            if(key[KEY_F1])console_show = !console_show;
-
-            if(key[KEY_PLUS_PAD])tool++;
-            if(key[KEY_MINUS_PAD])tool--;
-
 
             if(key[KEY_S]) {
               std::cout << "Saving..." << std::endl;
@@ -529,7 +548,7 @@ void AllegroGUI::update()
               std::cout << "Loading..." << std::endl;
               LoaderSaver::loadGame(test, client->map, NULL, NULL);
             }
-            clear_keybuf();
+            //clear_keybuf();
         }
 
     }
