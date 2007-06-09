@@ -119,9 +119,9 @@ void Server::setSpeed(int speed) {
     if(speed > 0) {
       int msec = 0;
       switch(speed) {
-        case 1: msec = 1000; break;
-        case 2: msec = 500;  break;
-        case 3: msec = 250;  break;
+        case 1: msec = 700; break;
+        case 2: msec = 400;  break;
+        case 3: msec = 200;  break;
       }
       install_param_int_ex(Server::time_increment, this, MSEC_TO_TIMER(msec));
     } else {

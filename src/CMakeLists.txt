@@ -15,6 +15,7 @@ ENDIF(WIN32)
 FIND_LIBRARY(ALLEGRO NAMES alld-4.2.1 alld-4.2.0 alld)
 FIND_LIBRARY(GUICHAN NAMES guichan)
 FIND_LIBRARY(GUICHANALLEGRO NAMES guichan_allegro)
+FIND_LIBRARY(ALLEGROUNSHARABLE NAMES alld_unsharable)
 
 INCLUDE_DIRECTORIES(${Simulty_SOURCE_DIR}/src/NL ${Simulty_SOURCE_DIR}/src/error /usr/local/include)
 
@@ -37,7 +38,7 @@ ENDIF(WIN32)
 
 IF(ALLEGROUNSHARABLE-NOTFOUND)
 ELSE(ALLEGROUNSHARABLE-NOTFOUND)
-  TARGET_LINK_LIBRARIES(../simulty-server)
+  TARGET_LINK_LIBRARIES(../simulty-server ${ALLEGROUNSHARABLE})
 ENDIF(ALLEGROUNSHARABLE-NOTFOUND)
 
 # Client:
@@ -48,8 +49,9 @@ ADD_EXECUTABLE(../simulty-client Client.cpp Point.cpp Map.cpp PlayerManager.cpp
     BuildingHospital.cpp BuildingManager.cpp BuildingPolice.cpp
     BuildingResidential.cpp BuildingCommersial.cpp BuildingIndustrial.cpp
 
-    guis/allegro/MapRender.cpp guis/allegro/BuildingRender.cpp
-    guis/allegro/AllegroGUI.cpp guis/allegro/Mouse.cpp guis/allegro/Camera.cpp)
+    guis/allegro/MapRender.cpp guis/allegro/MiniMap.cpp 
+    guis/allegro/BuildingRender.cpp guis/allegro/AllegroGUI.cpp
+    guis/allegro/Mouse.cpp guis/allegro/Camera.cpp)
 
 IF(WIN32)
   TARGET_LINK_LIBRARIES(../simulty-client NL elog ${ALLEGRO} ${GUICHAN} ${GUICHANALLEGRO} wsock32 )
@@ -59,6 +61,6 @@ ENDIF(WIN32)
 
 IF(ALLEGROUNSHARABLE-NOTFOUND)
 ELSE(ALLEGROUNSHARABLE-NOTFOUND)
-  TARGET_LINK_LIBRARIES(../simulty-client )
+  TARGET_LINK_LIBRARIES(../simulty-client ${ALLEGROUNSHARABLE})
 ENDIF(ALLEGROUNSHARABLE-NOTFOUND)
 

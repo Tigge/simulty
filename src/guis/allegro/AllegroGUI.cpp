@@ -63,7 +63,7 @@ AllegroGUI::AllegroGUI() {
   }
 
   set_color_depth(16);
-  if(set_gfx_mode(GFX_AUTODETECT, 1024, 768, 0, 0) != 0) {
+  if(set_gfx_mode(GFX_AUTODETECT_WINDOWED, 1024, 768, 0, 0) != 0) {
     allegro_message("* Graphics could not be inited:\n  %s", allegro_error);
     exit(0);
   }
@@ -115,6 +115,8 @@ AllegroGUI::AllegroGUI() {
 
   br = new BuildingRender();
 
+  miniMap = new MiniMap(client->map);
+  
   scrollSpeed = 5;
 
   try {
@@ -456,6 +458,8 @@ void AllegroGUI::render() {
         // TODO
       }
     }
+    
+
     //blit(mouse_hint, buffer, 0, 0, (mouse_x / TILE_W) * TILE_W, (mouse_y / TILE_H) * TILE_H, mouse_hint->w, mouse_hint->h);
 
     Point realtile = mr->toTileCoord(mouse.getPosition(), camera);
@@ -467,6 +471,8 @@ void AllegroGUI::render() {
     // Render GUI:
     masked_blit(gui_background, buffer, 0, 0, SCREEN_W - gui_background->w,
         SCREEN_H - gui_background->h, gui_background->w, gui_background->h);
+    miniMap->render(buffer, Point(SCREEN_W - miniMap->getWidth(), SCREEN_H - miniMap->getHeight()));
+
 
     textprintf_ex(buffer, font, 20, SCREEN_H - 40, makecol(0, 0, 0), -1, 
         "Money: %i", client->getMyPlayer()->getMoney());

@@ -21,6 +21,7 @@
 
 #include "MapRender.hpp"
 #include "BuildingRender.hpp"
+#include "MiniMap.hpp"
 
 
 
@@ -88,6 +89,8 @@ class AllegroGUI : public GUI, gcn::KeyListener, gcn::ActionListener,
     
     MapRender       *mr;
     BuildingRender  *br;
+    
+    MiniMap         *miniMap;
     
     Point           mouse_down_tile;
     Point           mouse_up_tile;
