@@ -1,7 +1,7 @@
-#include "PlayerManagerServer.hpp"
-
 #include "Server.hpp"
 #include "NL.hpp"
+
+#include "PlayerManagerServer.hpp"
 
 PlayerManagerServer::PlayerManagerServer() : PlayerManager()
 {

@@ -1,8 +1,9 @@
+#include "Server.hpp"
+#include "NL.hpp"
+#include "shared.h"
+
 #include "BuildingManagerServer.hpp"
 
-#include "shared.h"
-#include "NL.hpp"
-#include "Server.hpp"
 #include "SimultyException.hpp"
 
 BuildingManagerServer::BuildingManagerServer() : BuildingManager() {

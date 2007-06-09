@@ -2,7 +2,6 @@
 #define _SERVER_HPP_
 
 #include "allegro.h"
-
 #ifdef WIN32
   #include "winalleg.h"
 #endif

@@ -23,8 +23,8 @@
  * Version ##revision##
  */
 
-#include "SimultyException.hpp"
 #include "Server.hpp"
+#include "SimultyException.hpp"
 
 Server* Server::instance = NULL;
 
@@ -33,8 +33,7 @@ int main(int argc, char *argv[]) {
   try {
     Server *server = Server::getInstance();
 
-    while(true)
-    {
+    while(true) {
         server->update();
         rest(0);
     }
@@ -46,7 +45,9 @@ int main(int argc, char *argv[]) {
     std::cerr << "Error message: " << e.what() << std::endl;
   } catch(...) {
     std::cerr << "Simulty encountered an unkown error which it couldn't recover from." << std::endl;
+
   }
+  return 0;
 } END_OF_MAIN()
 
 

@@ -7,18 +7,22 @@
 #include <string>
 #include <sstream>
 
+#ifdef unix
 #ifdef __GNUC__
 #include <execinfo.h>
+#endif
 #endif
 
 class SimultyException: public std::exception {
 
   private:
   
+  #ifdef unix
   #ifdef __GNUC__
   void *backtraceArray[30];
   size_t backtraceSize;
   char **backtraceStrings;
+  #endif
   #endif
   
   std::string output;
@@ -37,6 +41,7 @@ class SimultyException: public std::exception {
     
     std::stringstream ss; ss << message << " - " << file << ":" << line;
 
+    #ifdef unix
     #ifdef __GNUC__
     backtraceSize    = backtrace(backtraceArray, 30);
     backtraceStrings = backtrace_symbols(backtraceArray, backtraceSize);    
@@ -44,12 +49,15 @@ class SimultyException: public std::exception {
     for (unsigned int i = 0; i < backtraceSize; i++)
       ss << backtraceStrings[i] << std::endl;
     #endif
-    
+    #endif
+
     this->output  = ss.str();
   }
   virtual ~SimultyException() throw() {
+    #ifdef unix
     #ifdef __GNUC__
     free(backtraceStrings);
+    #endif
     #endif
   }
   
