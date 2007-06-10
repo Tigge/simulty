@@ -16,6 +16,7 @@
 
 #include "widgets/ImageButton.hpp"
 #include "widgets/allegrotruetypefont.hpp"
+#include "widgets/EconomyWindow.hpp"
 
 #include "Camera.hpp"
 #include "Mouse.hpp"
@@ -59,18 +60,19 @@ class AllegroGUI : public GUI, gcn::KeyListener, gcn::ActionListener,
     
     gcn::Button      *bulldozerButton;
 
-    gcn::Image      *indIcon;
-    gcn::Image      *resIcon;
-    gcn::Image      *comIcon;
+    gcn::Image       *indIcon;
+    gcn::Image       *resIcon;
+    gcn::Image       *comIcon;
 
-    gcn::Image      *roadIcon;
-    gcn::Image      *landIcon;
+    gcn::Image       *roadIcon;
+    gcn::Image       *landIcon;
     
-    gcn::Image      *policeIcon;
-    gcn::Image      *fireIcon;
-    gcn::Image      *hospitalIcon;
-    gcn::Image      *bulldozerIcon;
+    gcn::Image       *policeIcon;
+    gcn::Image       *fireIcon;
+    gcn::Image       *hospitalIcon;
+    gcn::Image       *bulldozerIcon;
 
+    EconomyWindow    *economyWindow;
 
     BITMAP *menu_background;
     BITMAP *gui_background;

@@ -215,15 +215,8 @@ AllegroGUI::AllegroGUI() {
   usingTool    = false;
   tool         = 0;
 
-  gcn::Window *w = new gcn::Window("Economy");
-  w->setDimension(gcn::Rectangle(0, 0, 300, 300));
-  w->setBaseColor(gcn::Color(255, 150, 200, 190));
-
-  gcn::Slider *s = new gcn::Slider(0.0, 100.0);
-  s->setSize(100, 10);
-
-  w->add(s);
-  top->add(w, 100, 100);
+  economyWindow = new EconomyWindow("Economy");
+  top->add(economyWindow, 100, 100);
 
 
 }
@@ -273,6 +266,8 @@ AllegroGUI::~AllegroGUI(){
   delete resIcon;
   delete comIcon;
   delete indIcon;
+
+  delete economyWindow;
 
   //delete guiFont;
   delete top;
