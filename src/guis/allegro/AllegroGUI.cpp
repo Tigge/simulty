@@ -159,10 +159,9 @@ AllegroGUI::AllegroGUI() {
 
   gui->addGlobalKeyListener(this);
   // Load the image font.
-  //guiFont = new gcn::ImageFont("fixedfont.bmp", " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789");
-  //guiFont = new gcn::DefaultFont();
+  guiFont = new gcn::AllegroTrueTypeFont("DejaVuSans.ttf", 12);
   // The global font is static and must be set.
-  //gcn::Widget::setGlobalFont(guiFont);
+  gcn::Widget::setGlobalFont(guiFont);
 
   indIcon   = imageLoader->load("img/menu_icon_ind.pcx", true);
   indButton = new gcn::ImageButton(indIcon);

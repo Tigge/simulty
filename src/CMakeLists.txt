@@ -16,6 +16,7 @@ FIND_LIBRARY(ALLEGRO NAMES alld-4.2.1 alld-4.2.0 alld)
 FIND_LIBRARY(GUICHAN NAMES guichan)
 FIND_LIBRARY(GUICHANALLEGRO NAMES guichan_allegro)
 FIND_LIBRARY(ALLEGROUNSHARABLE NAMES alld_unsharable)
+FIND_LIBRARY(GLYPHKEEPER glyph-alleg)
 
 INCLUDE_DIRECTORIES(${Simulty_SOURCE_DIR}/src/NL ${Simulty_SOURCE_DIR}/src/error /usr/local/include)
 
@@ -51,12 +52,13 @@ ADD_EXECUTABLE(../simulty-client Client.cpp Point.cpp Map.cpp PlayerManager.cpp
 
     guis/allegro/MapRender.cpp guis/allegro/MiniMap.cpp 
     guis/allegro/BuildingRender.cpp guis/allegro/AllegroGUI.cpp
-    guis/allegro/Mouse.cpp guis/allegro/Camera.cpp)
+    guis/allegro/Mouse.cpp guis/allegro/Camera.cpp
+    guis/allegro/widgets/allegrotruetypefont.cpp)
 
 IF(WIN32)
-  TARGET_LINK_LIBRARIES(../simulty-client NL elog ${ALLEGRO} ${GUICHAN} ${GUICHANALLEGRO} wsock32 )
+  TARGET_LINK_LIBRARIES(../simulty-client NL elog ${ALLEGRO} ${GUICHAN} ${GUICHANALLEGRO} ${GLYPHKEEPER} wsock32 )
 ELSE(WIN32)
-  TARGET_LINK_LIBRARIES(../simulty-client NL elog ${ALLEGRO} ${GUICHAN} ${GUICHANALLEGRO})
+  TARGET_LINK_LIBRARIES(../simulty-client NL elog ${ALLEGRO} ${GUICHAN} ${GUICHANALLEGRO} ${GLYPHKEEPER})
 ENDIF(WIN32)
 
 IF(ALLEGROUNSHARABLE-NOTFOUND)

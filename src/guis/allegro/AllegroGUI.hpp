@@ -15,6 +15,7 @@
 #include "../../GUI.hpp"
 
 #include "widgets/ImageButton.hpp"
+#include "widgets/allegrotruetypefont.hpp"
 
 #include "Camera.hpp"
 #include "Mouse.hpp"
@@ -37,13 +38,13 @@ class AllegroGUI : public GUI, gcn::KeyListener, gcn::ActionListener,
 
     // Guichan:
     
-    gcn::AllegroInput       *input;
-    gcn::AllegroGraphics    *graphics;
-    gcn::AllegroImageLoader *imageLoader;
+    gcn::AllegroInput         *input;
+    gcn::AllegroGraphics      *graphics;
+    gcn::AllegroImageLoader   *imageLoader;
     
-    gcn::Gui          *gui;
-    gcn::Container    *top;
-    //gcn::DefaultFont  *guiFont;
+    gcn::Gui                  *gui;
+    gcn::Container            *top;
+    gcn::AllegroTrueTypeFont  *guiFont;
     
     gcn::Button     *indButton;
     gcn::Button     *resButton;
