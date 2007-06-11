@@ -7,7 +7,7 @@ class BuildingHospital: public Building {
 
     public:
 
-    BuildingHospital(Point position, int owner);
+    BuildingHospital(Point position, int owner, Date built);
     
     virtual unsigned char getType();
     virtual unsigned char getWidth();

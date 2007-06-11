@@ -93,7 +93,7 @@ class LoaderSaver {
         s = writeChar(s, m->getTile(x, y)->getOwner());
         s = writeChar(s, m->getTile(x, y)->getTerrain());
         s = writeChar(s, m->getTile(x, y)->getZone());
-        s = writeChar(s, m->getTile(x, y)->getHouse());
+        //s = writeChar(s, m->getTile(x, y)->getHouse());
         s = writeBool(s, m->getTile(x, y)->isRoad());
       }
     }
@@ -117,7 +117,7 @@ class LoaderSaver {
         m->getTile(x, y)->setOwner(readChar(s, i));
         readChar(s, i);
         m->getTile(x, y)->setZone(readChar(s, i));
-        readChar(s, i);
+        //readChar(s, i);
         m->getTile(x, y)->setRoad(readBool(s, i));
       }
     }

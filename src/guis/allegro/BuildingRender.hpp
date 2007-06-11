@@ -1,12 +1,10 @@
 #ifndef _BUILDINGRENDER_HPP_
 #define _BUILDINGRENDER_HPP_
 
-#include "allegro.h"
-#ifdef WIN32
-  #include "winalleg.h"
-#endif
+#include "AllegroGUIShared.hpp"
 
 #include "../../Building.hpp"
+#include "../../BuildingZone.hpp"
 #include "../../BuildingManager.hpp"
 
 #include "../../Point.hpp"

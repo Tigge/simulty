@@ -1,12 +1,7 @@
 #ifndef _MAPRENDER_HPP_
 #define _MAPRENDER_HPP_
 
-#include "allegro.h"
-#ifdef WIN32
-  #include "winalleg.h"
-#endif
-
-#include "../../shared.h"
+#include "AllegroGUIShared.hpp"
 
 #include "../../Map.hpp"
 #include "../../Point.hpp"

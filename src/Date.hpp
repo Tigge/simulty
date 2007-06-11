@@ -1,6 +1,6 @@
 
-#ifndef _CALENDAR_HPP_
-#define _CALENDAR_HPP_
+#ifndef _DATE_HPP_
+#define _DATE_HPP_
 
 #include <string>
 
@@ -11,7 +11,7 @@
 */
 #define _(string) string
 
-class Calendar {
+class Date {
 
   private:
     unsigned int year;
@@ -20,7 +20,7 @@ class Calendar {
 
   public:
 
-    Calendar() {
+    Date() {
       year  = 1920;
       month = 11;
       day   = 1;

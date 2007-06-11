@@ -2,6 +2,10 @@
 #ifndef _TOOLBAR_HPP_
 #define _TOOLBAR_HPP_
 
+#include "allegro.h"
+#ifdef WIN32
+  #include "winalleg.h"
+#endif
 #include <guichan.hpp>
 #include <guichan/allegro.hpp>
 

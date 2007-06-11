@@ -20,7 +20,7 @@
 
 #include "Point.hpp"
 
-#include "Calendar.hpp"
+#include "Date.hpp"
 
 #include "shared.h"
 #include "elog.h"
@@ -56,7 +56,7 @@ class Server {
 
   BuildingManagerServer bman;
 
-  Calendar calendar;
+  Date date;
 
   bool time_advance;
   int speed;
@@ -78,6 +78,8 @@ class Server {
 
   void setSpeed(int speed);
   int  getSpeed();
+  
+  Date getDate();
 
   void static time_increment(void *);
   void update();

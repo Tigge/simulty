@@ -53,7 +53,7 @@ void BuildingManagerServer::updateZoneBuildings(unsigned char player_slot, Map *
             // next update, it will be rebuilt, with higher standards.
           }
           // If there is no building, we can build here. Is this area attractive enough?
-          else if(getThriveValue(map, player_slot, Point(x,y)) >= thrive_min_val) {
+          else if(getThriveLevel(map, player_slot, Point(x,y)) > 0) {
 
             // Theoreticly, all zones which meats the minimum value will be inhabited
             int tries = 0;
@@ -96,13 +96,18 @@ void BuildingManagerServer::updateZoneBuildings(unsigned char player_slot, Map *
                     break;
                 }
                 if(good) {
+                  Server *server = Server::getInstance();
+                  int level      = getThriveLevel(map, player_slot, Point(x,y));
                   //int average_thrive = total_thrive/(w*h);
                   if(zone == SIMULTY_ZONE_RES)
-                    addZoneBuilding(player_slot, Building::TYPE_RESIDENTIAL, Point(x, y), w, h);
+                    addZoneBuilding(player_slot, Building::TYPE_RESIDENTIAL,
+                        Point(x, y), w, h, server->getDate(), level, 0);
                   else if(zone == SIMULTY_ZONE_IND)
-                    addZoneBuilding(player_slot, Building::TYPE_INDUSTRIAL, Point(x, y), w, h);
+                    addZoneBuilding(player_slot, Building::TYPE_INDUSTRIAL,
+                        Point(x, y), w, h, server->getDate(), level, 0);
                   else if(zone == SIMULTY_ZONE_COM)
-                    addZoneBuilding(player_slot, Building::TYPE_COMMERSIAL, Point(x, y), w, h);
+                    addZoneBuilding(player_slot, Building::TYPE_COMMERSIAL,
+                        Point(x, y), w, h, server->getDate(), level, 0);
                   else throw SIMULTYEXCEPTION("Can't build a zonebuilding of a type which shouldn't exist!");
                 }
               }
@@ -113,9 +118,11 @@ void BuildingManagerServer::updateZoneBuildings(unsigned char player_slot, Map *
     }
   }
 }
-void BuildingManagerServer::addZoneBuilding(unsigned char playerSlot, int buildingType, Point p, int w, int h) {
+void BuildingManagerServer::addZoneBuilding(unsigned char playerSlot,
+    int buildingType, Point p, int w, int h, Date built, int level, int style) {
 
-  BuildingManager::addZoneBuilding(playerSlot, buildingType, p, w, h);
+  BuildingManager::addZoneBuilding(playerSlot, buildingType, p, w, h, 
+      built, level, style);
 
   Server *server = Server::getInstance();
 
@@ -128,8 +135,8 @@ void BuildingManagerServer::addZoneBuilding(unsigned char playerSlot, int buildi
 }
 
 Building *BuildingManagerServer::getZoneBuilding(int i) {
-    return zone_buildings[i];
+    return zoneBuildings[i];
 }
 unsigned int BuildingManagerServer::getZoneBuildingCount() {
-    return zone_buildings.size();
+    return zoneBuildings.size();
 }

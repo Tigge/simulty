@@ -7,7 +7,7 @@ class BuildingFire: public Building {
 
     public:
 
-    BuildingFire(Point position, int owner);
+    BuildingFire(Point position, int owner, Date built);
     
     virtual unsigned char getType();
     virtual unsigned char getWidth();

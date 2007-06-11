@@ -5,13 +5,16 @@
 #include <vector>
 #include "Map.hpp"
 #include "Building.hpp"
+#include "BuildingZone.hpp"
+
+#include "Date.hpp"
 
 
 class BuildingManager {
 
   protected:
-    std::vector<Building *> zone_buildings;
-    std::vector<Building *> special_buildings;
+    std::vector<BuildingZone *> zoneBuildings;
+    std::vector<Building *> specialBuildings;
 
   public:
     virtual ~BuildingManager();
@@ -23,6 +26,8 @@ class BuildingManager {
     int getTaxesThrive(char slot);
 
     int getThriveValue(Map *m, char slot, Point where);
+
+    int getThriveLevel(Map *m, char owner, Point where);
 
     // Buildings:
     void addSpecialBuilding(Building *);
@@ -39,7 +44,8 @@ class BuildingManager {
     bool canBuild(Point at, unsigned char slot, Map *m);
 
     void updateZoneBuildings(unsigned char player_slot, Map *map);
-    virtual void addZoneBuilding(unsigned char player_slot, int buildingType, Point p, int w, int h);
+    virtual void addZoneBuilding(unsigned char owner, int buildingType,
+        Point p, int w, int h, Date built, int level, int style);
 };
 
 #endif

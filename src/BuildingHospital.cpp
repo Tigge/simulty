@@ -1,12 +1,9 @@
 #include "BuildingHospital.hpp"
 
-BuildingHospital::BuildingHospital(Point position, int owner) 
-    : Building(position, owner) {
+BuildingHospital::BuildingHospital(Point position, int owner, Date built) 
+    : Building(position, owner, 3, 3, built) {
 
-    width  = 3;
-    height = 3;
 }
-
 
 unsigned char BuildingHospital::getType() {
     return Building::TYPE_HOSPITAL;

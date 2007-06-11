@@ -1,7 +1,7 @@
 #include "Mouse.hpp"
 
 #include <iostream>
-#include "allegro.h"
+
 Mouse::Mouse() {
 
     position.setX(mouse_x);

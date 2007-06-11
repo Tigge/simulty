@@ -2,10 +2,7 @@
 #ifndef _MOUSE_H_
 #define _MOUSE_H_
 
-#include "allegro.h"
-#ifdef WIN32
-  #include "winalleg.h"
-#endif
+#include "AllegroGUIShared.hpp"
 
 #include "../../Point.hpp"
 

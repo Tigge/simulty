@@ -1,10 +1,8 @@
 #include "BuildingFire.hpp"
 
-BuildingFire::BuildingFire(Point position, int owner) 
-    : Building(position, owner) {
+BuildingFire::BuildingFire(Point position, int owner, Date built) 
+    : Building(position, owner, 3, 3, built) {
 
-    width  = 3;
-    height = 3;
 }
 
 

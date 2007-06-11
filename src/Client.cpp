@@ -180,7 +180,7 @@ void Client::packet_handle(NLPacket p) {
     }
 
     case NLPACKET_TYPE_SIMULTY_TIME_INCR: {
-      cal.advance();
+      date.advance();
       break;
     }
     case NLPACKET_TYPE_SIMULTY_MONEY_CHANGE: {
@@ -246,7 +246,9 @@ void Client::packet_handle(NLPacket p) {
 
       std::cerr << "BC: " << buildingType << " " << Point(x, y) << std::endl;
 
-      Building *b = BuildingFactory::getBuilding(buildingType, Point(x, y), slot);
+      Building *b = BuildingFactory::getBuilding(buildingType,
+          Point(x, y), (unsigned char)slot, date);
+
       bman.addSpecialBuilding(b);
 
       gui->console_log("Built building");
@@ -261,7 +263,7 @@ void Client::packet_handle(NLPacket p) {
       int w            = p.nextInt16();
       int h            = p.nextInt16();
 
-      bman.addZoneBuilding(playerSlot, buildingType, where, w, h);
+      bman.addZoneBuilding(playerSlot, buildingType, where, w, h, date, 0, 0);
 
       break;
     }

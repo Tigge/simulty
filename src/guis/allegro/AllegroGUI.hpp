@@ -3,12 +3,7 @@
 #ifndef _ALLEGROGUI_H_
 #define _ALLEGROGUI_H_
 
-#include <guichan.hpp>
-#include <guichan/allegro.hpp>
-#include "allegro.h"
-#ifdef WIN32
-  #include "winalleg.h"
-#endif
+#include "AllegroGUIShared.hpp"
 
 #include <vector>
 

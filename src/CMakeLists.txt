@@ -26,7 +26,7 @@ LINK_DIRECTORIES(${Simulty_BINARY_DIR}/src/NL ${Simulty_BINARY_DIR}/src/error /u
 ###############################################################################
 ADD_EXECUTABLE(../simulty-server Server.cpp Point.cpp Map.cpp PlayerManager.cpp
     Tile.cpp Player.cpp player_server_network.cpp player_server_ai.cpp
-    Building.cpp BuildingPolice.cpp BuildingFire.cpp
+    Building.cpp BuildingZone.cpp BuildingPolice.cpp BuildingFire.cpp
     BuildingHospital.cpp BuildingManager.cpp BuildingFactory.cpp
     BuildingResidential.cpp BuildingCommersial.cpp BuildingIndustrial.cpp
     PlayerManagerServer.cpp BuildingManagerServer.cpp)
@@ -46,7 +46,7 @@ ENDIF(ALLEGROUNSHARABLE-NOTFOUND)
 ###############################################################################
 ADD_EXECUTABLE(../simulty-client Client.cpp Point.cpp Map.cpp PlayerManager.cpp
     Tile.cpp Player.cpp player_client_local.cpp player_client_remote.cpp
-    Building.cpp BuildingFactory.cpp BuildingFire.cpp
+    Building.cpp BuildingZone.cpp BuildingFactory.cpp BuildingFire.cpp
     BuildingHospital.cpp BuildingManager.cpp BuildingPolice.cpp
     BuildingResidential.cpp BuildingCommersial.cpp BuildingIndustrial.cpp
 
@@ -57,9 +57,9 @@ ADD_EXECUTABLE(../simulty-client Client.cpp Point.cpp Map.cpp PlayerManager.cpp
     guis/allegro/widgets/EconomyWindow.cpp guis/allegro/widgets/Toolbar.cpp)
 
 IF(WIN32)
-  TARGET_LINK_LIBRARIES(../simulty-client NL elog ${ALLEGRO} ${GUICHAN} ${GUICHANALLEGRO} ${GLYPHKEEPER} wsock32 )
+  TARGET_LINK_LIBRARIES(../simulty-client NL elog ${GLYPHKEEPER} ${ALLEGRO} ${GUICHAN} ${GUICHANALLEGRO} wsock32 )
 ELSE(WIN32)
-  TARGET_LINK_LIBRARIES(../simulty-client NL elog ${ALLEGRO} ${GUICHAN} ${GUICHANALLEGRO} ${GLYPHKEEPER})
+  TARGET_LINK_LIBRARIES(../simulty-client NL elog ${GLYPHKEEPER} ${ALLEGRO} ${GUICHAN} ${GUICHANALLEGRO})
 ENDIF(WIN32)
 
 IF(ALLEGROUNSHARABLE-NOTFOUND)

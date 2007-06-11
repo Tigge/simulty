@@ -3,7 +3,7 @@
 
 #include <string>
 
-
+#include "Date.hpp"
 #include "Point.hpp"
 
 class Building {
@@ -22,19 +22,21 @@ class Building {
 
   public:
     std::string name;
-    int owner;
-    int cost;
-    int maintenace;
-    int income;
-    int expence;
+    unsigned char owner;
+    //int cost;
+    //int maintenace;
+    //int income;
+    //int expence;
     unsigned char width;
     unsigned char height;
 
     Point position;
-  // Operations
+    
+    Date built;
+    // Operations
   public:
 
-    Building(Point position, int owner);
+    Building(Point position, unsigned char owner, int w, int h, Date built);
     virtual ~Building();
 
     virtual Point getPosition();

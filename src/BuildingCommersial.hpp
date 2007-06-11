@@ -1,20 +1,18 @@
 #ifndef _BUILDINGCOMMERSIAL_HPP_
 #define _BUILDINGCOMMERSIAL_HPP_
 
-#include "Building.hpp"
+#include "BuildingZone.hpp"
 
-class BuildingCommersial : public Building {
+class BuildingCommersial : public BuildingZone {
   private:
-    unsigned int level, style, time;
+
   public:
-    BuildingCommersial(Point position, int owner);
+    BuildingCommersial(Point position, unsigned char owner, int w, int h, 
+        Date built, int level, int style);
+
 
     virtual unsigned char getType();
-//     virtual unsigned char getWidth();
-//     virtual unsigned char getHeight();
 
-//     virtual void setWidth(unsigned char set_width);
-//     virtual void setHeight(unsigned char set_height);
 };
 
 #endif

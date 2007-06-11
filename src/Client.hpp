@@ -11,7 +11,7 @@
 #include "BuildingManager.hpp"
 #include "BuildingFactory.hpp"
 
-#include "Calendar.hpp"
+#include "Date.hpp"
 
 #include "Map.hpp"
 #include "GUI.hpp"
@@ -37,7 +37,7 @@ class Client {
 
   public:
 
-    Calendar      cal;
+    Date      date;
 
     PlayerManager pman;
     player_client_local *myPlayer;

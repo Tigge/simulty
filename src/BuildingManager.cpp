@@ -3,11 +3,11 @@
 
 BuildingManager::~BuildingManager() {
 
-  for(unsigned int i = 0; i < special_buildings.size(); i++)
-    delete special_buildings[i];
+  for(unsigned int i = 0; i < specialBuildings.size(); i++)
+    delete specialBuildings[i];
 
-  for(unsigned int i = 0; i < zone_buildings.size(); i++)
-    delete zone_buildings[i];
+  for(unsigned int i = 0; i < zoneBuildings.size(); i++)
+    delete zoneBuildings[i];
 }
 
 int BuildingManager::getCrimeThrive(Map *m, char slot, Point where) {
@@ -85,29 +85,44 @@ int BuildingManager::getThriveValue(Map *map, char slot, Point where) {
 
 }
 
+int BuildingManager::getThriveLevel(Map *map, char owner, Point where) {
+
+  int con = getConnectionThrive(map, owner, where);
+  int el  = getElectricityThrive(map, owner, where);
+  int cr  = getCrimeThrive(map, owner, where);
+  
+  if(con < 20 || cr < 20)
+    return 0;
+  else {
+    if(cr < 10)
+      return 1;
+    else 
+      return 2;  
+  }
+}
 
 void BuildingManager::addSpecialBuilding(Building *b) {
 
-  special_buildings.push_back(b);
+  specialBuildings.push_back(b);
 }
 
 void BuildingManager::removeSpecialBuilding(unsigned int id) {
 
-  special_buildings.erase(std::vector<Building *>::iterator(special_buildings.begin() + id));
+  specialBuildings.erase(std::vector<Building *>::iterator(specialBuildings.begin() + id));
 }
 
 Building *BuildingManager::getSpecialBuilding(int i) {
-    return special_buildings[i];
+    return specialBuildings[i];
 }
 unsigned int BuildingManager::getSpecialBuildingCount() {
-    return special_buildings.size();
+    return specialBuildings.size();
 }
 
 Building *BuildingManager::getZoneBuilding(int i) {
-    return zone_buildings[i];
+    return zoneBuildings[i];
 }
 unsigned int BuildingManager::getZoneBuildingCount() {
-    return zone_buildings.size();
+    return zoneBuildings.size();
 }
 
 bool BuildingManager::canBuild(Point at, unsigned char slot, Map *m) {
@@ -133,9 +148,13 @@ bool BuildingManager::canBuild(Point at, unsigned char slot, Map *m) {
   }
 
 
-  for(unsigned int i = 0; i < special_buildings.size(); i++) {
-    if(x >= special_buildings[i]->position.getX() && x < special_buildings[i]->position.getX() + special_buildings[i]->getWidth()
-    && y >= special_buildings[i]->position.getY() && y < special_buildings[i]->position.getY() + special_buildings[i]->getHeight()) {
+  for(unsigned int i = 0; i < specialBuildings.size(); i++) {
+    if(x >= specialBuildings[i]->position.getX() 
+        && x < specialBuildings[i]->position.getX()
+        + specialBuildings[i]->getWidth()
+        && y >= specialBuildings[i]->position.getY() 
+        && y < specialBuildings[i]->position.getY() 
+        + specialBuildings[i]->getHeight()) {
       //std::cerr << "The tile " << x << ", " << y << " has a special building on it" << std::endl;
       return false;
     }
@@ -159,9 +178,13 @@ bool BuildingManager::canBuildSpecialBuilding(Building *b, unsigned char slot, M
 
 int BuildingManager::getSpecialBuildingID(Point at) {
 
-  for(unsigned int id = 0; id < special_buildings.size(); id++) {
-    if(at.getX() >= special_buildings[id]->position.getX() && at.getX() < special_buildings[id]->position.getX() + special_buildings[id]->getWidth()
-    && at.getY() >= special_buildings[id]->position.getY() && at.getY() < special_buildings[id]->position.getY() + special_buildings[id]->getHeight()) {
+  for(unsigned int id = 0; id < specialBuildings.size(); id++) {
+    if(at.getX() >= specialBuildings[id]->position.getX() 
+        && at.getX() < specialBuildings[id]->position.getX() 
+        + specialBuildings[id]->getWidth()
+        && at.getY() >= specialBuildings[id]->position.getY() 
+        && at.getY() < specialBuildings[id]->position.getY() 
+        + specialBuildings[id]->getHeight()) {
       return id;
     }
   }
@@ -169,15 +192,14 @@ int BuildingManager::getSpecialBuildingID(Point at) {
   return -1;
 }
 
-void BuildingManager::addZoneBuilding(unsigned char player_slot, int buildingType, Point p, int w, int h) {
+void BuildingManager::addZoneBuilding(unsigned char owner, int buildingType,
+    Point p, int w, int h, Date built, int level, int style) {
 
   //std::cout << "Attempting to construct a " << w << "x" << h << " zone of type " << buildingType << "...";
-  Building *b = BuildingFactory::getBuilding(buildingType, p, player_slot);
+  BuildingZone *b = BuildingFactory::getBuildingZone(buildingType, p, owner,
+      w, h, built, level, style);
 
-  b->setWidth(w);
-  b->setHeight(h);
-
-  zone_buildings.push_back(b);
+  zoneBuildings.push_back(b);
 
   //std::cout << "  Success!" << std::endl;
 }

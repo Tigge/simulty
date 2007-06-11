@@ -2,10 +2,7 @@
 #ifndef _IMAGELOADER_HPP_
 #define _IMAGELOADER_HPP_
 
-#include "allegro.h"
-#ifdef WIN32
-  #include "winalleg.h"
-#endif
+#include "AllegroGUIShared.hpp"
 
 #include <iostream>
 #include <string>

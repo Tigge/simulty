@@ -135,6 +135,10 @@ int  Server::getSpeed() {
   return this->speed;
 }
 
+Date Server::getDate() {
+  return date;
+}
+
 // Server update loop, the main loop:
 // =====================================================================
 void Server::update () {
@@ -146,16 +150,16 @@ void Server::update () {
   if(time_advance) {
 
     // Do every new month:
-    if(calendar.isEndOfMonth()) {
-      std::cout << "It is now " << calendar.getMonthAsString() << ", time to update zones" << std::endl;
+    if(date.isEndOfMonth()) {
+      std::cout << "It is now " << date.getMonthAsString() << ", time to update zones" << std::endl;
       for(unsigned int i = 0; i < pman.count(); i++) {
         bman.updateZoneBuildings(pman.get_by_n(i)->getSlot(), map);
       }
     }
     // Do every new year:
-    if(calendar.isEndOfYear()) {
+    if(date.isEndOfYear()) {
       // TODO: Make dependent of commerce and industry
-      std::cout << "It is now " << calendar.getYear() << ", time for *ka-ching!*" << std::endl;
+      std::cout << "It is now " << date.getYear() << ", time for *ka-ching!*" << std::endl;
       for(unsigned int p = 0; p < pman.count(); p++) {
         int pop = 0;
         for(unsigned int i = 0; i < bman.getZoneBuildingCount(); i++) {
@@ -171,7 +175,7 @@ void Server::update () {
       }
     }
 
-    calendar.advance();
+    date.advance();
 
     for(unsigned int i = 0; i < pman.count(); i++) {
       player_server_network *plr = (player_server_network *)pman.get_by_n(i);
@@ -351,7 +355,8 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
         if( x > 0 && y > 0) {
             std::cerr << "B: " << Point(x, y) << " - " << buildingType << std::endl;
 
-            Building *b = BuildingFactory::getBuilding(buildingType, Point(x, y), from->getSlot());
+            Building *b = BuildingFactory::getBuilding(buildingType,
+                Point(x, y), from->getSlot(), date);
 
             int cost;
 

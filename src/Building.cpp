@@ -2,11 +2,15 @@
 
 #include <iostream>
 
-Building::Building(Point position, int owner) {
+Building::Building(Point position, unsigned char owner, int w, int h, Date built) {
 
   this->position = position;
   this->owner    = owner;
 
+  this->built    = built;
+
+  setWidth(w);
+  setHeight(h);
   //std::cerr << "Pos is: " << getPosition() << std::endl;
 }
 

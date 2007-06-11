@@ -388,8 +388,8 @@ void AllegroGUI::render() {
     textprintf_ex(buffer, font, 20, SCREEN_H - 40, makecol(0, 0, 0), -1, 
         "Money: %i", client->getMyPlayer()->getMoney());
     textprintf_ex(buffer, font, 20, SCREEN_H - 30, makecol(0, 0, 0), -1, 
-        "Time: %i %s %i", client->cal.getYear(), 
-        client->cal.getMonthAsString().c_str(), client->cal.getDay());
+        "Time: %i %s %i", client->date.getYear(), 
+        client->date.getMonthAsString().c_str(), client->date.getDay());
     textprintf_ex(buffer, font, 20, SCREEN_H - 20, makecol(0, 0, 0), -1, 
         "Tool: %i", toolbar->getTool());
 
@@ -404,7 +404,9 @@ void AllegroGUI::render() {
     textprintf_ex(buffer, font, 400, SCREEN_H - 30, makecol(0, 0, 0), -1, 
         "Thrive: %i", client->bman.getThriveValue(client->map, 
         client->getMyPlayer()->getSlot(), realtile));
-
+    textprintf_ex(buffer, font, 400, SCREEN_H - 15, makecol(0, 0, 0), -1, 
+        "Thrive level: %i", client->bman.getThriveLevel(client->map, 
+        client->getMyPlayer()->getSlot(), realtile));
 
     textprintf_ex(buffer, font, 600, SCREEN_H - 30, makecol(0, 0, 0), -1, 
         "MD: %i, %i MU: %i, %i", mouse_down_tile.getX(), 

@@ -55,6 +55,10 @@ void BuildingRender::renderBuilding(BITMAP *r, Building *b, Point where) {
                       baseY + addY * b->getWidth()};
     polygon(r, 4, points, color);
     textprintf_ex(r, font, baseX - 10, baseY + 10, makecol(0, 0, 0), -1, "%i,%i", b->getWidth(), b->getHeight());
+    
+    BuildingZone *z = (BuildingZone *)b;
+    textprintf_ex(r, font, baseX - 10, baseY + 16, makecol(0, 0, 0), -1, "%i", z->getLevel());
+    
 
   } else {
 

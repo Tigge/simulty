@@ -1,10 +1,7 @@
 #ifndef _MINIMAP_HPP_
 #define _MINIMAP_HPP_
 
-#include "allegro.h"
-#ifdef WIN32
-  #include "winalleg.h"
-#endif
+#include "AllegroGUIShared.hpp"
 
 #include "../../Map.hpp"
 #include "../../Point.hpp"

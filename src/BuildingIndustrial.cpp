@@ -1,10 +1,9 @@
 #include "BuildingIndustrial.hpp"
 
-BuildingIndustrial::BuildingIndustrial(Point position, int owner)
-    : Building(position, owner) {
+BuildingIndustrial::BuildingIndustrial(Point position, unsigned char owner,
+    int w, int h, Date built, int level, int style)
+    : BuildingZone(position, owner, w, h, built, level, style) {
 
-  width = 1;
-  height = 1;
 }
 
 

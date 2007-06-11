@@ -1,13 +1,15 @@
 #ifndef _BUILDINGINDUSTRIAL_HPP_
 #define _BUILDINGINDUSTRIAL_HPP_
 
-#include "Building.hpp"
+#include "BuildingZone.hpp"
 
-class BuildingIndustrial : public Building {
+class BuildingIndustrial : public BuildingZone {
   private:
-    unsigned int level, style, time;
+
   public:
-    BuildingIndustrial(Point position, int owner);
+    BuildingIndustrial(Point position, unsigned char owner, int w, int h, 
+        Date built, int level, int style);
+
 
     virtual unsigned char getType();
 
