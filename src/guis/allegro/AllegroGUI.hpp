@@ -17,6 +17,7 @@
 #include "widgets/ImageButton.hpp"
 #include "widgets/allegrotruetypefont.hpp"
 #include "widgets/EconomyWindow.hpp"
+#include "widgets/Toolbar.hpp"
 
 #include "Camera.hpp"
 #include "Mouse.hpp"
@@ -46,31 +47,8 @@ class AllegroGUI : public GUI, gcn::KeyListener, gcn::ActionListener,
     gcn::Gui                  *gui;
     gcn::Container            *top;
     gcn::AllegroTrueTypeFont  *guiFont;
-    
-    gcn::Button     *indButton;
-    gcn::Button     *resButton;
-    gcn::Button     *comButton;
 
-    gcn::Button      *roadButton;
-    gcn::Button      *landButton;
-    
-    gcn::Button      *policeButton;
-    gcn::Button      *fireButton;
-    gcn::Button      *hospitalButton;
-    
-    gcn::Button      *bulldozerButton;
-
-    gcn::Image       *indIcon;
-    gcn::Image       *resIcon;
-    gcn::Image       *comIcon;
-
-    gcn::Image       *roadIcon;
-    gcn::Image       *landIcon;
-    
-    gcn::Image       *policeIcon;
-    gcn::Image       *fireIcon;
-    gcn::Image       *hospitalIcon;
-    gcn::Image       *bulldozerIcon;
+    Toolbar          *toolbar;
 
     EconomyWindow    *economyWindow;
 
@@ -99,7 +77,6 @@ class AllegroGUI : public GUI, gcn::KeyListener, gcn::ActionListener,
     Point           mouse_up_tile;
     
     bool usingTool;
-    int  tool;
     
     int scrollSpeed;
         

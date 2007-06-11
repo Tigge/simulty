@@ -54,7 +54,7 @@ ADD_EXECUTABLE(../simulty-client Client.cpp Point.cpp Map.cpp PlayerManager.cpp
     guis/allegro/BuildingRender.cpp guis/allegro/AllegroGUI.cpp
     guis/allegro/Mouse.cpp guis/allegro/Camera.cpp
     guis/allegro/widgets/allegrotruetypefont.cpp
-    guis/allegro/widgets/EconomyWindow.cpp)
+    guis/allegro/widgets/EconomyWindow.cpp guis/allegro/widgets/Toolbar.cpp)
 
 IF(WIN32)
   TARGET_LINK_LIBRARIES(../simulty-client NL elog ${ALLEGRO} ${GUICHAN} ${GUICHANALLEGRO} ${GLYPHKEEPER} wsock32 )

@@ -163,61 +163,17 @@ AllegroGUI::AllegroGUI() {
   // The global font is static and must be set.
   gcn::Widget::setGlobalFont(guiFont);
 
-  indIcon   = imageLoader->load("img/menu_icon_ind.pcx", true);
-  indButton = new gcn::ImageButton(indIcon);
-  indButton->addActionListener(this);
-  top->add(indButton, SCREEN_W - 74, 5);
 
-  comIcon   = imageLoader->load("img/menu_icon_com.pcx", true);
-  comButton = new gcn::ImageButton(comIcon);
-  comButton->addActionListener(this);
-  top->add(comButton, SCREEN_W - 37, 5);
-
-  resIcon   = imageLoader->load("img/menu_icon_res.pcx", true);
-  resButton = new gcn::ImageButton(resIcon);
-  resButton->addActionListener(this);
-  top->add(resButton, SCREEN_W - 74, 42);
-
-
-  roadIcon  = imageLoader->load("img/menu_icon_road.pcx", true);
-  roadButton = new gcn::ImageButton(roadIcon);
-  roadButton->addActionListener(this);
-  top->add(roadButton, SCREEN_W - 37, 42);
-
-  landIcon  = imageLoader->load("img/menu_icon_land.pcx", true);
-  landButton = new gcn::ImageButton(landIcon);
-  landButton->addActionListener(this);
-  top->add(landButton, SCREEN_W - 74, 79);
-
-
-  policeIcon   = imageLoader->load("img/menu_icon_police.pcx", true);
-  policeButton = new gcn::ImageButton(policeIcon);
-  policeButton->addActionListener(this);
-  top->add(policeButton, SCREEN_W - 37, 79);
-
-  fireIcon  = imageLoader->load("img/menu_icon_fire.pcx", true);
-  fireButton = new gcn::ImageButton(fireIcon);
-  fireButton->addActionListener(this);
-  top->add(fireButton, SCREEN_W - 74, 116);
   top->addMouseListener(this);
-
-  hospitalIcon  = imageLoader->load("img/menu_icon_hospital.pcx", true);
-  hospitalButton = new gcn::ImageButton(hospitalIcon);
-  hospitalButton->addActionListener(this);
-  top->add(hospitalButton, SCREEN_W - 37, 116);
-
-  bulldozerIcon  = imageLoader->load("img/menu_icon_bulldozer.pcx", true);
-  bulldozerButton = new gcn::ImageButton(bulldozerIcon);
-  bulldozerButton->addActionListener(this);
-  top->add(bulldozerButton, SCREEN_W - 74, 153);
 
   console_show = false;
   usingTool    = false;
-  tool         = 0;
 
   economyWindow = new EconomyWindow("Economy");
   top->add(economyWindow, 100, 100);
-
+  
+  toolbar       = new Toolbar();
+  top->add(toolbar, SCREEN_W - 10 - toolbar->getWidth(), 10);
 
 }
 
@@ -236,37 +192,12 @@ AllegroGUI::~AllegroGUI(){
 
   destroy_bitmap(buffer);
 
-  delete roadIcon;
-  delete roadButton;
-
-  delete landIcon;
-  delete landButton;
-
-  delete policeIcon;
-  delete policeButton;
-
-  delete fireIcon;
-  delete fireButton;
-
-  delete hospitalIcon;
-  delete hospitalButton;
-
-  delete bulldozerIcon;
-  delete bulldozerButton;
-
   // Guichan stuff
   delete input;
   delete graphics;
   delete imageLoader;
 
-  delete resButton;
-  delete comButton;
-  delete indButton;
-
-  delete resIcon;
-  delete comIcon;
-  delete indIcon;
-
+  delete toolbar;
   delete economyWindow;
 
   //delete guiFont;
@@ -290,6 +221,9 @@ void AllegroGUI::mousePressed (gcn::MouseEvent &e) {
 void AllegroGUI::mouseReleased (gcn::MouseEvent &e) {
   if(e.getSource() == top) {  
     if(usingTool) {
+    
+      int tool = toolbar->getTool();
+    
       if(tool == SIMULTY_CLIENT_TOOL_LAND) {
           client->buyLand(mouse_down_tile, mouse_up_tile);
           // buy land
@@ -354,25 +288,6 @@ void AllegroGUI::keyReleased(gcn::KeyEvent &keyEvent) {
 
 void AllegroGUI::action(const gcn::ActionEvent &actionEvent) {
 
-  if(actionEvent.getSource() == comButton) {
-    tool = SIMULTY_CLIENT_TOOL_ZONE_COM;
-  } else if(actionEvent.getSource() == resButton) {
-    tool = SIMULTY_CLIENT_TOOL_ZONE_RES;
-  } else if(actionEvent.getSource() == indButton) {
-    tool = SIMULTY_CLIENT_TOOL_ZONE_IND;
-  } else if(actionEvent.getSource() == roadButton) {
-    tool = SIMULTY_CLIENT_TOOL_ROAD;
-  } else if(actionEvent.getSource() == landButton) {
-    tool = SIMULTY_CLIENT_TOOL_LAND;
-  } else if(actionEvent.getSource() == policeButton) {
-    tool = SIMULTY_CLIENT_TOOL_BUILD_POLICE;
-  } else if(actionEvent.getSource() == fireButton) {
-    tool = SIMULTY_CLIENT_TOOL_BUILD_FIRE;
-  } else if(actionEvent.getSource() == hospitalButton) {
-    tool = SIMULTY_CLIENT_TOOL_BUILD_HOSPITAL;
-  } else if(actionEvent.getSource() == bulldozerButton) {
-    tool = SIMULTY_CLIENT_TOOL_BULLDOZER;
-  }
 }
 
 
@@ -404,6 +319,8 @@ void AllegroGUI::render() {
 
       Point c1 = mouse_down_tile;
       Point c3 = mouse_up_tile;
+
+      int tool = toolbar->getTool();
 
       if(tool == SIMULTY_CLIENT_TOOL_ZONE_COM
           || tool == SIMULTY_CLIENT_TOOL_ZONE_RES 
@@ -474,7 +391,7 @@ void AllegroGUI::render() {
         "Time: %i %s %i", client->cal.getYear(), 
         client->cal.getMonthAsString().c_str(), client->cal.getDay());
     textprintf_ex(buffer, font, 20, SCREEN_H - 20, makecol(0, 0, 0), -1, 
-        "Tool: %i", tool);
+        "Tool: %i", toolbar->getTool());
 
     textprintf_ex(buffer, font, 200, SCREEN_H - 20, makecol(0, 0, 0), -1, 
         "FPS: %i", fps);
