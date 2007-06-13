@@ -128,7 +128,8 @@ void BuildingManagerServer::addZoneBuilding(unsigned char playerSlot,
 
   NLPacket packet(NLPACKET_TYPE_SIMULTY_ZONE_BUILDING);
   packet << (NLINT16)playerSlot << (NLINT16)buildingType << (NLINT32)p.getX()
-         << (NLINT32)p.getY()   << (NLINT16)w            << (NLINT16)h;
+         << (NLINT32)p.getY()   << (NLINT16)w            << (NLINT16)h
+         << (NLINT16)level      << (NLINT16)style;
 
   server->packet_send_to_all(packet);
 

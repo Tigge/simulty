@@ -89,7 +89,7 @@ class AllegroGUI : public GUI, gcn::KeyListener, gcn::ActionListener,
 
     virtual void action(const gcn::ActionEvent &actionEvent);
 
-    std::string test;
+//    std::string test;
 
     void console_log(std::string s);
     

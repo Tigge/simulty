@@ -262,8 +262,11 @@ void Client::packet_handle(NLPacket p) {
       Point where      = Point::fromPacket(p);
       int w            = p.nextInt16();
       int h            = p.nextInt16();
+      int level        = p.nextInt16();
+      int style        = p.nextInt16();
 
-      bman.addZoneBuilding(playerSlot, buildingType, where, w, h, date, 0, 0);
+      bman.addZoneBuilding(playerSlot, buildingType, where, w, h,
+          date, level, style);
 
       break;
     }

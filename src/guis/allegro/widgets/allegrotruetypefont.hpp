@@ -57,6 +57,8 @@
 #ifndef GCN_ALLEGROTRUETYPEFONT_HPP
 #define GCN_ALLEGROTRUETYPEFONT_HPP
 
+#include "../AllegroGUIShared.hpp"
+
 #include "guichan/font.hpp"
 #include "guichan/graphics.hpp"
 #include "guichan/image.hpp"

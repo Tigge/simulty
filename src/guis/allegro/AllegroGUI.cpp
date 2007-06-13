@@ -278,9 +278,9 @@ void AllegroGUI::keyReleased(gcn::KeyEvent &keyEvent) {
   } else if(keyEvent.getKey().getValue() == gcn::Key::F1) {
     console_show = !console_show;
   } else if(keyEvent.getKey().getValue() == 's') {
-    test = LoaderSaver::saveGame(client->map, NULL, NULL);
+    //test = LoaderSaver::saveGame(client->map, NULL, NULL);
   } else if(keyEvent.getKey().getValue() == 'l') {
-     LoaderSaver::loadGame(test, client->map, NULL, NULL);
+    //LoaderSaver::loadGame(test, client->map, NULL, NULL);
   }
 
   std::cout << "KR: " << keyEvent.getKey().getValue() << std::endl;
@@ -317,6 +317,7 @@ void AllegroGUI::render() {
 
     if(usingTool) {
 
+      int cost = 0;
       Point c1 = mouse_down_tile;
       Point c3 = mouse_up_tile;
 
@@ -368,6 +369,29 @@ void AllegroGUI::render() {
       
         // TODO
       }
+      
+      if(tool == SIMULTY_CLIENT_TOOL_ZONE_COM
+          || tool == SIMULTY_CLIENT_TOOL_ZONE_RES 
+          || tool == SIMULTY_CLIENT_TOOL_ZONE_IND) {
+        cost = client->map->buildZoneCost(client->getMyPlayer()->getSlot(),
+            tool, mouse_down_tile, mouse_up_tile);
+        //std::cout << "z: " << cost << " " << c1 << c3 << std::endl;
+      } else if(tool == SIMULTY_CLIENT_TOOL_LAND) {
+        cost = client->map->buyLandCost(client->getMyPlayer()->getSlot(),
+            mouse_down_tile, mouse_up_tile);
+        //std::cout << "l: " << cost << " " << c1 << c3 << std::endl;
+      } else if(tool == SIMULTY_CLIENT_TOOL_BULLDOZER) {
+        cost = client->map->bulldozeCost(client->getMyPlayer()->getSlot(),
+            mouse_down_tile, mouse_up_tile);
+      }
+
+      if(cost <= client->getMyPlayer()->getMoney())
+        textprintf_ex(buffer, font, c3.getX(), c3.getY(), 
+            makecol(0, 0, 0), -1, "%i", cost);
+      else
+        textprintf_ex(buffer, font, c3.getX(), c3.getY(), 
+            makecol(255, 0, 0), -1, "%i", cost);
+      
     }
     
 

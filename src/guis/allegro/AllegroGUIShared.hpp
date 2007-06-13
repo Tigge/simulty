@@ -1,6 +1,8 @@
 #ifndef _ALLEGROGUISHARED_HPP_
 #define _ALLEGROGUISHARED_HPP_
 
+#define GLYPH_TARGET GLYPH_TARGET_ALLEGRO
+
 // Allegro
 #include "allegro.h"
 #ifdef WIN32
