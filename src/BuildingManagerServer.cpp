@@ -13,9 +13,8 @@ BuildingManagerServer::~BuildingManagerServer() {
 
 }
 
-void BuildingManagerServer::updateZoneBuildings(unsigned char player_slot, Map *map) {
+void BuildingManagerServer::updateZoneBuildings(unsigned char player_slot, Map *map, Date date) {
 
-  int thrive_min_val = 1;
   int max_size = 3;
 
   // loop through all tiles
@@ -49,8 +48,10 @@ void BuildingManagerServer::updateZoneBuildings(unsigned char player_slot, Map *
             // If there is one, level up?
 
             // sugestion:
-            //[if(rand() % X == 42) DeleteBuilding]
-            // next update, it will be rebuilt, with higher standards.
+            if(rand() % int(420/int(date.monthsPassed()
+            - getZoneBuilding(getZoneBuildingID(Point(x,y)))->getBuildDate().monthsPassed())) == 0)
+              removeZoneBuilding(getZoneBuildingID(Point(x,y)));
+            // next update, there might be a new building here, with more accurate level.
           }
           // If there is no building, we can build here. Is this area attractive enough?
           else if(getThriveLevel(map, player_slot, Point(x,y)) > 0) {
@@ -69,9 +70,15 @@ void BuildingManagerServer::updateZoneBuildings(unsigned char player_slot, Map *
                 good = false;
               }
               else {
-                // Check if the surrounding tiles can join our building project
+                // Check if the surrounding tiles can join our building project,
+                // and check whether the building is connected to a road
+                bool haveRoad = false;
                 for(int tile_x = x; tile_x < x+w; tile_x++) {
                   for(int tile_y = y; tile_y < y+h; tile_y++) {
+
+                    if(map->getAdjacentRoads(Point(tile_x, tile_y)) != 0) {
+                      haveRoad = true;
+                    }
 
                     total_thrive += getThriveValue(map, player_slot, Point(tile_x, tile_y));
                     if(map->getTile(tile_x, tile_y)->getZone() != zone
@@ -94,11 +101,11 @@ void BuildingManagerServer::updateZoneBuildings(unsigned char player_slot, Map *
                   }
                   if(!good)
                     break;
-                }
+                } if(!haveRoad) good = false;
+
                 if(good) {
                   Server *server = Server::getInstance();
-                  int level      = getThriveLevel(map, player_slot, Point(x,y));
-                  //int average_thrive = total_thrive/(w*h);
+                  int level      = total_thrive/(w*h);
                   if(zone == SIMULTY_ZONE_RES)
                     addZoneBuilding(player_slot, Building::TYPE_RESIDENTIAL,
                         Point(x, y), w, h, server->getDate(), level, 0);
@@ -121,12 +128,12 @@ void BuildingManagerServer::updateZoneBuildings(unsigned char player_slot, Map *
 void BuildingManagerServer::addZoneBuilding(unsigned char playerSlot,
     int buildingType, Point p, int w, int h, Date built, int level, int style) {
 
-  BuildingManager::addZoneBuilding(playerSlot, buildingType, p, w, h, 
+  BuildingManager::addZoneBuilding(playerSlot, buildingType, p, w, h,
       built, level, style);
 
   Server *server = Server::getInstance();
 
-  NLPacket packet(NLPACKET_TYPE_SIMULTY_ZONE_BUILDING);
+  NLPacket packet(NLPACKET_TYPE_SIMULTY_BUILD_ZONE_BUILDING);
   packet << (NLINT16)playerSlot << (NLINT16)buildingType << (NLINT32)p.getX()
          << (NLINT32)p.getY()   << (NLINT16)w            << (NLINT16)h
          << (NLINT16)level      << (NLINT16)style;
@@ -136,8 +143,51 @@ void BuildingManagerServer::addZoneBuilding(unsigned char playerSlot,
 }
 
 Building *BuildingManagerServer::getZoneBuilding(int i) {
-    return zoneBuildings[i];
+
+  return zoneBuildings[i];
 }
 unsigned int BuildingManagerServer::getZoneBuildingCount() {
-    return zoneBuildings.size();
+
+  return zoneBuildings.size();
+}
+
+void BuildingManagerServer::removeZoneBuilding(unsigned int id) {
+  Building *b = getZoneBuilding(id);
+
+  Server *server = Server::getInstance();
+
+  NLPacket packet(NLPACKET_TYPE_SIMULTY_REMOVE_ZONE_BUILDING);
+  packet << (NLINT32)b->getPosition().getX() << (NLINT32)b->getPosition().getY();
+
+  server->packet_send_to_all(packet);
+
+  zoneBuildings.erase(std::vector<BuildingZone *>::iterator(zoneBuildings.begin() + id));
+}
+
+void BuildingManagerServer::removeSpecialBuilding(unsigned int id) {
+  Building *b = getSpecialBuilding(id);
+
+  Server *server = Server::getInstance();
+
+  NLPacket packet(NLPACKET_TYPE_SIMULTY_REMOVE_SPECIAL_BUILDING);
+  packet << (NLINT32)b->getPosition().getX() << (NLINT32)b->getPosition().getY();
+
+  server->packet_send_to_all(packet);
+
+  specialBuildings.erase(std::vector<Building *>::iterator(specialBuildings.begin() + id));
+}
+
+void BuildingManagerServer::clearArea(Map *map, Point from, Point to) {
+
+  for(unsigned int x = from.getX(); x <= (unsigned int)to.getX() && x < map->getWidth(); x++) {
+    for(unsigned int y = from.getX(); y <= (unsigned int)to.getX() && y < map->getHeight(); y++) {
+
+      if(getSpecialBuildingID(Point(x, y)) != -1)
+        removeSpecialBuilding(getSpecialBuildingID(Point(x, y)));
+
+      if(getZoneBuildingID(Point(x, y)) != -1)
+        removeZoneBuilding(getZoneBuildingID(Point(x, y)));
+
+    }
+  }
 }

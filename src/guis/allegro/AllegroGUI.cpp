@@ -55,6 +55,7 @@ void AllegroGUI::handleFPS(void *data) {
 
 
 AllegroGUI::AllegroGUI() {
+  int resulotionX  = 800, resulotionY = 600;
 
   // Initializing allegro (and some sub elements)
   if(install_allegro(SYSTEM_AUTODETECT, &errno, atexit) != 0) {
@@ -63,7 +64,7 @@ AllegroGUI::AllegroGUI() {
   }
 
   set_color_depth(16);
-  if(set_gfx_mode(GFX_AUTODETECT_WINDOWED, 1024, 768, 0, 0) != 0) {
+  if(set_gfx_mode(GFX_AUTODETECT_WINDOWED, resulotionX, resulotionY, 0, 0) != 0) {
     allegro_message("* Graphics could not be inited:\n  %s", allegro_error);
     exit(0);
   }
@@ -116,7 +117,7 @@ AllegroGUI::AllegroGUI() {
   br = new BuildingRender();
 
   miniMap = new MiniMap(client->map);
-  
+
   scrollSpeed = 5;
 
   try {
@@ -171,10 +172,9 @@ AllegroGUI::AllegroGUI() {
 
   economyWindow = new EconomyWindow("Economy");
   top->add(economyWindow, 100, 100);
-  
+
   toolbar       = new Toolbar();
   top->add(toolbar, SCREEN_W - 10 - toolbar->getWidth(), 10);
-
 }
 
 AllegroGUI::~AllegroGUI(){
@@ -219,14 +219,14 @@ void AllegroGUI::mousePressed (gcn::MouseEvent &e) {
   }
 }
 void AllegroGUI::mouseReleased (gcn::MouseEvent &e) {
-  if(e.getSource() == top) {  
+  if(e.getSource() == top) {
     if(usingTool) {
-    
+
       int tool = toolbar->getTool();
-    
+
       if(tool == SIMULTY_CLIENT_TOOL_LAND) {
-          client->buyLand(mouse_down_tile, mouse_up_tile);
           // buy land
+          client->buyLand(mouse_down_tile, mouse_up_tile);
       } else if(tool == SIMULTY_CLIENT_TOOL_ROAD) {
           // draw road
           client->buyRoad(mouse_down_tile, mouse_up_tile);
@@ -253,20 +253,20 @@ void AllegroGUI::mouseReleased (gcn::MouseEvent &e) {
 void AllegroGUI::keyPressed(gcn::KeyEvent &keyEvent) {
 
   if(keyEvent.getKey().getValue() == gcn::Key::UP) {
-    camera.step(DIR_UP, 3, client->map->getWidth() * TILE_W - SCREEN_W, 
+    camera.step(DIR_UP, 9, client->map->getWidth() * TILE_W - SCREEN_W,
         client->map->getHeight() * TILE_H - SCREEN_H);
   } else if(keyEvent.getKey().getValue() == gcn::Key::RIGHT) {
-    camera.step(DIR_RIGHT, 3, client->map->getWidth() * TILE_W - SCREEN_W, 
+    camera.step(DIR_RIGHT, 9, client->map->getWidth() * TILE_W - SCREEN_W,
         client->map->getHeight() * TILE_H - SCREEN_H);
   } else if(keyEvent.getKey().getValue() == gcn::Key::DOWN) {
-    camera.step(DIR_DOWN, 3, client->map->getWidth() * TILE_W - SCREEN_W, 
+    camera.step(DIR_DOWN, 9, client->map->getWidth() * TILE_W - SCREEN_W,
         client->map->getHeight() * TILE_H - SCREEN_H);
   } else if(keyEvent.getKey().getValue() == gcn::Key::LEFT) {
-    camera.step(DIR_LEFT, 3, client->map->getWidth() * TILE_W - SCREEN_W, 
+    camera.step(DIR_LEFT, 9, client->map->getWidth() * TILE_W - SCREEN_W,
         client->map->getHeight() * TILE_H - SCREEN_H);
   }
 
-  std::cout << "KP: " << keyEvent.getKey().getValue() << std::endl;
+  //std::cout << "KP: " << keyEvent.getKey().getValue() << std::endl;
 }
 void AllegroGUI::keyReleased(gcn::KeyEvent &keyEvent) {
 
@@ -283,7 +283,7 @@ void AllegroGUI::keyReleased(gcn::KeyEvent &keyEvent) {
     //LoaderSaver::loadGame(test, client->map, NULL, NULL);
   }
 
-  std::cout << "KR: " << keyEvent.getKey().getValue() << std::endl;
+  //std::cout << "KR: " << keyEvent.getKey().getValue() << std::endl;
 }
 
 void AllegroGUI::action(const gcn::ActionEvent &actionEvent) {
@@ -324,7 +324,7 @@ void AllegroGUI::render() {
       int tool = toolbar->getTool();
 
       if(tool == SIMULTY_CLIENT_TOOL_ZONE_COM
-          || tool == SIMULTY_CLIENT_TOOL_ZONE_RES 
+          || tool == SIMULTY_CLIENT_TOOL_ZONE_RES
           || tool == SIMULTY_CLIENT_TOOL_ZONE_IND
           || tool == SIMULTY_CLIENT_TOOL_BULLDOZER
           || tool == SIMULTY_CLIENT_TOOL_LAND) {
@@ -345,28 +345,28 @@ void AllegroGUI::render() {
 
         int color = makecol(255, 255, 255);
         switch(tool) {
-          case SIMULTY_CLIENT_TOOL_ZONE_COM: 
+          case SIMULTY_CLIENT_TOOL_ZONE_COM:
             color = makecol(0, 0, 255);
             break;
-          case SIMULTY_CLIENT_TOOL_ZONE_RES: 
+          case SIMULTY_CLIENT_TOOL_ZONE_RES:
             color = makecol(0, 255, 0);
             break;
-          case SIMULTY_CLIENT_TOOL_ZONE_IND: 
+          case SIMULTY_CLIENT_TOOL_ZONE_IND:
             color = makecol(255, 0, 0);
             break;
-          case SIMULTY_CLIENT_TOOL_LAND: 
+          case SIMULTY_CLIENT_TOOL_LAND:
             color = makecol(255, 255, 255);
             break;
-          case SIMULTY_CLIENT_TOOL_BULLDOZER: 
+          case SIMULTY_CLIENT_TOOL_BULLDOZER:
             color = makecol(0, 0, 0);
             break;
         }
-        set_trans_blender(255, 255, 255, 100); 
+        set_trans_blender(255, 255, 255, 100);
         drawing_mode(DRAW_MODE_TRANS, NULL, 0, 0);
         polygon(buffer, 4, points, color);
         solid_mode();
       } else if(tool == SIMULTY_CLIENT_TOOL_BUILD_POLICE) {
-      
+
         // TODO
       }
       
@@ -393,7 +393,7 @@ void AllegroGUI::render() {
             makecol(255, 0, 0), -1, "%i", cost);
       
     }
-    
+
 
     //blit(mouse_hint, buffer, 0, 0, (mouse_x / TILE_W) * TILE_W, (mouse_y / TILE_H) * TILE_H, mouse_hint->w, mouse_hint->h);
 
@@ -409,39 +409,39 @@ void AllegroGUI::render() {
     miniMap->render(buffer, Point(SCREEN_W - miniMap->getWidth(), SCREEN_H - miniMap->getHeight()));
 
 
-    textprintf_ex(buffer, font, 20, SCREEN_H - 40, makecol(0, 0, 0), -1, 
+    textprintf_ex(buffer, font, 20, SCREEN_H - 40, makecol(0, 0, 0), -1,
         "Money: %i", client->getMyPlayer()->getMoney());
-    textprintf_ex(buffer, font, 20, SCREEN_H - 30, makecol(0, 0, 0), -1, 
-        "Time: %i %s %i", client->date.getYear(), 
+    textprintf_ex(buffer, font, 20, SCREEN_H - 30, makecol(0, 0, 0), -1,
+        "Time: %i %s %i", client->date.getYear(),
         client->date.getMonthAsString().c_str(), client->date.getDay());
-    textprintf_ex(buffer, font, 20, SCREEN_H - 20, makecol(0, 0, 0), -1, 
+    textprintf_ex(buffer, font, 20, SCREEN_H - 20, makecol(0, 0, 0), -1,
         "Tool: %i", toolbar->getTool());
 
-    textprintf_ex(buffer, font, 200, SCREEN_H - 20, makecol(0, 0, 0), -1, 
+    textprintf_ex(buffer, font, 200, SCREEN_H - 20, makecol(0, 0, 0), -1,
         "FPS: %i", fps);
-    textprintf_ex(buffer, font, 200, SCREEN_H - 50, makecol(0, 0, 0), -1, 
+    textprintf_ex(buffer, font, 200, SCREEN_H - 50, makecol(0, 0, 0), -1,
         "Camera: %i, %i (%i, %i)", camera.getX(), camera.getY(),
         mr->toTileCoord(camera).getX(), mr->toTileCoord(camera).getY());
-    textprintf_ex(buffer, font, 200, SCREEN_H - 30, makecol(0, 0, 0), -1, 
+    textprintf_ex(buffer, font, 200, SCREEN_H - 30, makecol(0, 0, 0), -1,
         "Mouse: %i, %i", realtile.getX(), realtile.getY());
 
-    textprintf_ex(buffer, font, 400, SCREEN_H - 30, makecol(0, 0, 0), -1, 
-        "Thrive: %i", client->bman.getThriveValue(client->map, 
+    textprintf_ex(buffer, font, 400, SCREEN_H - 30, makecol(0, 0, 0), -1,
+        "Thrive: %i", client->bman.getThriveValue(client->map,
         client->getMyPlayer()->getSlot(), realtile));
-    textprintf_ex(buffer, font, 400, SCREEN_H - 15, makecol(0, 0, 0), -1, 
-        "Thrive level: %i", client->bman.getThriveLevel(client->map, 
+    textprintf_ex(buffer, font, 400, SCREEN_H - 15, makecol(0, 0, 0), -1,
+        "Thrive level: %i", client->bman.getThriveLevel(client->map,
         client->getMyPlayer()->getSlot(), realtile));
 
-    textprintf_ex(buffer, font, 600, SCREEN_H - 30, makecol(0, 0, 0), -1, 
-        "MD: %i, %i MU: %i, %i", mouse_down_tile.getX(), 
+    textprintf_ex(buffer, font, 600, SCREEN_H - 30, makecol(0, 0, 0), -1,
+        "MD: %i, %i MU: %i, %i", mouse_down_tile.getX(),
         mouse_down_tile.getY(), mouse_up_tile.getX(), mouse_up_tile.getY());
-    textprintf_ex(buffer, font, 600, SCREEN_H - 60, makecol(0, 0, 0), -1, 
+    textprintf_ex(buffer, font, 600, SCREEN_H - 60, makecol(0, 0, 0), -1,
         "SB: %i", client->bman.getSpecialBuildingCount());
 
     // Draw console:
     if(console_show)
     {
-        set_trans_blender(255, 255, 255, 100); 
+        set_trans_blender(255, 255, 255, 100);
         drawing_mode(DRAW_MODE_TRANS, NULL, 0, 0);
         rectfill(buffer, 0, 0, SCREEN_W, 100, makecol(50, 50, 50));
         for(int i = 1; i <= 5; i++)

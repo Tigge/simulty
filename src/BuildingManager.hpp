@@ -39,6 +39,7 @@ class BuildingManager {
 
     Building *getZoneBuilding(int i);
     unsigned int getZoneBuildingCount();
+    int getZoneBuildingID(Point at);
 
     bool canBuildSpecialBuilding(Building *b, unsigned char slot, Map *m);
     bool canBuild(Point at, unsigned char slot, Map *m);
@@ -46,6 +47,7 @@ class BuildingManager {
     void updateZoneBuildings(unsigned char player_slot, Map *map);
     virtual void addZoneBuilding(unsigned char owner, int buildingType,
         Point p, int w, int h, Date built, int level, int style);
+    void removeZoneBuilding(unsigned int id);
 };
 
 #endif

@@ -35,6 +35,10 @@ void Map::buyLand(unsigned char owner, Point from, Point to) {
   }
 }
 int  Map::buyLandCost(unsigned char owner, Point from, Point to) {
+
+  from.unsign();
+  to.unsign();
+
   int cost = 0;
   for(unsigned int x = from.getX(); x <= (unsigned int)to.getX(); x++) {
     for(unsigned int y = from.getY(); y <= (unsigned int)to.getY(); y++) {
@@ -66,6 +70,10 @@ void Map::bulldoze(unsigned char owner, Point from, Point to) {
 }
 
 int Map::bulldozeCost(unsigned char owner, Point from, Point to) {
+
+  from.unsign();
+  to.unsign();
+
   int cost = 0;
   for(unsigned int x = from.getX(); x <= (unsigned int)to.getX(); x++) {
     for(unsigned int y = from.getY(); y <= (unsigned int)to.getY(); y++) {
@@ -119,6 +127,10 @@ void Map::buildRoad(unsigned char owner, Point from, Point to) {
   }
 }
 int Map::buildRoadCost(unsigned char owner, Point from, Point to) {
+
+  from.unsign();
+  to.unsign();
+
   int cost = 0;
 
   for(unsigned int x = from.getX(); x <= (unsigned int)to.getX(); x++) {
@@ -147,6 +159,10 @@ void Map::buildZone(unsigned char owner, int type, Point from, Point to) {
 }
 
 int  Map::buildZoneCost(unsigned char owner, int type, Point from, Point to) {
+
+  from.unsign();
+  to.unsign();
+
   int cost = 0;
   int cost_per_tile;
   switch(type) {
@@ -166,6 +182,7 @@ int  Map::buildZoneCost(unsigned char owner, int type, Point from, Point to) {
   for(unsigned int x = from.getX(); x <= (unsigned int)to.getX(); x++) {
     for(unsigned int y = from.getY(); y <= (unsigned int)to.getY(); y++) {
       if(!outOfBounds(Point(x, y))) {
+
         if(getTile(x, y)->getOwner() == owner && getTile(x,y)->getZone() == 0) {
           cost += cost_per_tile;
         }
@@ -195,16 +212,17 @@ Map::~Map() {
 
 unsigned char Map::getAdjacentRoads(Point at) {
   unsigned char maskMe = 0;
-  if(getTile(at.getX(),   at.getY()+1))
+
+  if(!outOfBounds(Point(at.getX(), at.getY()+1)) && getTile(at.getX(), at.getY()+1)->isRoad())
     maskMe |= ROAD_UP;
 
-  if(getTile(at.getX()+1, at.getY()))
+  if(!outOfBounds(Point(at.getX()+1, at.getY())) && getTile(at.getX()+1, at.getY())->isRoad())
     maskMe |= ROAD_RIGHT;
 
-  if(getTile(at.getX(),   at.getY()-1))
+  if(!outOfBounds(Point(at.getX(), at.getY()-1)) && getTile(at.getX(), at.getY()-1)->isRoad())
     maskMe |= ROAD_DOWN;
 
-  if(getTile(at.getX()-1, at.getY()))
+  if(!outOfBounds(Point(at.getX()-1, at.getY())) && getTile(at.getX()-1, at.getY())->isRoad())
     maskMe |= ROAD_LEFT;
 
   return maskMe;

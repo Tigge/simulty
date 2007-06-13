@@ -90,14 +90,14 @@ int BuildingManager::getThriveLevel(Map *map, char owner, Point where) {
   int con = getConnectionThrive(map, owner, where);
   int el  = getElectricityThrive(map, owner, where);
   int cr  = getCrimeThrive(map, owner, where);
-  
+
   if(con < 20 || cr < 20)
     return 0;
   else {
     if(cr < 10)
       return 1;
-    else 
-      return 2;  
+    else
+      return 2;
   }
 }
 
@@ -107,11 +107,13 @@ void BuildingManager::addSpecialBuilding(Building *b) {
 }
 
 void BuildingManager::removeSpecialBuilding(unsigned int id) {
+  if(id > zoneBuildings.size()) throw SIMULTYEXCEPTION("\n  removeSpecialBuilding: i > size");
 
   specialBuildings.erase(std::vector<Building *>::iterator(specialBuildings.begin() + id));
 }
 
 Building *BuildingManager::getSpecialBuilding(int i) {
+  if(i > zoneBuildings.size()) throw SIMULTYEXCEPTION("\n  getSpecialBuilding: i > size");
     return specialBuildings[i];
 }
 unsigned int BuildingManager::getSpecialBuildingCount() {
@@ -119,19 +121,24 @@ unsigned int BuildingManager::getSpecialBuildingCount() {
 }
 
 Building *BuildingManager::getZoneBuilding(int i) {
-    return zoneBuildings[i];
+  if(i > zoneBuildings.size()) throw SIMULTYEXCEPTION("\n  getZoneBuilding: i > size");
+
+  return zoneBuildings[i];
 }
 unsigned int BuildingManager::getZoneBuildingCount() {
     return zoneBuildings.size();
 }
 
 bool BuildingManager::canBuild(Point at, unsigned char slot, Map *m) {
+
+  if(m->outOfBounds(at)) return false;
+
   int x = at.getX(), y = at.getY();
 
   Tile *t = m->getTile(x, y);
 
   if(t->getOwner() != slot) {
-    std::cerr << "The tile " << x << ", " << y << " is not owned by player " << (int)slot << " but " << (int)t->getOwner() << std::endl;
+    std::cerr << "The tile " << x << ", " << y << " is not owned by player " << (int)slot << ", but " << (int)t->getOwner() << std::endl;
     return false;
   }
   if(t->isRoad()) {
@@ -149,11 +156,11 @@ bool BuildingManager::canBuild(Point at, unsigned char slot, Map *m) {
 
 
   for(unsigned int i = 0; i < specialBuildings.size(); i++) {
-    if(x >= specialBuildings[i]->position.getX() 
+    if(x >= specialBuildings[i]->position.getX()
         && x < specialBuildings[i]->position.getX()
         + specialBuildings[i]->getWidth()
-        && y >= specialBuildings[i]->position.getY() 
-        && y < specialBuildings[i]->position.getY() 
+        && y >= specialBuildings[i]->position.getY()
+        && y < specialBuildings[i]->position.getY()
         + specialBuildings[i]->getHeight()) {
       //std::cerr << "The tile " << x << ", " << y << " has a special building on it" << std::endl;
       return false;
@@ -179,12 +186,28 @@ bool BuildingManager::canBuildSpecialBuilding(Building *b, unsigned char slot, M
 int BuildingManager::getSpecialBuildingID(Point at) {
 
   for(unsigned int id = 0; id < specialBuildings.size(); id++) {
-    if(at.getX() >= specialBuildings[id]->position.getX() 
-        && at.getX() < specialBuildings[id]->position.getX() 
+    if(at.getX() >= specialBuildings[id]->position.getX()
+        && at.getX() < specialBuildings[id]->position.getX()
         + specialBuildings[id]->getWidth()
-        && at.getY() >= specialBuildings[id]->position.getY() 
-        && at.getY() < specialBuildings[id]->position.getY() 
+        && at.getY() >= specialBuildings[id]->position.getY()
+        && at.getY() < specialBuildings[id]->position.getY()
         + specialBuildings[id]->getHeight()) {
+      return id;
+    }
+  }
+
+  return -1;
+}
+
+int BuildingManager::getZoneBuildingID(Point at) {
+
+  for(unsigned int id = 0; id < zoneBuildings.size(); id++) {
+    if(at.getX() >= zoneBuildings[id]->position.getX()
+        && at.getX() < zoneBuildings[id]->position.getX()
+        + zoneBuildings[id]->getWidth()
+        && at.getY() >= zoneBuildings[id]->position.getY()
+        && at.getY() < zoneBuildings[id]->position.getY()
+        + zoneBuildings[id]->getHeight()) {
       return id;
     }
   }
@@ -202,4 +225,9 @@ void BuildingManager::addZoneBuilding(unsigned char owner, int buildingType,
   zoneBuildings.push_back(b);
 
   //std::cout << "  Success!" << std::endl;
+}
+
+void BuildingManager::removeZoneBuilding(unsigned int id) {
+
+  zoneBuildings.erase(std::vector<BuildingZone *>::iterator(zoneBuildings.begin() + id));
 }

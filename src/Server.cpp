@@ -151,15 +151,16 @@ void Server::update () {
 
     // Do every new month:
     if(date.isEndOfMonth()) {
-      std::cout << "It is now " << date.getMonthAsString() << ", time to update zones" << std::endl;
+      std::cout << "It is now the end of " << date.getMonthAsString() << ", time to update zones" << std::endl;
       for(unsigned int i = 0; i < pman.count(); i++) {
-        bman.updateZoneBuildings(pman.get_by_n(i)->getSlot(), map);
+        std::cerr << "asd" << std::endl;
+        bman.updateZoneBuildings(pman.get_by_n(i)->getSlot(), map, date.getMonth());
       }
     }
     // Do every new year:
     if(date.isEndOfYear()) {
       // TODO: Make dependent of commerce and industry
-      std::cout << "It is now " << date.getYear() << ", time for *ka-ching!*" << std::endl;
+      std::cout << "It is now the end of" << date.getYear() << ", time for *ka-ching!*" << std::endl;
       for(unsigned int p = 0; p < pman.count(); p++) {
         int pop = 0;
         for(unsigned int i = 0; i < bman.getZoneBuildingCount(); i++) {
@@ -261,21 +262,11 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
                << (NLINT32)to.getY();
 
         packet_send_to_all(packet);
+
+        bman.clearArea(map, fr, to);
+
         pman.changeMoney(from->getSlot(), from->getMoney() - cost);
       }
-
-      // TODO: move to building manager
-      /*
-      for(unsigned int x = startX; x <= (unsigned int)endX && x < map->getWidth(); x++)
-        for(unsigned int y = startY; y <= (unsigned int)endY && y < map->getHeight(); y++) {
-          if(map->getTile(x, y)->getOwner() == from->getSlot()) {
-            map->getTile(x, y)->setRoad(false);
-            map->getTile(x, y)->setZone(0);
-            if(bman.getSpecialBuildingID(Point(x, y)) != -1)
-              bman.removeSpecialBuilding(bman.getSpecialBuildingID(Point(x, y)));
-          }
-        }
-      */
 
       break;
     }
@@ -339,7 +330,7 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
         zonepak << (NLINT16)from->getSlot() << (NLINT16)tp
                 << (NLINT32)fr.getX() << (NLINT32)fr.getY()
                 << (NLINT32)to.getX() << (NLINT32)to.getY();
-                
+
         packet_send_to_all(zonepak);
         pman.changeMoney(from->getSlot(), from->getMoney() - cost);
       }
@@ -387,7 +378,7 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
 
               bman.addSpecialBuilding(b);
 
-              NLPacket packet(NLPACKET_TYPE_SIMULTY_SPECIAL_BUILDING);
+              NLPacket packet(NLPACKET_TYPE_SIMULTY_BUILD_SPECIAL_BUILDING);
               packet << (NLINT16)from->getSlot() << buildingType << x << y;
               packet_send_to_all(packet);
 

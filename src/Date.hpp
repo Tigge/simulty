@@ -17,13 +17,16 @@ class Date {
     unsigned int year;
     unsigned int month;
     unsigned int day;
+    unsigned int startYear;
 
   public:
 
-    Date() {
-      year  = 1920;
-      month = 11;
-      day   = 1;
+    Date(int year = 1920, int month = 1, int day = 1) {
+      this->year  = year;
+      this->month = month;
+      this->day   = day;
+
+      startYear   = year;
     }
 
     int getYear() {
@@ -76,6 +79,16 @@ class Date {
       } else {
         day++;
       }
+    }
+
+    unsigned int yearsPassed() {
+      return startYear-year;
+    }
+    unsigned int monthsPassed() {
+      return yearsPassed()*12 + month;
+    }
+    unsigned int daysPassed() {
+      return monthsPassed()*30 + day;
     }
 };
 

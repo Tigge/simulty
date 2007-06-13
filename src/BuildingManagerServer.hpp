@@ -16,12 +16,17 @@ class BuildingManagerServer : public BuildingManager {
     virtual ~BuildingManagerServer();
 
 
-    virtual void updateZoneBuildings(unsigned char player_slot, Map *map);
+    virtual void updateZoneBuildings(unsigned char player_slot, Map *map, Date date);
     virtual void addZoneBuilding(unsigned char player_slot, int buildingType,
         Point p, int w, int h, Date built, int level, int style);
+    virtual void removeZoneBuilding(unsigned int id);
+
+    virtual void removeSpecialBuilding(unsigned int id);
 
     Building *getZoneBuilding(int i);
     unsigned int getZoneBuildingCount();
+
+    void clearArea(Map *map, Point from, Point to);
 };
 
 #endif

@@ -55,3 +55,7 @@ unsigned int Building::getZ() {
 int Building::getOwner() {
   return owner;
 }
+
+Date Building::getBuildDate() {
+  return built;
+}

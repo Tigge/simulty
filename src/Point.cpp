@@ -54,11 +54,11 @@ void Point::move(Point p) {
 int  Point::distance(Point a, Point b) {
 
    float dx = a.getX() - b.getX();
-   float dy = a.getY() - b.getY();    
+   float dy = a.getY() - b.getY();
 
   return (int)sqrt(pow(dx, 2.0) + pow(dy, 2.0));
 }
-    
+
 void Point::fixOrder(Point &a, Point &b) {
 
   if(a.getX() > b.getX()) {
@@ -75,7 +75,7 @@ void Point::fixOrder(Point &a, Point &b) {
 bool Point::inArea(Point p, Point a, int w, int h) {
 
   if(p.getX() >= a.getX() && p.getX() <= a.getX() + w
-      && p.getY() >= a.getY() && p.getY() <= a.getY() + h) 
+      && p.getY() >= a.getY() && p.getY() <= a.getY() + h)
     return true;
   else
     return false;
@@ -102,3 +102,7 @@ Point Point::fromPacket(NLPacket &p) {
   return Point(a, b);
 }
 
+void Point::unsign() {
+  if(x < 0) x = 0;
+  if(y < 0) y = 0;
+}

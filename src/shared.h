@@ -74,9 +74,11 @@ const unsigned char NLPACKET_TYPE_SIMULTY_ROAD                     = 200;
 const unsigned char NLPACKET_TYPE_SIMULTY_ZONE                     = 201;
 const unsigned char NLPACKET_TYPE_SIMULTY_LAND                     = 202;
 const unsigned char NLPACKET_TYPE_SIMULTY_CHAT                     = 203;
-const unsigned char NLPACKET_TYPE_SIMULTY_SPECIAL_BUILDING         = 204;
-const unsigned char NLPACKET_TYPE_SIMULTY_ZONE_BUILDING            = 205;
-const unsigned char NLPACKET_TYPE_SIMULTY_BULLDOZE                 = 210;
+const unsigned char NLPACKET_TYPE_SIMULTY_BUILD_SPECIAL_BUILDING   = 211;
+const unsigned char NLPACKET_TYPE_SIMULTY_REMOVE_SPECIAL_BUILDING  = 212;
+const unsigned char NLPACKET_TYPE_SIMULTY_BUILD_ZONE_BUILDING      = 213;
+const unsigned char NLPACKET_TYPE_SIMULTY_REMOVE_ZONE_BUILDING     = 214;
+const unsigned char NLPACKET_TYPE_SIMULTY_BULLDOZE                 = 220;
 
 /*
 const unsigned char NPACKET_TYPE_SIMULTY_ROAD_BUILD       = 200;

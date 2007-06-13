@@ -2,6 +2,8 @@
 #ifndef _CLIENT_HPP_
 #define _CLIENT_HPP_
 
+#include "SimultyException.hpp"
+
 #include "PlayerManager.hpp"
 
 #include "Player.hpp"
@@ -15,6 +17,8 @@
 
 #include "Map.hpp"
 #include "GUI.hpp"
+
+#include <sstream>
 
 const unsigned char SIMULTY_CLIENT_STATE_GAME_NONE  = 0;
 
@@ -64,7 +68,7 @@ class Client {
   // Operations
   public:
     Client(GUI *);
-    
+
     ~Client();
 
     bool running();

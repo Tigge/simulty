@@ -58,6 +58,8 @@ player_client_local *Client::getMyPlayer() {
 
 void Client::bulldoze(Point from, Point to) {
 
+  gui->console_log("Bulldoze requested");
+
   NLPacket packet(NLPACKET_TYPE_SIMULTY_REQUEST_BULLDOZE);
 
   packet << (NLINT32)from.getX() << (NLINT32)from.getY()
@@ -69,7 +71,7 @@ void Client::bulldoze(Point from, Point to) {
 
 void Client::buyLand(Point from, Point to) {
 
-  gui->console_log("Bought land (request)");
+  gui->console_log("Land requested");
 
   NLPacket packet(NLPACKET_TYPE_SIMULTY_REQUEST_LAND);
   packet << (NLINT32)from.getX() << (NLINT32)from.getY()
@@ -79,6 +81,8 @@ void Client::buyLand(Point from, Point to) {
 }
 
 void Client::buyRoad(Point from, Point to) {
+
+  gui->console_log("Road requested");
 
   // Only straight lines (for now):
   //if(from.getX() == to.getX() || from.getY() == to.getY()) {
@@ -92,7 +96,7 @@ void Client::buyRoad(Point from, Point to) {
 
 void Client::buyZone(Point from, Point to, int type) {
 
-  gui->console_log("Bought zone (request)");
+  gui->console_log("Zone requested");
 
   NLPacket packet(NLPACKET_TYPE_SIMULTY_REQUEST_ZONE);
 
@@ -107,14 +111,14 @@ void Client::buyZone(Point from, Point to, int type) {
 
 void Client::buyBuilding(Point where, int type) {
 
+  gui->console_log("Building requested");
+
   NLPacket packet(NLPACKET_TYPE_SIMULTY_REQUEST_SPECIAL_BUILDING);
 
   packet << (NLINT16)type
          << (NLINT32)where.getX() << (NLINT32)where.getY();
 
   net_client->packet_put(packet);
-
-  gui->console_log("Built building (request)");
 }
 
 void Client::packet_handle(NLPacket p) {
@@ -175,7 +179,7 @@ void Client::packet_handle(NLPacket p) {
 
       // TODO
       map->buildRoad(sl, fr, to);
-      gui->console_log("Built road");
+      gui->console_log("Road built");
       break;
     }
 
@@ -202,7 +206,7 @@ void Client::packet_handle(NLPacket p) {
       Point fr = Point::fromPacket(p);
       Point to = Point::fromPacket(p);
       map->buyLand(sl, fr, to);
-      gui->console_log("Bought land");
+      gui->console_log("Land bought");
 
       break;
     }
@@ -215,7 +219,7 @@ void Client::packet_handle(NLPacket p) {
 
       map->buildZone(sl, zt, fr, to);
 
-      gui->console_log("Bought zone");
+      gui->console_log("Zone bought");
 
       break;
     }
@@ -239,7 +243,7 @@ void Client::packet_handle(NLPacket p) {
 
       break;
     }
-    case NLPACKET_TYPE_SIMULTY_SPECIAL_BUILDING: {
+    case NLPACKET_TYPE_SIMULTY_BUILD_SPECIAL_BUILDING: {
 
       NLINT16 buildingType, slot; NLINT32 x, y;
       p >> slot >> buildingType >> x >> y;
@@ -251,11 +255,18 @@ void Client::packet_handle(NLPacket p) {
 
       bman.addSpecialBuilding(b);
 
-      gui->console_log("Built building");
+      gui->console_log("Building built");
 
       break;
     }
-    case NLPACKET_TYPE_SIMULTY_ZONE_BUILDING: {
+    case NLPACKET_TYPE_SIMULTY_REMOVE_SPECIAL_BUILDING: {
+
+      bman.removeSpecialBuilding(bman.getSpecialBuildingID(Point::fromPacket(p)));
+
+      gui->console_log("Building razed");
+      break;
+    }
+    case NLPACKET_TYPE_SIMULTY_BUILD_ZONE_BUILDING: {
 
       int playerSlot   = p.nextInt16();
       int buildingType = p.nextInt16();
@@ -270,6 +281,11 @@ void Client::packet_handle(NLPacket p) {
 
       break;
     }
+    case NLPACKET_TYPE_SIMULTY_REMOVE_ZONE_BUILDING: {
+
+      bman.removeZoneBuilding(bman.getZoneBuildingID(Point::fromPacket(p)));
+      break;
+    }
     case NLPACKET_TYPE_SIMULTY_BULLDOZE: {
 
       int   sl = p.nextInt16();
@@ -278,12 +294,15 @@ void Client::packet_handle(NLPacket p) {
 
       map->bulldoze(sl, fr, to);
 
-      std::cerr << "** I want to bulldoze, but don't know how to!" << std::endl;
+      gui->console_log("Bulldozing");
       break;
     }
     default: {
 
-      std::cerr << "** Got uknown message with id " << p.getType() << std::endl;
+      std::stringstream tmp;
+      tmp << "** Got uknown message with id " << p.getType();
+      gui->console_log(tmp.str().c_str());
+
       p.print();
       break;
     }
