@@ -50,11 +50,15 @@ ADD_EXECUTABLE(../simulty-client Client.cpp Point.cpp Map.cpp PlayerManager.cpp
     BuildingHospital.cpp BuildingManager.cpp BuildingPolice.cpp
     BuildingResidential.cpp BuildingCommersial.cpp BuildingIndustrial.cpp
 
-    guis/allegro/MapRender.cpp guis/allegro/MiniMap.cpp 
-    guis/allegro/BuildingRender.cpp guis/allegro/AllegroGUI.cpp
-    guis/allegro/Mouse.cpp guis/allegro/Camera.cpp
+    guis/allegro/AllegroGUI.cpp
+    guis/allegro/MapRender.cpp
+    guis/allegro/BuildingRender.cpp
+    guis/allegro/Mouse.cpp
+    guis/allegro/Camera.cpp
+    guis/allegro/widgets/MiniMap.cpp 
     guis/allegro/widgets/allegrotruetypefont.cpp
-    guis/allegro/widgets/EconomyWindow.cpp guis/allegro/widgets/Toolbar.cpp)
+    guis/allegro/widgets/EconomyWindow.cpp
+    guis/allegro/widgets/Toolbar.cpp)
 
 IF(WIN32)
   TARGET_LINK_LIBRARIES(../simulty-client NL elog ${GLYPHKEEPER} ${ALLEGRO} ${GUICHAN} ${GUICHANALLEGRO} wsock32 )

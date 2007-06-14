@@ -13,13 +13,14 @@
 #include "widgets/allegrotruetypefont.hpp"
 #include "widgets/EconomyWindow.hpp"
 #include "widgets/Toolbar.hpp"
+#include "widgets/MiniMap.hpp"
 
 #include "Camera.hpp"
 #include "Mouse.hpp"
 
 #include "MapRender.hpp"
 #include "BuildingRender.hpp"
-#include "MiniMap.hpp"
+
 
 
 

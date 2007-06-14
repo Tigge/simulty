@@ -116,7 +116,7 @@ AllegroGUI::AllegroGUI() {
 
   br = new BuildingRender();
 
-  miniMap = new MiniMap(client->map);
+
 
   scrollSpeed = 5;
 
@@ -175,6 +175,11 @@ AllegroGUI::AllegroGUI() {
 
   toolbar       = new Toolbar();
   top->add(toolbar, SCREEN_W - 10 - toolbar->getWidth(), 10);
+  
+  miniMap       = new MiniMap(client->map, &camera);
+  top->add(miniMap, SCREEN_W - miniMap->getWidth() - 10,
+      SCREEN_H - miniMap->getHeight() - 10);
+  
 }
 
 AllegroGUI::~AllegroGUI(){
@@ -207,19 +212,34 @@ AllegroGUI::~AllegroGUI(){
 }
 
 void AllegroGUI::mouseDragged (gcn::MouseEvent &e) {
-  if(e.getSource() == top)
-    mouse_up_tile = mr->toTileCoord(Point(e.getX(), e.getY()), camera);
+  if(e.getSource() == top) {
+    Point p = mr->toTileCoord(Point(e.getX(), e.getY()), camera);
+    if(p.getX() < 0)
+      p.setX(0);
+    if(p.getY() < 0)
+      p.setY(0);
+    if(p.getX() >= (int)client->map->getWidth())
+      p.setX((int)client->map->getWidth() - 1);
+    if(p.getY() >= (int)client->map->getHeight())
+      p.setY((int)client->map->getHeight() - 1);
+
+    mouse_up_tile = p;
+  }
 }
 
 void AllegroGUI::mousePressed (gcn::MouseEvent &e) {
+
   if(e.getSource() == top) {
-    mouse_down_tile = mr->toTileCoord(Point(e.getX(), e.getY()), camera);
-    mouse_up_tile   = mr->toTileCoord(Point(e.getX(), e.getY()), camera);
-    usingTool       = true;
+    Point p = mr->toTileCoord(Point(e.getX(), e.getY()), camera);
+    if(!client->map->outOfBounds(p)) {
+      mouse_down_tile = mouse_up_tile = p;
+      usingTool       = true;
+    }
   }
 }
 void AllegroGUI::mouseReleased (gcn::MouseEvent &e) {
   if(e.getSource() == top) {
+  
     if(usingTool) {
 
       int tool = toolbar->getTool();
@@ -406,7 +426,7 @@ void AllegroGUI::render() {
     // Render GUI:
     masked_blit(gui_background, buffer, 0, 0, SCREEN_W - gui_background->w,
         SCREEN_H - gui_background->h, gui_background->w, gui_background->h);
-    miniMap->render(buffer, Point(SCREEN_W - miniMap->getWidth(), SCREEN_H - miniMap->getHeight()));
+    //miniMap->render(buffer, Point(SCREEN_W - miniMap->getWidth(), SCREEN_H - miniMap->getHeight()));
 
 
     textprintf_ex(buffer, font, 20, SCREEN_H - 40, makecol(0, 0, 0), -1,
@@ -439,8 +459,7 @@ void AllegroGUI::render() {
         "SB: %i", client->bman.getSpecialBuildingCount());
 
     // Draw console:
-    if(console_show)
-    {
+    if(console_show) {
         set_trans_blender(255, 255, 255, 100);
         drawing_mode(DRAW_MODE_TRANS, NULL, 0, 0);
         rectfill(buffer, 0, 0, SCREEN_W, 100, makecol(50, 50, 50));
