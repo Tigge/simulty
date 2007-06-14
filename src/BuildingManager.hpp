@@ -27,6 +27,7 @@ class BuildingManager {
 
     int getThriveValue(Map *m, char slot, Point where);
 
+    int getThriveLevel(int thrive);
     int getThriveLevel(Map *m, char owner, Point where);
 
     // Buildings:
@@ -37,7 +38,7 @@ class BuildingManager {
     unsigned int getSpecialBuildingCount();
     int getSpecialBuildingID(Point at);
 
-    Building *getZoneBuilding(int i);
+    BuildingZone *getZoneBuilding(int i);
     unsigned int getZoneBuildingCount();
     int getZoneBuildingID(Point at);
 

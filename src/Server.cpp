@@ -153,7 +153,6 @@ void Server::update () {
     if(date.isEndOfMonth()) {
       std::cout << "It is now the end of " << date.getMonthAsString() << ", time to update zones" << std::endl;
       for(unsigned int i = 0; i < pman.count(); i++) {
-        std::cerr << "asd" << std::endl;
         bman.updateZoneBuildings(pman.get_by_n(i)->getSlot(), map, date.getMonth());
       }
     }

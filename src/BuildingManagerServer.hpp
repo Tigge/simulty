@@ -23,9 +23,6 @@ class BuildingManagerServer : public BuildingManager {
 
     virtual void removeSpecialBuilding(unsigned int id);
 
-    Building *getZoneBuilding(int i);
-    unsigned int getZoneBuildingCount();
-
     void clearArea(Map *map, Point from, Point to);
 };
 

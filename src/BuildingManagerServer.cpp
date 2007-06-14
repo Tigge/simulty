@@ -23,13 +23,14 @@ void BuildingManagerServer::updateZoneBuildings(unsigned char player_slot, Map *
       // If the tile is zoned and hasn't got a road on it
       if(map->getTile(x, y)->getZone() != 0 && !map->getTile(x, y)->isRoad()) {
 
+
         // Check for special buildings on the zone
         bool special_building = false;
         for(unsigned int i = 0; i < getSpecialBuildingCount(); i++) {
           if(x < getSpecialBuilding(i)->getPosition().getX() + getSpecialBuilding(i)->getWidth()
           && x >= getSpecialBuilding(i)->getPosition().getX()
           && y < getSpecialBuilding(i)->getPosition().getY() + getSpecialBuilding(i)->getHeight()
-          && y >= getSpecialBuilding(i)->getPosition().getY()) { // then the tile is underneath an already existant building.
+          && y >= getSpecialBuilding(i)->getPosition().getY()) { // then the tile is underneath a specialbuilding.
             special_building = true; break;
           }
         }
@@ -40,25 +41,41 @@ void BuildingManagerServer::updateZoneBuildings(unsigned char player_slot, Map *
             if(x < getZoneBuilding(i)->getPosition().getX() + getZoneBuilding(i)->getWidth()
             && x >= getZoneBuilding(i)->getPosition().getX()
             && y < getZoneBuilding(i)->getPosition().getY() + getZoneBuilding(i)->getHeight()
-            && y >= getZoneBuilding(i)->getPosition().getY()) { // then the tile is underneath an already existant building.
+            && y >= getZoneBuilding(i)->getPosition().getY()) { // then the tile is underneath a zonebuilding.
               zone_building = true; break;
             }
           }
           if(zone_building) {
-            // If there is one, level up?
 
-            // sugestion:
-            if(rand() % int(420/int(date.monthsPassed()
-            - getZoneBuilding(getZoneBuildingID(Point(x,y)))->getBuildDate().monthsPassed())) == 0)
-              removeZoneBuilding(getZoneBuildingID(Point(x,y)));
-            // next update, there might be a new building here, with more accurate level.
+            BuildingZone *zb = getZoneBuilding(getZoneBuildingID(Point(x,y)));
+            int zb_tot_thrive = 0;
+
+            for(int zb_x = zb->getPosition().getX(); zb_x < zb->getPosition().getX() + zb->getWidth(); zb_x++)
+              for(int zb_y = zb->getPosition().getY(); zb_y < zb->getPosition().getY() + zb->getHeight(); zb_y++)
+                zb_tot_thrive += getThriveValue(map, player_slot, Point(x,y));
+
+            if(getThriveLevel(zb_tot_thrive/(zb->getWidth()*zb->getHeight())) != zb->getLevel()) {
+              // Is the building unsuitable in this area?
+
+              int level_diff;
+              if(zb->getLevel() - getThriveLevel(zb_tot_thrive/(zb->getWidth()*zb->getHeight())) < 0)
+                level_diff = -1 * (zb->getLevel() - getThriveLevel(zb_tot_thrive/(zb->getWidth()*zb->getHeight())));
+              else
+                level_diff = zb->getLevel() - getThriveLevel(zb_tot_thrive/(zb->getWidth()*zb->getHeight()));
+
+              if(rand() % int(42/int((date.monthsPassed()
+              - getZoneBuilding(getZoneBuildingID(Point(x,y)))->getBuildDate().monthsPassed()) * level_diff)) == 0) {
+                // Depending on how old it is and how greatly it missfits, it might be razed
+                removeZoneBuilding(getZoneBuildingID(Point(x,y)));
+              }
+            }
           }
           // If there is no building, we can build here. Is this area attractive enough?
           else if(getThriveLevel(map, player_slot, Point(x,y)) > 0) {
 
             // Theoreticly, all zones which meats the minimum value will be inhabited
             int tries = 0;
-            while(tries < max_size-1) {
+            while(tries < max_size) {
               tries++;
               bool good = true;
               unsigned char zone = map->getTile(x, y)->getZone();
@@ -105,7 +122,8 @@ void BuildingManagerServer::updateZoneBuildings(unsigned char player_slot, Map *
 
                 if(good) {
                   Server *server = Server::getInstance();
-                  int level      = total_thrive/(w*h);
+                  int level      = getThriveLevel(total_thrive/(w*h));
+
                   if(zone == SIMULTY_ZONE_RES)
                     addZoneBuilding(player_slot, Building::TYPE_RESIDENTIAL,
                         Point(x, y), w, h, server->getDate(), level, 0);
@@ -140,15 +158,6 @@ void BuildingManagerServer::addZoneBuilding(unsigned char playerSlot,
 
   server->packet_send_to_all(packet);
 
-}
-
-Building *BuildingManagerServer::getZoneBuilding(int i) {
-
-  return zoneBuildings[i];
-}
-unsigned int BuildingManagerServer::getZoneBuildingCount() {
-
-  return zoneBuildings.size();
 }
 
 void BuildingManagerServer::removeZoneBuilding(unsigned int id) {

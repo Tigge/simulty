@@ -13,9 +13,7 @@ BuildingManager::~BuildingManager() {
 int BuildingManager::getCrimeThrive(Map *m, char slot, Point where) {
 
   // Out of bounds:
-  if(where.getX() < 0 || where.getY() < 0
-      || (unsigned int)where.getX() >= m->getWidth()
-      || (unsigned int)where.getY() >= m->getHeight())
+  if(m->outOfBounds(where))
     return 0;
 
   int distance = 100;
@@ -38,12 +36,10 @@ int BuildingManager::getCrimeThrive(Map *m, char slot, Point where) {
     }
   }
 
-  if(distance < 15)
-    return 20;
-  else if(distance < 30)
-    return 10;
-  else
+  if(distance > 30)
     return 0;
+  else
+    return 30 - distance;
 }
 
 
@@ -53,12 +49,8 @@ int BuildingManager::getConnectionThrive(Map *map, char slot, Point where) {
   if(map->outOfBounds(where))
     return 0;
 
-  for(int x = where.getX() - 3; x <= where.getX() + 3; x++)
-    for(int y = where.getY() - 3; y <= where.getY() + 3; y++)
-      if(abs(where.getX() - x) + abs(where.getY() - y) <= 3
-          && !map->outOfBounds(Point(x, y))
-          && map->getTile(x, y)->getOwner() == slot
-          && map->getTile(x, y)->isRoad()) return 20;
+  if(map->getAdjacentRoads(where))
+    return 1;
 
   return 0;
 
@@ -85,8 +77,13 @@ int BuildingManager::getThriveValue(Map *map, char slot, Point where) {
 
 }
 
+int BuildingManager::getThriveLevel(int thrive) {
+  return sqrt(thrive);
+}
 int BuildingManager::getThriveLevel(Map *map, char owner, Point where) {
 
+  return sqrt(getThriveValue(map, owner, where));
+/*
   int con = getConnectionThrive(map, owner, where);
   int el  = getElectricityThrive(map, owner, where);
   int cr  = getCrimeThrive(map, owner, where);
@@ -98,7 +95,7 @@ int BuildingManager::getThriveLevel(Map *map, char owner, Point where) {
       return 1;
     else
       return 2;
-  }
+  }*/
 }
 
 void BuildingManager::addSpecialBuilding(Building *b) {
@@ -107,21 +104,21 @@ void BuildingManager::addSpecialBuilding(Building *b) {
 }
 
 void BuildingManager::removeSpecialBuilding(unsigned int id) {
-  if(id > zoneBuildings.size()) throw SIMULTYEXCEPTION("\n  removeSpecialBuilding: i > size");
+  if((unsigned int)id > zoneBuildings.size()) throw SIMULTYEXCEPTION("\n  removeSpecialBuilding: i > size");
 
   specialBuildings.erase(std::vector<Building *>::iterator(specialBuildings.begin() + id));
 }
 
 Building *BuildingManager::getSpecialBuilding(int i) {
-  if(i > zoneBuildings.size()) throw SIMULTYEXCEPTION("\n  getSpecialBuilding: i > size");
+  if((unsigned int)i > zoneBuildings.size()) throw SIMULTYEXCEPTION("\n  getSpecialBuilding: i > size");
     return specialBuildings[i];
 }
 unsigned int BuildingManager::getSpecialBuildingCount() {
     return specialBuildings.size();
 }
 
-Building *BuildingManager::getZoneBuilding(int i) {
-  if(i > zoneBuildings.size()) throw SIMULTYEXCEPTION("\n  getZoneBuilding: i > size");
+BuildingZone *BuildingManager::getZoneBuilding(int i) {
+  if((unsigned int)i > zoneBuildings.size()) throw SIMULTYEXCEPTION("\n  getZoneBuilding: i > size");
 
   return zoneBuildings[i];
 }
@@ -228,6 +225,7 @@ void BuildingManager::addZoneBuilding(unsigned char owner, int buildingType,
 }
 
 void BuildingManager::removeZoneBuilding(unsigned int id) {
+  if((unsigned int)id > zoneBuildings.size()) throw SIMULTYEXCEPTION("\n  removeZoneBuilding: i > size");
 
   zoneBuildings.erase(std::vector<BuildingZone *>::iterator(zoneBuildings.begin() + id));
 }
