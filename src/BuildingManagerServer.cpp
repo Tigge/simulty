@@ -52,10 +52,12 @@ void BuildingManagerServer::updateZoneBuildings(unsigned char player_slot, Map *
 
             for(int zb_x = zb->getPosition().getX(); zb_x < zb->getPosition().getX() + zb->getWidth(); zb_x++)
               for(int zb_y = zb->getPosition().getY(); zb_y < zb->getPosition().getY() + zb->getHeight(); zb_y++)
-                zb_tot_thrive += getThriveValue(map, player_slot, Point(x,y));
+                zb_tot_thrive += getThrive(map, player_slot, Point(x,y));
 
             if(getThriveLevel(zb_tot_thrive/(zb->getWidth()*zb->getHeight())) != zb->getLevel()) {
               // Is the building unsuitable in this area?
+
+              // TODO: significantly increase wanna-move if ohters are already moving.
 
               int level_diff;
               if(zb->getLevel() - getThriveLevel(zb_tot_thrive/(zb->getWidth()*zb->getHeight())) < 0)
@@ -71,7 +73,8 @@ void BuildingManagerServer::updateZoneBuildings(unsigned char player_slot, Map *
             }
           }
           // If there is no building, we can build here. Is this area attractive enough?
-          else if(getThriveLevel(map, player_slot, Point(x,y)) > 0) {
+          //else if(getThriveLevel(map, player_slot, Point(x,y)) > 0) {
+          else {
 
             // Theoreticly, all zones which meats the minimum value will be inhabited
             int tries = 0;
@@ -97,7 +100,7 @@ void BuildingManagerServer::updateZoneBuildings(unsigned char player_slot, Map *
                       haveRoad = true;
                     }
 
-                    total_thrive += getThriveValue(map, player_slot, Point(tile_x, tile_y));
+                    total_thrive += getThrive(map, player_slot, Point(tile_x, tile_y));
                     if(map->getTile(tile_x, tile_y)->getZone() != zone
                     || map->getTile(tile_x, tile_y)->getOwner() != player_slot
                     || map->getTile(tile_x, tile_y)->isRoad()) {

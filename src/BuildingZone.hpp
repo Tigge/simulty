@@ -14,9 +14,11 @@ class BuildingZone : public Building {
         Date built, int level, int style);
 
     virtual unsigned char getType() = 0;
-    
+
     unsigned int getLevel();
     unsigned int getStyle();
+
+    unsigned int getInhabitants();
 };
 
 #endif

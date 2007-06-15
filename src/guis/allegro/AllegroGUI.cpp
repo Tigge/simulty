@@ -175,11 +175,11 @@ AllegroGUI::AllegroGUI() {
 
   toolbar       = new Toolbar();
   top->add(toolbar, SCREEN_W - 10 - toolbar->getWidth(), 10);
-  
+
   miniMap       = new MiniMap(client->map, &camera);
   top->add(miniMap, SCREEN_W - miniMap->getWidth() - 10,
       SCREEN_H - miniMap->getHeight() - 10);
-  
+
 }
 
 AllegroGUI::~AllegroGUI(){
@@ -239,7 +239,7 @@ void AllegroGUI::mousePressed (gcn::MouseEvent &e) {
 }
 void AllegroGUI::mouseReleased (gcn::MouseEvent &e) {
   if(e.getSource() == top) {
-  
+
     if(usingTool) {
 
       int tool = toolbar->getTool();
@@ -389,9 +389,9 @@ void AllegroGUI::render() {
 
         // TODO
       }
-      
+
       if(tool == SIMULTY_CLIENT_TOOL_ZONE_COM
-          || tool == SIMULTY_CLIENT_TOOL_ZONE_RES 
+          || tool == SIMULTY_CLIENT_TOOL_ZONE_RES
           || tool == SIMULTY_CLIENT_TOOL_ZONE_IND) {
         cost = client->map->buildZoneCost(client->getMyPlayer()->getSlot(),
             tool, mouse_down_tile, mouse_up_tile);
@@ -406,12 +406,12 @@ void AllegroGUI::render() {
       }
 
       if(cost <= client->getMyPlayer()->getMoney())
-        textprintf_ex(buffer, font, c3.getX(), c3.getY(), 
+        textprintf_ex(buffer, font, c3.getX(), c3.getY(),
             makecol(0, 0, 0), -1, "%i", cost);
       else
-        textprintf_ex(buffer, font, c3.getX(), c3.getY(), 
+        textprintf_ex(buffer, font, c3.getX(), c3.getY(),
             makecol(255, 0, 0), -1, "%i", cost);
-      
+
     }
 
 
@@ -446,7 +446,7 @@ void AllegroGUI::render() {
         "Mouse: %i, %i", realtile.getX(), realtile.getY());
 
     textprintf_ex(buffer, font, 400, SCREEN_H - 30, makecol(0, 0, 0), -1,
-        "Thrive: %i", client->bman.getThriveValue(client->map,
+        "Thrive: %i", client->bman.getThrive(client->map,
         client->getMyPlayer()->getSlot(), realtile));
     textprintf_ex(buffer, font, 400, SCREEN_H - 15, makecol(0, 0, 0), -1,
         "Thrive level: %i", client->bman.getThriveLevel(client->map,

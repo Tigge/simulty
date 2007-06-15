@@ -56,7 +56,7 @@ int  Point::distance(Point a, Point b) {
    float dx = a.getX() - b.getX();
    float dy = a.getY() - b.getY();
 
-  return (int)sqrt(pow(dx, 2.0) + pow(dy, 2.0));
+  return round(sqrt(pow(dx, 2.0) + pow(dy, 2.0)));
 }
 
 void Point::fixOrder(Point &a, Point &b) {

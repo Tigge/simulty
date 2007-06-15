@@ -158,19 +158,21 @@ void Server::update () {
     }
     // Do every new year:
     if(date.isEndOfYear()) {
-      // TODO: Make dependent of commerce and industry
       std::cout << "It is now the end of" << date.getYear() << ", time for *ka-ching!*" << std::endl;
       for(unsigned int p = 0; p < pman.count(); p++) {
+
+        // Move to PlayerHandlerServer ?
         int pop = 0;
         for(unsigned int i = 0; i < bman.getZoneBuildingCount(); i++) {
           if(bman.getZoneBuilding(i)->getOwner() == pman.get_by_n(p)->getSlot()) {
-            pop += int(pow(bman.getZoneBuilding(i)->getWidth()*bman.getZoneBuilding(i)->getHeight(), 2.0)) *
-            bman.getThriveValue(map, pman.get_by_n(p)->getSlot(), bman.getZoneBuilding(i)->getPosition());
+
+            pop += bman.getZoneBuilding(i)->getInhabitants();
           }
         }
         int income = pop * (1 + pman.get_by_n(p)->getTax() / 100);
         int money  = pman.get_by_n(p)->getMoney();
-         std::cout << "P " << p << " " << money << " + " << income << std::endl;
+
+        std::cout << "Player " << p << " now has " << money + income << " money. (income was " << income << ")" << std::endl;
         pman.changeMoney(pman.get_by_n(p)->getSlot(), money + income);
       }
     }

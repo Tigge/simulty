@@ -59,3 +59,4 @@ int Building::getOwner() {
 Date Building::getBuildDate() {
   return built;
 }
+

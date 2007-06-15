@@ -16,18 +16,19 @@ int BuildingManager::getCrimeThrive(Map *m, char slot, Point where) {
   if(m->outOfBounds(where))
     return 0;
 
-  int distance = 100;
+  int distance = 0;
 
   for(unsigned int i = 0; i < getSpecialBuildingCount(); i++) {
     if(getSpecialBuilding(i)->getType() == Building::TYPE_POLICE
         && getSpecialBuilding(i)->getOwner() == slot) {
+
       for(unsigned int x = 0; x < getSpecialBuilding(i)->getWidth(); x++) {
         for(unsigned int y = 0; y < getSpecialBuilding(i)->getHeight(); y++) {
 
           int d = Point::distance(where,
               getSpecialBuilding(i)->getPosition() + Point(x, y));
 
-          if(d < distance ) {
+          if(distance == 0 || d < distance ) {
                 distance = d;
 
           }
@@ -36,10 +37,18 @@ int BuildingManager::getCrimeThrive(Map *m, char slot, Point where) {
     }
   }
 
-  if(distance > 30)
+  // Without ANY police, returns -70. Yes, if the police station is farther, this lessens the value.
+  // But then maybe this would be the case in the real world. Say your store is being robbed, when
+  // would you complain the most, when there were no police, or when it took the police one hour to
+  // get there, and the theifs left 10 minutes ago?
+  if(distance == 0) distance = 100;
+
+  // You dont think: "Yay!! A police station, I wanna live there!!", but the area gets a bad
+  // reputation if there isn't one. Will only return < 1. (TODO: Good reputation (randomed statistics?))
+  if(distance < 30)
     return 0;
   else
-    return 30 - distance;
+    return 30-distance;
 }
 
 
@@ -53,7 +62,6 @@ int BuildingManager::getConnectionThrive(Map *map, char slot, Point where) {
     return 1;
 
   return 0;
-
 }
 
 int BuildingManager::getElectricityThrive(Map *map, char slot, Point where) {
@@ -65,24 +73,113 @@ int BuildingManager::getElectricityThrive(Map *map, char slot, Point where) {
 int BuildingManager::getTaxesThrive(char slot) {
 
     return 0;
-
 }
 
-int BuildingManager::getThriveValue(Map *map, char slot, Point where) {
+int BuildingManager::getCommersialThrive(Map *m, char slot, Point where) {
+  return 0;
+}
+int BuildingManager::getIndustrialThrive(Map *m, char slot, Point where) {
+  return 0;
+}
+int BuildingManager::getResidentialThrive(Map *m, char slot, Point where) {
+  if(m->outOfBounds(where))
+    return 0;
+
+  // Not checking to ensure that buildings are connected to roads. They should
+  // not be built on if they arent, unless there is two "sub-nets".
+  unsigned int jobs = 0, store_dist = 0;
+
+  // Check for available jobs, and distance to closes store.
+  for(unsigned int i = 0; i < zoneBuildings.size(); i++) {
+    BuildingZone *b = zoneBuildings[i];
+    if(b->getType() != Building::TYPE_RESIDENTIAL) {  // then you can get a job here
+      if(Point::distance(where,
+          Point(b->getPosition().getX() + b->getWidth(), b->getPosition().getY() + b->getHeight())) < 30) {
+        // Employer nearby!
+        // TODO: Move job functions to BuildingZone::
+
+        if(b->getType() == Building::TYPE_INDUSTRIAL)
+          jobs += b->getWidth()*b->getHeight()*10 - pow(b->getLevel(), 2.0) + 5;
+        else  // Commersial employer
+          jobs += b->getWidth()*b->getHeight()*5 - pow(b->getLevel(), 2.0) + 2;
+
+
+        for(unsigned int i = 0; i < zoneBuildings.size(); i++) {
+          BuildingZone *b = zoneBuildings[i];
+          if(b->getType() == Building::TYPE_RESIDENTIAL) {  // then you can get a job here
+            if(Point::distance(where,
+                Point(b->getPosition().getX() + b->getWidth(), b->getPosition().getY() + b->getHeight())) < 30) {
+
+              // TODO:
+              // What if these guys can reach jobs, which u cant reach from $where?
+              // Should we spread out jobs as good as it possibly can be?
+              // Maybe we need an inhabbitant-class, if we want things to be really neat?
+              // Should all people work?
+              jobs -= b->getInhabitants();
+            }
+          }
+        }
+      }
+      // Check for closes store
+      if(b->getType() == Building::TYPE_COMMERSIAL) {
+        unsigned int d = Point::distance(where,
+          Point(b->getPosition().getX() + b->getWidth(), b->getPosition().getY() + b->getHeight()));
+        if(store_dist == 0 || store_dist > d) {
+          store_dist = d;
+        }
+      }
+    }
+  }
+
+  // Calculate thrive
+  int thrive = 0;
+
+  if(store_dist == 0)
+    thrive -= 200;
+  if(jobs == 0)
+    thrive -= 300;
+
+  return thrive;
+}
+
+int BuildingManager::getEnvoirmentThrive(Map *m, char slot, Point where) {
+
+  // Out of bounds:
+  if(m->outOfBounds(where))
+    return 0;
+
+  int thrive = 0;
+
+  // Function to calculate industrial noise. Other players' industry also counts ;):
+  //int noise = 0;
+  for(unsigned int i = 0; i < getZoneBuildingCount(); i++) {
+    BuildingZone *b = getZoneBuilding(i);
+    if(b->getType() == Building::TYPE_INDUSTRIAL) {
+      //if(
+    }
+  }
+
+  return thrive;
+}
+
+int BuildingManager::getThrive(Map *map, char slot, Point where) {
 
     return getConnectionThrive(map, slot, where)
             + getElectricityThrive(map, slot, where)
             + getTaxesThrive(slot)
-            + getCrimeThrive(map, slot, where);
+            + getCrimeThrive(map, slot, where)
+            + getEnvoirmentThrive(map, slot,where);
 
 }
 
-int BuildingManager::getThriveLevel(int thrive) {
-  return sqrt(thrive);
-}
-int BuildingManager::getThriveLevel(Map *map, char owner, Point where) {
+unsigned int BuildingManager::getThriveLevel(Map *map, char owner, Point where) {
 
-  return sqrt(getThriveValue(map, owner, where));
+  int thrive = getThrive(map, owner, where);
+
+  if(thrive < 1)
+    return 0;
+
+  return thrive/30;
 /*
   int con = getConnectionThrive(map, owner, where);
   int el  = getElectricityThrive(map, owner, where);
@@ -96,6 +193,13 @@ int BuildingManager::getThriveLevel(Map *map, char owner, Point where) {
     else
       return 2;
   }*/
+}
+unsigned int BuildingManager::getThriveLevel(int thrive) {
+
+  if(thrive < 1)
+    return 0;
+
+  return thrive/30;
 }
 
 void BuildingManager::addSpecialBuilding(Building *b) {

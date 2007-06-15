@@ -25,10 +25,16 @@ class BuildingManager {
     int getElectricityThrive(Map *m, char slot, Point where);
     int getTaxesThrive(char slot);
 
-    int getThriveValue(Map *m, char slot, Point where);
+    int getCommersialThrive(Map *m, char slot, Point where);
+    int getIndustrialThrive(Map *m, char slot, Point where);
+    int getResidentialThrive(Map *m, char slot, Point where);
 
-    int getThriveLevel(int thrive);
-    int getThriveLevel(Map *m, char owner, Point where);
+    int getEnvoirmentThrive(Map *m, char slot, Point where);
+
+    int getThrive(Map *m, char slot, Point where);
+
+    unsigned int getThriveLevel(Map *m, char owner, Point where);
+    unsigned int getThriveLevel(int thrive);
 
     // Buildings:
     void addSpecialBuilding(Building *);
