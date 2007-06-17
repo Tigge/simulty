@@ -17,7 +17,6 @@ class Date {
     unsigned int year;
     unsigned int month;
     unsigned int day;
-    unsigned int startYear;
 
   public:
 
@@ -25,8 +24,6 @@ class Date {
       this->year  = year;
       this->month = month;
       this->day   = day;
-
-      startYear   = year;
     }
 
     int getYear() {
@@ -81,14 +78,22 @@ class Date {
       }
     }
 
-    unsigned int yearsPassed() {
-      return startYear-year;
+    unsigned int getTimeDiff(Date t) {
+      return getTimeDiff(*this, t);
     }
-    unsigned int monthsPassed() {
-      return yearsPassed()*12 + month;
+    unsigned int getTimeDiff(Date t1, Date t2) {
+
+      long long int day_diff = (t1.getYear()*12*30 + t1.getMonth()*30 + t1.getDay())
+                -(t2.getYear()*12*30 + t2.getMonth()*30 + t2.getDay());
+      if(day_diff < 0) day_diff *= -1;
+
+      return (unsigned int)day_diff;
     }
-    unsigned int daysPassed() {
-      return monthsPassed()*30 + day;
+    static unsigned int daysToMonths(unsigned int days) {
+      return (unsigned int)(days/30);
+    }
+    static unsigned int daysToYears(unsigned int days) {
+      return (unsigned int)(days/30/12);
     }
 };
 

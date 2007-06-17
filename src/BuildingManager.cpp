@@ -93,16 +93,16 @@ int BuildingManager::getResidentialThrive(Map *m, char slot, Point where) {
   for(unsigned int i = 0; i < zoneBuildings.size(); i++) {
     BuildingZone *b = zoneBuildings[i];
     if(b->getType() != Building::TYPE_RESIDENTIAL) {  // then you can get a job here
+       // Checks at placement should prevent this from going out of bounds
       if(Point::distance(where,
-          Point(b->getPosition().getX() + b->getWidth(), b->getPosition().getY() + b->getHeight())) < 30) {
+          Point(b->getPosition().getX() + b->getWidth()/2, b->getPosition().getY() + b->getHeight()/2)) < 30) {
         // Employer nearby!
         // TODO: Move job functions to BuildingZone::
 
         if(b->getType() == Building::TYPE_INDUSTRIAL)
-          jobs += b->getWidth()*b->getHeight()*10 - pow(b->getLevel(), 2.0) + 5;
+          jobs += b->getWidth()*b->getHeight()*10 - (unsigned int)pow(b->getLevel(), 2.0) + 5;
         else  // Commersial employer
-          jobs += b->getWidth()*b->getHeight()*5 - pow(b->getLevel(), 2.0) + 2;
-
+          jobs += b->getWidth()*b->getHeight()*5 - (unsigned int)pow(b->getLevel(), 2.0) + 2;
 
         for(unsigned int i = 0; i < zoneBuildings.size(); i++) {
           BuildingZone *b = zoneBuildings[i];
@@ -112,9 +112,10 @@ int BuildingManager::getResidentialThrive(Map *m, char slot, Point where) {
 
               // TODO:
               // What if these guys can reach jobs, which u cant reach from $where?
-              // Should we spread out jobs as good as it possibly can be?
-              // Maybe we need an inhabbitant-class, if we want things to be really neat?
+              // Should we spread out jobs as good as they possibly can be?
+              // Maybe we need an citizen-class, if we want things to be really neat?
               // Should all people work?
+              if(jobs < 0)
               jobs -= b->getInhabitants();
             }
           }
@@ -123,8 +124,8 @@ int BuildingManager::getResidentialThrive(Map *m, char slot, Point where) {
       // Check for closes store
       if(b->getType() == Building::TYPE_COMMERSIAL) {
         unsigned int d = Point::distance(where,
-          Point(b->getPosition().getX() + b->getWidth(), b->getPosition().getY() + b->getHeight()));
-        if(store_dist == 0 || store_dist > d) {
+          Point(b->getPosition().getX() + b->getWidth()/2, b->getPosition().getY() + b->getHeight()/2));
+        if(store_dist == 0 || d < store_dist) {
           store_dist = d;
         }
       }
@@ -135,9 +136,13 @@ int BuildingManager::getResidentialThrive(Map *m, char slot, Point where) {
   int thrive = 0;
 
   if(store_dist == 0)
-    thrive -= 200;
+    thrive -= 2;
+  else
+    thrive += 2/store_dist;
   if(jobs == 0)
-    thrive -= 300;
+    thrive -= 3;
+  else
+    thrive += 3*jobs/10;
 
   return thrive;
 }
@@ -164,11 +169,40 @@ int BuildingManager::getEnvoirmentThrive(Map *m, char slot, Point where) {
 
 int BuildingManager::getThrive(Map *map, char slot, Point where) {
 
+  if(map->outOfBounds(where)) return 0;
+
+  if(map->getTile(where)->getZone() == SIMULTY_ZONE_COM) {
     return getConnectionThrive(map, slot, where)
             + getElectricityThrive(map, slot, where)
             + getTaxesThrive(slot)
             + getCrimeThrive(map, slot, where)
-            + getEnvoirmentThrive(map, slot,where);
+            + getEnvoirmentThrive(map, slot,where)
+            + getCommersialThrive(map, slot, where);
+  }
+
+  else if(map->getTile(where)->getZone() == SIMULTY_ZONE_IND) {
+    return getConnectionThrive(map, slot, where)
+            + getElectricityThrive(map, slot, where)
+            + getTaxesThrive(slot)
+            + getCrimeThrive(map, slot, where)
+            + getEnvoirmentThrive(map, slot,where)
+            + getIndustrialThrive(map, slot, where);
+  }
+
+  else if(map->getTile(where)->getZone() == SIMULTY_ZONE_RES) {
+    return getConnectionThrive(map, slot, where)
+            + getElectricityThrive(map, slot, where)
+            + getTaxesThrive(slot)
+            + getCrimeThrive(map, slot, where)
+            + getEnvoirmentThrive(map, slot,where)
+            + getResidentialThrive(map, slot, where);
+  }
+
+  return getConnectionThrive(map, slot, where)
+          + getElectricityThrive(map, slot, where)
+          + getTaxesThrive(slot)
+          + getCrimeThrive(map, slot, where)
+          + getEnvoirmentThrive(map, slot,where);
 
 }
 

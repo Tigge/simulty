@@ -36,18 +36,11 @@ void BuildingManagerServer::updateZoneBuildings(unsigned char player_slot, Map *
         }
         if(!special_building) {
           // Check for zone buildings on the zone
-          bool zone_building = false;
-          for(unsigned int i = 0; i < getZoneBuildingCount(); i++) {
-            if(x < getZoneBuilding(i)->getPosition().getX() + getZoneBuilding(i)->getWidth()
-            && x >= getZoneBuilding(i)->getPosition().getX()
-            && y < getZoneBuilding(i)->getPosition().getY() + getZoneBuilding(i)->getHeight()
-            && y >= getZoneBuilding(i)->getPosition().getY()) { // then the tile is underneath a zonebuilding.
-              zone_building = true; break;
-            }
-          }
-          if(zone_building) {
+          int zone_building_id = getZoneBuildingID(Point(x,y));
 
-            BuildingZone *zb = getZoneBuilding(getZoneBuildingID(Point(x,y)));
+          if(zone_building_id != -1) {  // then there is a zone building here!
+
+            BuildingZone *zb = getZoneBuilding(zone_building_id);
             int zb_tot_thrive = 0;
 
             for(int zb_x = zb->getPosition().getX(); zb_x < zb->getPosition().getX() + zb->getWidth(); zb_x++)
@@ -65,8 +58,8 @@ void BuildingManagerServer::updateZoneBuildings(unsigned char player_slot, Map *
               else
                 level_diff = zb->getLevel() - getThriveLevel(zb_tot_thrive/(zb->getWidth()*zb->getHeight()));
 
-              if(rand() % int(42/int((date.monthsPassed()
-              - getZoneBuilding(getZoneBuildingID(Point(x,y)))->getBuildDate().monthsPassed()) * level_diff)) == 0) {
+              // TODO: Better chance-formula
+              if(rand() % 10/level_diff == int(42/int(Date::daysToMonths(date.getTimeDiff(zb->getBuildDate())) * level_diff)) == 0) {
                 // Depending on how old it is and how greatly it missfits, it might be razed
                 removeZoneBuilding(getZoneBuildingID(Point(x,y)));
               }
