@@ -66,8 +66,7 @@ void BuildingManagerServer::updateZoneBuildings(unsigned char player_slot, Map *
             }
           }
           // If there is no building, we can build here. Is this area attractive enough?
-          //else if(getThriveLevel(map, player_slot, Point(x,y)) > 0) {
-          else {
+          else if(getThriveLevel(map, player_slot, Point(x,y)) > 0) {
 
             // Theoreticly, all zones which meats the minimum value will be inhabited
             int tries = 0;
@@ -119,17 +118,19 @@ void BuildingManagerServer::updateZoneBuildings(unsigned char player_slot, Map *
                 if(good) {
                   Server *server = Server::getInstance();
                   int level      = getThriveLevel(total_thrive/(w*h));
+                  if(level > 0) {
 
-                  if(zone == SIMULTY_ZONE_RES)
-                    addZoneBuilding(player_slot, Building::TYPE_RESIDENTIAL,
-                        Point(x, y), w, h, server->getDate(), level, 0);
-                  else if(zone == SIMULTY_ZONE_IND)
-                    addZoneBuilding(player_slot, Building::TYPE_INDUSTRIAL,
-                        Point(x, y), w, h, server->getDate(), level, 0);
-                  else if(zone == SIMULTY_ZONE_COM)
-                    addZoneBuilding(player_slot, Building::TYPE_COMMERSIAL,
-                        Point(x, y), w, h, server->getDate(), level, 0);
-                  else throw SIMULTYEXCEPTION("Can't build a zonebuilding of a type which shouldn't exist!");
+                    if(zone == SIMULTY_ZONE_RES)
+                      addZoneBuilding(player_slot, Building::TYPE_RESIDENTIAL,
+                          Point(x, y), w, h, server->getDate(), level, 0);
+                    else if(zone == SIMULTY_ZONE_IND)
+                      addZoneBuilding(player_slot, Building::TYPE_INDUSTRIAL,
+                          Point(x, y), w, h, server->getDate(), level, 0);
+                    else if(zone == SIMULTY_ZONE_COM)
+                      addZoneBuilding(player_slot, Building::TYPE_COMMERSIAL,
+                          Point(x, y), w, h, server->getDate(), level, 0);
+                    else throw SIMULTYEXCEPTION("Can't build a zonebuilding of a type which shouldn't exist!");
+                  }
                 }
               }
             }

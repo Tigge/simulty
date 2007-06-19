@@ -40,6 +40,7 @@ class Building {
     virtual ~Building();
 
     virtual Point getPosition();
+    virtual void  setPosition(Point to);
 
     virtual unsigned char getType() = 0;
     virtual unsigned char getWidth();

@@ -59,7 +59,7 @@ int BuildingManager::getConnectionThrive(Map *map, char slot, Point where) {
     return 0;
 
   if(map->getAdjacentRoads(where))
-    return 1;
+    return 29;  // Aaaalmost enough for level 1 ^^
 
   return 0;
 }
@@ -87,7 +87,8 @@ int BuildingManager::getResidentialThrive(Map *m, char slot, Point where) {
 
   // Not checking to ensure that buildings are connected to roads. They should
   // not be built on if they arent, unless there is two "sub-nets".
-  unsigned int jobs = 0, store_dist = 0;
+  unsigned int jobs = 0;
+  BuildingZone* closestStore = 0;
 
   // Check for available jobs, and distance to closes store.
   for(unsigned int i = 0; i < zoneBuildings.size(); i++) {
@@ -123,11 +124,24 @@ int BuildingManager::getResidentialThrive(Map *m, char slot, Point where) {
       }
       // Check for closes store
       if(b->getType() == Building::TYPE_COMMERSIAL) {
-        unsigned int d = Point::distance(where,
-          Point(b->getPosition().getX() + b->getWidth()/2, b->getPosition().getY() + b->getHeight()/2));
-        if(store_dist == 0 || d < store_dist) {
-          store_dist = d;
+        Point p = Point(b->getPosition().getX() + b->getWidth()/2, b->getPosition().getY() + b->getHeight()/2);
+
+        if(closestStore == 0 || Point::distance(where, p) < Point::distance(where, closestStore->getPosition())) {
+           closestStore->setPosition(p);
         }
+      }
+    }
+  }
+
+  // There might be pioneers who'd like to start up shop in your town
+  // Check for available unbuilt zones.
+  unsigned int pioneer_need = 0;
+  for(int x = where.getX() - 15; x < where.getX() + 15; x++) {
+    for(int y = where.getY() - 15; y < where.getY() + 15; y++) {
+      if(!m->outOfBounds(Point(x, y))) {
+        if(m->getTile(Point(x, y))->getZone() == SIMULTY_ZONE_COM
+        || m->getTile(Point(x, y))->getZone() == SIMULTY_ZONE_IND)
+          pioneer_need += 1;
       }
     }
   }
@@ -135,14 +149,17 @@ int BuildingManager::getResidentialThrive(Map *m, char slot, Point where) {
   // Calculate thrive
   int thrive = 0;
 
-  if(store_dist == 0)
-    thrive -= 2;
+  // TODO: formulsas should be curves, not lines.
+  if(closestStore != 0)
+    // This could be an x²-curve, where the top is at origo, and the greater root will then decide when bad goes to worse.
+    thrive += (200/Point::distance(where, closestStore->getPosition()))*closestStore->getLevel();
+  if(jobs == 0 && pioneer_need == 0)
+    thrive -= 150;
+  else if(jobs != 0)
+    thrive += int(pow(200, 1/(jobs/2)));
   else
-    thrive += 2/store_dist;
-  if(jobs == 0)
-    thrive -= 3;
-  else
-    thrive += 3*jobs/10;
+    thrive += pioneer_need; // nerf it!
+
 
   return thrive;
 }
@@ -155,12 +172,14 @@ int BuildingManager::getEnvoirmentThrive(Map *m, char slot, Point where) {
 
   int thrive = 0;
 
-  // Function to calculate industrial noise. Other players' industry also counts ;):
-  //int noise = 0;
+  // Calculate industrial noise. Other players' industry also counts ;)
+  int noise = 0;
   for(unsigned int i = 0; i < getZoneBuildingCount(); i++) {
     BuildingZone *b = getZoneBuilding(i);
     if(b->getType() == Building::TYPE_INDUSTRIAL) {
-      //if(
+      int d;
+      if((d = Point::distance(where, getZoneBuilding(i)->getPosition())) < 7)
+        noise += (d*20)/getZoneBuilding(i)->getLevel();
     }
   }
 

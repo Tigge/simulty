@@ -22,6 +22,9 @@ Building::~Building(){
 Point Building::getPosition() {
   return position;
 }
+void  Building::setPosition(Point to) {
+  position = to;
+}
 
 unsigned char Building::getWidth() {
   return width;
