@@ -59,7 +59,7 @@
 #include "guichan/allegro.hpp"
 #include "guichan/exception.hpp"
 
-#define GLYPH_TARGET GLYPH_TARGET_ALLEGRO
+
 
 #include <glyph.h>
 

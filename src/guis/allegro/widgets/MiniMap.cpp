@@ -67,7 +67,11 @@ void MiniMap::drawSelector(gcn::Graphics *g) {
 
 }
 
-void MiniMap::mouseClicked(gcn::MouseEvent &e) {
+void MiniMap::mousePressed(gcn::MouseEvent &e) {
+  camera->setX(e.getX() * (TILE_W / 4));
+  camera->setY(e.getY() * (TILE_H / 2));
+}
+void MiniMap::mouseDragged(gcn::MouseEvent &e) {
   camera->setX(e.getX() * (TILE_W / 4));
   camera->setY(e.getY() * (TILE_H / 2));
 }

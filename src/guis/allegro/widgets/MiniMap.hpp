@@ -22,12 +22,9 @@ class MiniMap : public gcn::Widget, gcn::MouseListener {
   
   virtual void draw(gcn::Graphics *g);
   virtual void drawSelector(gcn::Graphics *g);
-  //void render(BITMAP *bitmap, Point where);
-  
-  //int getWidth();
-  //int getHeight();
-  
-  virtual void mouseClicked(gcn::MouseEvent &e);
+
+  virtual void mousePressed(gcn::MouseEvent &e);
+  virtual void mouseDragged(gcn::MouseEvent &e);
 
 };
 

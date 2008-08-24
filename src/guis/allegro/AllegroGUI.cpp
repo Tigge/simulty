@@ -424,9 +424,8 @@ void AllegroGUI::render() {
     masked_blit(mouse_block, buffer, 0, 0, realscrn.getX(), realscrn.getY(), mouse_block->w, mouse_block->h);
 
     // Render GUI:
-    masked_blit(gui_background, buffer, 0, 0, SCREEN_W - gui_background->w,
-        SCREEN_H - gui_background->h, gui_background->w, gui_background->h);
-    //miniMap->render(buffer, Point(SCREEN_W - miniMap->getWidth(), SCREEN_H - miniMap->getHeight()));
+    //masked_blit(gui_background, buffer, 0, 0, SCREEN_W - gui_background->w,
+    //    SCREEN_H - gui_background->h, gui_background->w, gui_background->h);
 
 
     textprintf_ex(buffer, font, 20, SCREEN_H - 40, makecol(0, 0, 0), -1,

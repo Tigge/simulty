@@ -1,0 +1,89 @@
+
+body {
+
+  font-family: "Georgia", sans-serif;
+  font-size: 14px;
+
+}
+
+
+/* Page */
+
+#page {
+
+  width: 460px;
+
+  margin-left: auto;
+  margin-right: auto;
+
+}
+
+
+/* Header */
+
+#header h1 {
+
+  padding: 0;
+  margin: 0;
+  margin-top: 20px;
+  text-align: center;
+
+}
+
+/* Menu */
+
+#menu {
+
+  display: none;
+}
+
+#menu ul {
+
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  display: block;
+}
+
+#menu li {
+
+  display: block;
+  float:left;
+  padding-right: 10px;
+
+}
+
+
+
+
+/* Content */
+
+#content #screenshot {
+
+  width: 250px;
+
+  float:right;
+  margin-left: 10px;
+  margin-bottom: 10px;
+
+}
+
+#content {
+
+  clear: both;
+}
+
+#content h2 {
+  
+  border-bottom: 2px solid #ccc;
+
+}
+
+#content img {
+  border: 0;
+}
+
+
+
+
