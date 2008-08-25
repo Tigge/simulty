@@ -4,6 +4,8 @@
 #include <string>
 #include "NL.hpp"
 
+#include "ThriveMap.hpp"
+
 const int PLAYER_TYPE_BASE = 0;
 
 class Player {
@@ -21,10 +23,13 @@ class Player {
     int type;
     int expences_year;
     int expences_last;
-    int level_electricity;
+    
+    ThriveMap *thriveMap;
+    
+    /*int level_electricity;
     int level_police;
     int level_fire;
-    int level_education;
+    int level_education; */
 
   // Operations
   public:
@@ -39,6 +44,9 @@ class Player {
     virtual int  getMoney();
     virtual void setMoney(int m);
 
+    virtual void setThriveMap(ThriveMap *);
+    virtual ThriveMap *getThriveMap();
+  
     virtual void update();
 
     Player(NLINT32, NLINT16);

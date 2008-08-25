@@ -10,8 +10,8 @@ Player::Player(NLINT32 id_new, NLINT16 slot_new) {
 
     // Taxes in percantage
     tax = 10;
-    expences_year = expences_last = level_electricity
-    = level_police = level_fire = level_education = 0;
+    expences_year = expences_last = 0;
+    //= level_electricity = level_police = level_fire = level_education = 0;
 }
 
 /*
@@ -38,6 +38,13 @@ int  Player::getTax() {
 }
 void Player::setTax(unsigned int tax) {
   this->tax = tax;
+}
+
+void Player::setThriveMap(ThriveMap *thriveMap) {
+  this->thriveMap = thriveMap;
+}
+ThriveMap *Player::getThriveMap() {
+  return this->thriveMap;
 }
 
 void Player::update() {

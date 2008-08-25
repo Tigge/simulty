@@ -4,7 +4,7 @@
 
 #include "../AllegroGUIShared.hpp"
 
-#include "ImageButton.hpp"
+//#include "ImageButton.hpp"
 
 class Toolbar : public gcn::Container, gcn::ActionListener {
 

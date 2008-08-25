@@ -51,9 +51,7 @@ class Server {
 
   bool packet_handle(player_server_network *from, NLPacket pack);
 
-
   PlayerManagerServer   pman;
-
   BuildingManagerServer bman;
 
   Date date;
@@ -80,9 +78,13 @@ class Server {
   int  getSpeed();
   
   Date getDate();
+  
+  PlayerManagerServer   *getPlayerManager();
+  BuildingManagerServer *getBuildingManager();
 
   void static time_increment(void *);
   void update();
+  void updateThrive();
 };
 
 extern Server *server;

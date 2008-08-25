@@ -13,7 +13,7 @@ class ImageLoader {
 
   public:
 
-  static BITMAP *getImage(char *file) {  
+  static BITMAP *getImage(const char *file) {  
     BITMAP *b = load_bitmap(file, NULL);    
 
     // Error:

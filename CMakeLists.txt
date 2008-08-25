@@ -1,3 +1,9 @@
+# Build script for Simulty
+# ==============================================================================
+
+# Require at least CMake version 2.6
+CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
+
 IF(WIN32)
   SET(CMAKE_CXX_FLAGS "-D__GTHREAD_HIDE_WIN32API -g -Wall")
   SET(CMAKE_CXX_FLAGS_DEBUG "-D__GTHREAD_HIDE_WIN32API -g -Wall")  

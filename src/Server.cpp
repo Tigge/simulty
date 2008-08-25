@@ -109,8 +109,7 @@ Server::~Server() {
 // =====================================================================
 void Server::time_increment(void *object) {
     ((Server *)object)->time_advance = true;
-}
-END_OF_FUNCTION()
+} END_OF_FUNCTION()
 
 
 void Server::setSpeed(int speed) {
@@ -153,7 +152,7 @@ void Server::update () {
     if(date.isEndOfMonth()) {
       std::cout << "It is now the end of " << date.getMonthAsString() << ", time to update zones" << std::endl;
       for(unsigned int i = 0; i < pman.count(); i++) {
-        bman.updateZoneBuildings(pman.get_by_n(i)->getSlot(), map, date.getMonth());
+        bman.updateZoneBuildings(pman.get_by_n(i), map, date.getMonth());
       }
     }
     // Do every new year:
@@ -177,8 +176,15 @@ void Server::update () {
       }
     }
 
+    // Increase date:
     date.advance();
 
+    // Update thrive values
+    if(date.getDay() % 5 == 0) {
+      updateThrive();
+    }
+
+    // Tell clients we have a time increase
     for(unsigned int i = 0; i < pman.count(); i++) {
       player_server_network *plr = (player_server_network *)pman.get_by_n(i);
 
@@ -216,6 +222,180 @@ void Server::update () {
   }
 }
 
+
+void Server::updateThrive() {
+
+  std::cout << " - Updating thrive values" << std::endl;
+
+  for(unsigned int pi = 0; pi < pman.count(); pi++) {
+  
+    Player *p = pman.get_by_n(pi);
+  
+    std::cout << "   - Player: " << p->getSlot() << std::endl;
+
+    for(unsigned int x = 0; x < map->getWidth(); x++) {
+      for(unsigned int y = 0; y < map->getHeight(); y++) {
+
+        // Update crime thrive values:
+        // ---------------------------------------------------------------------
+      
+        // Without ANY police, returns -70. Yes, if the police station is 
+        // farther, this lessens the value. But then maybe this would be the 
+        // case in the real world. Say your store is being robbed, when would 
+        // you complain the most, when there were no police, or when it took 
+        // the police one hour to get there, and the theifs left 10 minutes ago?
+        int distance = 100;
+        
+        for(unsigned int i = 0; i < bman.getSpecialBuildingCount(); i++) {
+          if(bman.getSpecialBuilding(i)->getType() == Building::TYPE_POLICE
+              && bman.getSpecialBuilding(i)->getOwner() == p->getSlot()) {
+            
+            int newDistance = Point::distance(Point(x, y),
+                bman.getSpecialBuilding(i)->getPosition() + Point(
+                (bman.getSpecialBuilding(i)->getWidth() - 1) / 2,
+                (bman.getSpecialBuilding(i)->getHeight() - 1) / 2));
+                
+            if(distance == 0 || newDistance < distance) {
+              distance = newDistance;
+            }
+          }
+        }
+        
+        // You dont think: "Yay!! A police station, I wanna live there!!", but 
+        // the area gets a bad reputation if there isn't one. Will only 
+        // return < 1. (TODO: Good reputation (randomed statistics?))
+        
+        p->getThriveMap()->updateThrive(x, y, Thrive::TYPE_CRIME, 
+            (100 - distance) / 100);
+        
+        // Update connection thrive
+        // ---------------------------------------------------------------------        
+        if(map->getAdjacentRoads(Point(x, y)))
+          p->getThriveMap()->updateThrive(x, y, Thrive::TYPE_CONNECTIVITY, 0.3);
+        else
+          p->getThriveMap()->updateThrive(x, y, Thrive::TYPE_CONNECTIVITY, 0.0);
+        
+        // Update electricity thrive
+        // ---------------------------------------------------------------------        
+        p->getThriveMap()->updateThrive(x, y, Thrive::TYPE_ELECTRICITY, 0.0);
+        
+        // Update taxes thrive
+        // ---------------------------------------------------------------------        
+        p->getThriveMap()->updateThrive(x, y, Thrive::TYPE_TAXES, 0.0);
+        
+        // Update commerse thrive
+        // ---------------------------------------------------------------------
+        p->getThriveMap()->updateThrive(x, y, Thrive::TYPE_COMMERSE, 0.0);
+        
+        // Update work thrive
+        // ---------------------------------------------------------------------
+        p->getThriveMap()->updateThrive(x, y, Thrive::TYPE_WORKERS, 0.0);
+        
+        // Update jobs thrive
+        // ---------------------------------------------------------------------
+        
+        // Not checking to ensure that buildings are connected to roads. They 
+        // should not be built on if they arent, unless there is two "sub-nets".
+        unsigned int jobs = 0;
+        BuildingZone* closestStore = NULL;
+
+        // Check for available jobs, and distance to closes store.
+        for(unsigned int i = 0; i < bman.getZoneBuildingCount(); i++) {
+        
+          BuildingZone *b = bman.getZoneBuilding(i);
+          if(b->getType() != Building::TYPE_RESIDENTIAL) {  // then you can get a job here
+             // Checks at placement should prevent this from going out of bounds
+            if(Point::distance(Point(x, y),
+                Point(b->getPosition().getX() + b->getWidth()/2, 
+                b->getPosition().getY() + b->getHeight()/2)) < 30) {
+              // Employer nearby!
+              // TODO: Move job functions to BuildingZone::
+
+              if(b->getType() == Building::TYPE_INDUSTRIAL)
+                jobs += b->getWidth()*b->getHeight()*10 - (unsigned int)pow(b->getLevel(), 2.0) + 5;
+              else  // Commersial employer
+                jobs += b->getWidth()*b->getHeight()*5 - (unsigned int)pow(b->getLevel(), 2.0) + 2;
+
+              for(unsigned int i = 0; i < bman.getZoneBuildingCount(); i++) {
+                BuildingZone *b = bman.getZoneBuilding(i);
+                if(b->getType() == Building::TYPE_RESIDENTIAL) {  // then you can get a job here
+                  if(Point::distance(Point(x, y),
+                      Point(b->getPosition().getX() + b->getWidth(), b->getPosition().getY() + b->getHeight())) < 30) {
+
+                    // TODO:
+                    // What if these guys can reach jobs, which u cant reach from $where?
+                    // Should we spread out jobs as good as they possibly can be?
+                    // Maybe we need an citizen-class, if we want things to be really neat?
+                    // Should all people work?
+                    if(jobs < 0)
+                    jobs -= b->getInhabitants();
+                  }
+                }
+              }
+            }
+            // Check for closes store
+            if(b->getType() == Building::TYPE_COMMERSIAL) {
+              Point p = Point(b->getPosition().getX() + b->getWidth()/2, b->getPosition().getY() + b->getHeight()/2);
+
+              if(closestStore == 0 || Point::distance(Point(x, y), p) 
+                  < Point::distance(Point(x, y), closestStore->getPosition())) {
+                 closestStore->setPosition(p);
+              }
+            }
+          }
+        }
+
+        // There might be pioneers who'd like to start up shop in your town
+        // Check for available unbuilt zones.
+        unsigned int pioneer_need = 0;
+        for(unsigned int xp = x - 15; xp < x + 15; xp++) {
+          for(unsigned int yp = y - 15; yp < y + 15; yp++) {
+            if(!map->outOfBounds(Point(xp, yp))) {
+              if(map->getTile(Point(xp, yp))->getZone() == SIMULTY_ZONE_COM
+              || map->getTile(Point(xp, yp))->getZone() == SIMULTY_ZONE_IND)
+                pioneer_need += 1;
+            }
+          }
+        }
+
+        // Calculate thrive
+        int thrive = 0;
+
+        // TODO: formulsas should be curves, not lines.
+        if(closestStore != 0)
+          // This could be an x²-curve, where the top is at origo, and the greater root will then decide when bad goes to worse.
+          thrive += (200/Point::distance(Point(x, y), closestStore->getPosition()))*closestStore->getLevel();
+        if(jobs == 0 && pioneer_need == 0)
+          thrive -= 150;
+        else if(jobs != 0)
+          thrive += int(pow(200, 1/(jobs/2)));
+        else
+          thrive += pioneer_need; // nerf it!
+
+
+        //return thrive;
+        
+        p->getThriveMap()->updateThrive(x, y, Thrive::TYPE_JOBS, 0.0);
+        
+        // Update environment thrive:
+        // ---------------------------------------------------------------------
+        
+        // Calculate industrial noise. Other players' industry also counts ;)
+        int noise = 0;
+        for(unsigned int i = 0; i < bman.getZoneBuildingCount(); i++) {
+          BuildingZone *b = bman.getZoneBuilding(i);
+          if(b->getType() == Building::TYPE_INDUSTRIAL) {
+            int d = Point::distance(Point(x, y), bman.getZoneBuilding(i)->getPosition());
+            if(d < 7)
+              noise += (d * 20) / bman.getZoneBuilding(i)->getLevel();
+          }
+        }
+        
+        p->getThriveMap()->updateThrive(x, y, Thrive::TYPE_ENVIRONMENT, noise / 100);
+      }
+    }
+  }
+}
 
 // PACKET HANDLING:
 // =============================================================================
@@ -512,6 +692,10 @@ bool Server::player_add(unsigned char type)
     // Write info
     std::cerr << "  - Gave player the id " << player_tmp->getId() << " and assigned to slot " << player_tmp->getSlot() << std::endl << std::endl;
 
+    // Set up thrive map
+    ThriveMap *tm = new ThriveMap(map->getWidth(), map->getHeight());
+    player_tmp->setThriveMap(tm);
+
     // Add player to the list
     pman.add(player_tmp);
 
@@ -548,4 +732,12 @@ bool Server::player_remove(Player *pl)
     std::cerr << "  - Delete failed" << std::endl;
     return false;
 
+}
+
+PlayerManagerServer *Server::getPlayerManager() {
+  return &pman;
+}
+
+BuildingManagerServer *Server::getBuildingManager() {
+  return &bman;
 }

@@ -10,6 +10,7 @@ BuildingManager::~BuildingManager() {
     delete zoneBuildings[i];
 }
 
+/*
 int BuildingManager::getCrimeThrive(Map *m, char slot, Point where) {
 
   // Out of bounds:
@@ -50,8 +51,8 @@ int BuildingManager::getCrimeThrive(Map *m, char slot, Point where) {
   else
     return 30-distance;
 }
-
-
+*/
+/*
 int BuildingManager::getConnectionThrive(Map *map, char slot, Point where) {
 
   // Out of bounds:
@@ -63,6 +64,7 @@ int BuildingManager::getConnectionThrive(Map *map, char slot, Point where) {
 
   return 0;
 }
+
 
 int BuildingManager::getElectricityThrive(Map *map, char slot, Point where) {
 
@@ -80,7 +82,7 @@ int BuildingManager::getCommersialThrive(Map *m, char slot, Point where) {
 }
 int BuildingManager::getIndustrialThrive(Map *m, char slot, Point where) {
   return 0;
-}
+} 
 int BuildingManager::getResidentialThrive(Map *m, char slot, Point where) {
   if(m->outOfBounds(where))
     return 0;
@@ -162,7 +164,7 @@ int BuildingManager::getResidentialThrive(Map *m, char slot, Point where) {
 
 
   return thrive;
-}
+} 
 
 int BuildingManager::getEnvoirmentThrive(Map *m, char slot, Point where) {
 
@@ -184,7 +186,7 @@ int BuildingManager::getEnvoirmentThrive(Map *m, char slot, Point where) {
   }
 
   return thrive;
-}
+} 
 
 int BuildingManager::getThrive(Map *map, char slot, Point where) {
 
@@ -245,7 +247,7 @@ unsigned int BuildingManager::getThriveLevel(Map *map, char owner, Point where) 
       return 1;
     else
       return 2;
-  }*/
+  }*/ /*
 }
 unsigned int BuildingManager::getThriveLevel(int thrive) {
 
@@ -253,7 +255,7 @@ unsigned int BuildingManager::getThriveLevel(int thrive) {
     return 0;
 
   return thrive/30;
-}
+} */
 
 void BuildingManager::addSpecialBuilding(Building *b) {
 

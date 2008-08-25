@@ -20,7 +20,7 @@ class BuildingManager {
     virtual ~BuildingManager();
 
     // Thrive values:
-    int getCrimeThrive(Map *m, char slot, Point where);
+    /*int getCrimeThrive(Map *m, char slot, Point where);
     int getConnectionThrive(Map *m, char slot, Point where);
     int getElectricityThrive(Map *m, char slot, Point where);
     int getTaxesThrive(char slot);
@@ -29,7 +29,7 @@ class BuildingManager {
     int getIndustrialThrive(Map *m, char slot, Point where);
     int getResidentialThrive(Map *m, char slot, Point where);
 
-    int getEnvoirmentThrive(Map *m, char slot, Point where);
+    int getEnvoirmentThrive(Map *m, char slot, Point where); */
 
     int getThrive(Map *m, char slot, Point where);
 

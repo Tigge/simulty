@@ -444,12 +444,12 @@ void AllegroGUI::render() {
     textprintf_ex(buffer, font, 200, SCREEN_H - 30, makecol(0, 0, 0), -1,
         "Mouse: %i, %i", realtile.getX(), realtile.getY());
 
-    textprintf_ex(buffer, font, 400, SCREEN_H - 30, makecol(0, 0, 0), -1,
+    /* textprintf_ex(buffer, font, 400, SCREEN_H - 30, makecol(0, 0, 0), -1,
         "Thrive: %i", client->bman.getThrive(client->map,
         client->getMyPlayer()->getSlot(), realtile));
     textprintf_ex(buffer, font, 400, SCREEN_H - 15, makecol(0, 0, 0), -1,
         "Thrive level: %i", client->bman.getThriveLevel(client->map,
-        client->getMyPlayer()->getSlot(), realtile));
+        client->getMyPlayer()->getSlot(), realtile)); */
 
     textprintf_ex(buffer, font, 600, SCREEN_H - 30, makecol(0, 0, 0), -1,
         "MD: %i, %i MU: %i, %i", mouse_down_tile.getX(),

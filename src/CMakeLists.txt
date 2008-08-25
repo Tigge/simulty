@@ -29,7 +29,7 @@ ADD_EXECUTABLE(../simulty-server Server.cpp Point.cpp Map.cpp PlayerManager.cpp
     Building.cpp BuildingZone.cpp BuildingPolice.cpp BuildingFire.cpp
     BuildingHospital.cpp BuildingManager.cpp BuildingFactory.cpp
     BuildingResidential.cpp BuildingCommersial.cpp BuildingIndustrial.cpp
-    PlayerManagerServer.cpp BuildingManagerServer.cpp)
+    PlayerManagerServer.cpp BuildingManagerServer.cpp ThriveMap.cpp)
 
 IF(WIN32)
   TARGET_LINK_LIBRARIES(../simulty-server NL elog ${ALLEGRO} wsock32)
