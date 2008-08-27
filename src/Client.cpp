@@ -69,6 +69,20 @@ void Client::bulldoze(Point from, Point to) {
 
 }
 
+void Client::deZone(Point from, Point to) {
+
+  gui->console_log("DeZone requested");
+
+  NLPacket packet(NLPACKET_TYPE_SIMULTY_REQUEST_DEZONE);
+
+  packet << (NLINT32)from.getX() << (NLINT32)from.getY()
+         << (NLINT32)to.getX()   << (NLINT32)to.getY();
+
+  net_client->packet_put(packet);
+
+}
+
+
 void Client::buyLand(Point from, Point to) {
 
   gui->console_log("Land requested");
@@ -253,7 +267,7 @@ void Client::packet_handle(NLPacket p) {
       Building *b = BuildingFactory::getBuilding(buildingType,
           Point(x, y), (unsigned char)slot, date);
 
-      bman.addSpecialBuilding(b);
+      bman.addSpecialBuilding(map, b);
 
       gui->console_log("Building built");
 
@@ -261,7 +275,7 @@ void Client::packet_handle(NLPacket p) {
     }
     case NLPACKET_TYPE_SIMULTY_REMOVE_SPECIAL_BUILDING: {
 
-      bman.removeSpecialBuilding(bman.getSpecialBuildingID(Point::fromPacket(p)));
+      bman.removeSpecialBuilding(map, bman.getSpecialBuildingID(Point::fromPacket(p)));
 
       gui->console_log("Building razed");
       break;
@@ -276,14 +290,14 @@ void Client::packet_handle(NLPacket p) {
       int level        = p.nextInt16();
       int style        = p.nextInt16();
 
-      bman.addZoneBuilding(playerSlot, buildingType, where, w, h,
+      bman.addZoneBuilding(map, playerSlot, buildingType, where, w, h,
           date, level, style);
 
       break;
     }
     case NLPACKET_TYPE_SIMULTY_REMOVE_ZONE_BUILDING: {
 
-      bman.removeZoneBuilding(bman.getZoneBuildingID(Point::fromPacket(p)));
+      bman.removeZoneBuilding(map, bman.getZoneBuildingID(Point::fromPacket(p)));
       break;
     }
     case NLPACKET_TYPE_SIMULTY_BULLDOZE: {
@@ -297,6 +311,19 @@ void Client::packet_handle(NLPacket p) {
       gui->console_log("Bulldozing");
       break;
     }
+    
+    case NLPACKET_TYPE_SIMULTY_DEZONE: {
+
+      int   sl = p.nextInt16();
+      Point fr = Point::fromPacket(p);
+      Point to = Point::fromPacket(p);
+
+      map->deZone(sl, fr, to);
+
+      gui->console_log("DeZoneing");
+      break;
+    }
+    
     default: {
 
       std::stringstream tmp;

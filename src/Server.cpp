@@ -333,15 +333,15 @@ void Server::updateThrive() {
                 }
               }
             }
-            // Check for closes store
+            /* Check for closes store 
             if(b->getType() == Building::TYPE_COMMERSIAL) {
               Point p = Point(b->getPosition().getX() + b->getWidth()/2, b->getPosition().getY() + b->getHeight()/2);
 
-              if(closestStore == 0 || Point::distance(Point(x, y), p) 
+              if(closestStore != NULL || Point::distance(Point(x, y), p) 
                   < Point::distance(Point(x, y), closestStore->getPosition())) {
                  closestStore->setPosition(p);
               }
-            }
+            } */
           }
         }
 
@@ -452,6 +452,24 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
       break;
     }
 
+    case NLPACKET_TYPE_SIMULTY_REQUEST_DEZONE: {
+      Point fr = Point::fromPacket(pack);
+      Point to = Point::fromPacket(pack);
+      
+      int cost = map->deZoneCost(from->getSlot(), fr, to);
+      map->deZone(from->getSlot(), fr, to);
+      
+      NLPacket packet(NLPACKET_TYPE_SIMULTY_DEZONE);
+      packet << (NLINT16)from->getSlot() << (NLINT32)fr.getX()
+             << (NLINT32)fr.getY()       << (NLINT32)to.getX()
+             << (NLINT32)to.getY();
+             
+      packet_send_to_all(packet);
+      pman.changeMoney(from->getSlot(), from->getMoney() - cost);
+      
+      break;
+    }
+
     // Buy land:
     case NLPACKET_TYPE_SIMULTY_REQUEST_LAND: {
 
@@ -557,7 +575,7 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
 
             if(cost <= from->getMoney()  && bman.canBuildSpecialBuilding(b, from->getSlot(), map)) {
 
-              bman.addSpecialBuilding(b);
+              bman.addSpecialBuilding(map, b);
 
               NLPacket packet(NLPACKET_TYPE_SIMULTY_BUILD_SPECIAL_BUILDING);
               packet << (NLINT16)from->getSlot() << buildingType << x << y;

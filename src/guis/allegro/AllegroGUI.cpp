@@ -263,6 +263,8 @@ void AllegroGUI::mouseReleased (gcn::MouseEvent &e) {
         client->buyBuilding(mouse_down_tile, Building::TYPE_HOSPITAL);
       } else if(tool == SIMULTY_CLIENT_TOOL_BULLDOZER) {
         client->bulldoze(mouse_down_tile, mouse_up_tile);
+      } else if(tool == SIMULTY_CLIENT_TOOL_DEZONE) {
+        client->deZone(mouse_down_tile, mouse_up_tile);
       }
       usingTool = false;
     }
@@ -403,8 +405,10 @@ void AllegroGUI::render() {
       } else if(tool == SIMULTY_CLIENT_TOOL_BULLDOZER) {
         cost = client->map->bulldozeCost(client->getMyPlayer()->getSlot(),
             mouse_down_tile, mouse_up_tile);
+      } else if(tool == SIMULTY_CLIENT_TOOL_DEZONE) {
+        cost = client->map->deZoneCost(client->getMyPlayer()->getSlot(),
+            mouse_down_tile, mouse_up_tile);
       }
-
       if(cost <= client->getMyPlayer()->getMoney())
         textprintf_ex(buffer, font, c3.getX(), c3.getY(),
             makecol(0, 0, 0), -1, "%i", cost);

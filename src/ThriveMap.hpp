@@ -11,6 +11,8 @@ class ThriveMap {
   int width, height;
   
   protected:
+  // Thrive combine factors
+  double thriveCombine[Thrive::TYPE_COUNT];
 
   // Thrive factors (increase / decrase rate)
   double thriveFactors[Thrive::TYPE_COUNT];
@@ -23,6 +25,8 @@ class ThriveMap {
   
   ThriveMap(int width, int height);
   ~ThriveMap();
+  
+  double getThrive(int x, int y);
   
   double getThrive(int x, int y, int type);
   void   setThrive(int x, int y, int type, double value);

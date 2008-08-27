@@ -29,32 +29,32 @@ class BuildingManager {
     int getIndustrialThrive(Map *m, char slot, Point where);
     int getResidentialThrive(Map *m, char slot, Point where);
 
-    int getEnvoirmentThrive(Map *m, char slot, Point where); */
+    int getEnvoirmentThrive(Map *m, char slot, Point where); 
 
     int getThrive(Map *m, char slot, Point where);
 
     unsigned int getThriveLevel(Map *m, char owner, Point where);
-    unsigned int getThriveLevel(int thrive);
+    unsigned int getThriveLevel(int thrive); */
 
     // Buildings:
-    void addSpecialBuilding(Building *);
-    void removeSpecialBuilding(unsigned int id);
+    void          addSpecialBuilding(Map *, Building *);
+    void          removeSpecialBuilding(Map *, unsigned int id);
 
-    Building *getSpecialBuilding(int i);
-    unsigned int getSpecialBuildingCount();
-    int getSpecialBuildingID(Point at);
+    Building     *getSpecialBuilding(int i);
+    unsigned int  getSpecialBuildingCount();
+    int           getSpecialBuildingID(Point at);
 
     BuildingZone *getZoneBuilding(int i);
-    unsigned int getZoneBuildingCount();
-    int getZoneBuildingID(Point at);
+    unsigned int  getZoneBuildingCount();
+    int           getZoneBuildingID(Point at);
 
-    bool canBuildSpecialBuilding(Building *b, unsigned char slot, Map *m);
-    bool canBuild(Point at, unsigned char slot, Map *m);
+    bool          canBuildSpecialBuilding(Building *b, unsigned char slot, Map *m);
+    bool          canBuild(Point at, unsigned char slot, Map *m);
 
-    void updateZoneBuildings(unsigned char player_slot, Map *map);
-    virtual void addZoneBuilding(unsigned char owner, int buildingType,
+    void          updateZoneBuildings(unsigned char player_slot, Map *map);
+    virtual void  addZoneBuilding(Map *, unsigned char owner, int buildingType,
         Point p, int w, int h, Date built, int level, int style);
-    void removeZoneBuilding(unsigned int id);
+    void          removeZoneBuilding(Map *, unsigned int id);
 };
 
 #endif

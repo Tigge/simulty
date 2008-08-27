@@ -13,6 +13,14 @@ ThriveMap::ThriveMap(int width, int height) {
     thriveFactors[i] = 0.80;
   }
   
+  
+  
+  // Set combine factor to 1 / Thrive::TYPE_COUNT
+  // TODO: make real. Electricity and roads should be most important
+  for(int i = 0; i < Thrive::TYPE_COUNT; i++) {
+    thriveCombine[i] = 1.0 / Thrive::TYPE_COUNT;
+  }
+  
   // Add all thrives
   for(int i = 0; i < width * height; i++) {
     thrive.push_back(Thrive());
@@ -22,7 +30,16 @@ ThriveMap::ThriveMap(int width, int height) {
 ThriveMap::~ThriveMap() {
 
 }
-  
+
+
+double ThriveMap::getThrive(int x, int y) {
+  double t = 0.0;  
+  for(int i = 0; i < Thrive::TYPE_COUNT; i++) {
+    t += thrive[x + y * width].thrive[i] * thriveCombine[i];
+  }
+  return t;
+}
+
 double ThriveMap::getThrive(int x, int y, int type) {
   return thrive[x + y * width].thrive[type];
 }

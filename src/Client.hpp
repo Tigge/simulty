@@ -78,6 +78,7 @@ class Client {
     void packet_handle(NLPacket p);
 
     void bulldoze(Point from, Point to);
+    void deZone(Point from, Point to);
 
     void buyLand(Point from, Point to);
     void buyRoad(Point from, Point to);

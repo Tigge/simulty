@@ -32,6 +32,7 @@ const unsigned char SIMULTY_CLIENT_TOOL_BUILD_HOSPITAL = 51;
 const unsigned char SIMULTY_CLIENT_TOOL_BUILD_FIRE     = 52;
 
 const unsigned char SIMULTY_CLIENT_TOOL_BULLDOZER      = 100;
+const unsigned char SIMULTY_CLIENT_TOOL_DEZONE         = 101;
 
 // Costs: (for now)
 
@@ -67,6 +68,7 @@ const unsigned char NLPACKET_TYPE_SIMULTY_REQUEST_LAND             = 152;
 const unsigned char NLPACKET_TYPE_SIMULTY_REQUEST_CHAT             = 153;
 const unsigned char NLPACKET_TYPE_SIMULTY_REQUEST_SPECIAL_BUILDING = 154;
 const unsigned char NLPACKET_TYPE_SIMULTY_REQUEST_BULLDOZE         = 160;
+const unsigned char NLPACKET_TYPE_SIMULTY_REQUEST_DEZONE           = 161;
 
 // Responese:
 
@@ -79,6 +81,9 @@ const unsigned char NLPACKET_TYPE_SIMULTY_REMOVE_SPECIAL_BUILDING  = 212;
 const unsigned char NLPACKET_TYPE_SIMULTY_BUILD_ZONE_BUILDING      = 213;
 const unsigned char NLPACKET_TYPE_SIMULTY_REMOVE_ZONE_BUILDING     = 214;
 const unsigned char NLPACKET_TYPE_SIMULTY_BULLDOZE                 = 220;
+const unsigned char NLPACKET_TYPE_SIMULTY_DEZONE                   = 221;
+
+const unsigned char NLPACKET_TYPE_SIMULTY_THRIVEMAP                = 225;
 
 /*
 const unsigned char NPACKET_TYPE_SIMULTY_ROAD_BUILD       = 200;

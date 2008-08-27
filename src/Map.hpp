@@ -6,6 +6,7 @@
 
 #include "Tile.hpp"
 #include "Point.hpp"
+#include "Building.hpp"
 
 #include <vector>
 
@@ -52,6 +53,12 @@ class Map {
 
     virtual void buildZone(unsigned char owner, int type, Point from, Point to);
     virtual int  buildZoneCost(unsigned char owner, int type, Point from, Point to);
+    
+    virtual void deZone(unsigned char owner, Point from, Point to);
+    virtual int deZoneCost(unsigned char owner, Point from, Point to);
+    
+    virtual void markBuilding(Building *, int);
+    virtual void unmarkBuilding(Building *);
 
     virtual unsigned char getAdjacentRoads(Point at);
     //virtual bool isConnectedToZone(Point start, unsigned char zone);

@@ -17,11 +17,11 @@ class BuildingManagerServer : public BuildingManager {
 
 
     virtual void updateZoneBuildings(Player * player, Map *map, Date date);
-    virtual void addZoneBuilding(unsigned char player_slot, int buildingType,
+    virtual void addZoneBuilding(Map *, unsigned char player_slot, int buildingType,
         Point p, int w, int h, Date built, int level, int style);
-    virtual void removeZoneBuilding(unsigned int id);
+    virtual void removeZoneBuilding(Map *, unsigned int id);
 
-    virtual void removeSpecialBuilding(unsigned int id);
+    virtual void removeSpecialBuilding(Map *, unsigned int id);
 
     void clearArea(Map *map, Point from, Point to);
 };

@@ -150,7 +150,7 @@ void Map::buildZone(unsigned char owner, int type, Point from, Point to) {
   for(unsigned int x = from.getX(); x <= (unsigned int)to.getX(); x++) {
     for(unsigned int y = from.getY(); y <= (unsigned int)to.getY(); y++) {
     if(!outOfBounds(Point(x, y))) {
-        if(getTile(x, y)->getOwner() == owner && getTile(x,y)->getZone() == 0) {
+      if(getTile(x, y)->getOwner() == owner && !getTile(x,y)->isOccupied()) {
           getTile(x,y)->setZone(type);
         }
       }
@@ -182,8 +182,7 @@ int  Map::buildZoneCost(unsigned char owner, int type, Point from, Point to) {
   for(unsigned int x = from.getX(); x <= (unsigned int)to.getX(); x++) {
     for(unsigned int y = from.getY(); y <= (unsigned int)to.getY(); y++) {
       if(!outOfBounds(Point(x, y))) {
-
-        if(getTile(x, y)->getOwner() == owner && getTile(x,y)->getZone() == 0) {
+        if(getTile(x, y)->getOwner() == owner && !getTile(x,y)->isOccupied()) {
           cost += cost_per_tile;
         }
       }
@@ -191,6 +190,54 @@ int  Map::buildZoneCost(unsigned char owner, int type, Point from, Point to) {
   }
 
   return cost;
+}
+
+void Map::deZone(unsigned char owner, Point from, Point to) {
+  for(int x = from.getX(); x <= to.getX(); x++) {
+    for(int y = from.getY(); y <= to.getY(); y++) {
+      if(getTile(x, y)->getOwner() == owner 
+          && getTile(x, y)->getBuilding() == SIMULTY_BUILDING_NONE) {
+        if(getTile(x, y)->getZone() != SIMULTY_ZONE_NONE) {
+          getTile(x, y)->setZone(SIMULTY_ZONE_NONE);
+        }
+      }
+    }
+  }
+}
+
+int Map::deZoneCost(unsigned char owner, Point from, Point to) {
+  int cost = 0;
+  for(int x = from.getX(); x <= to.getX(); x++) {
+    for(int y = from.getY(); y <= to.getY(); y++) {
+      if(getTile(x, y)->getOwner() == owner 
+          && getTile(x, y)->getBuilding() == SIMULTY_BUILDING_NONE) {
+        if(getTile(x, y)->getZone() == SIMULTY_ZONE_RES)cost -= SIMULTY_COST_RES / 2;
+        if(getTile(x, y)->getZone() == SIMULTY_ZONE_COM)cost -= SIMULTY_COST_COM / 2;
+        if(getTile(x, y)->getZone() == SIMULTY_ZONE_IND)cost -= SIMULTY_COST_IND / 2;
+      }
+    }
+  }
+  return cost;
+}
+
+void Map::markBuilding(Building *b, int type) {
+
+  for(int x = b->getPosition().getX(); x < b->getPosition().getX() + b->getWidth(); x++) {
+    for(int y = b->getPosition().getY(); y < b->getPosition().getY() + b->getHeight(); y++) {
+      getTile(x, y)->setBuilding(type);
+    }
+  }
+
+}
+
+void Map::unmarkBuilding(Building *b) {
+
+  for(int x = b->getPosition().getX(); x < b->getPosition().getX() + b->getWidth(); x++) {
+    for(int y = b->getPosition().getY(); y < b->getPosition().getY() + b->getHeight(); y++) {
+      getTile(x, y)->setBuilding(SIMULTY_BUILDING_NONE);
+    }
+  }
+
 }
 
 
