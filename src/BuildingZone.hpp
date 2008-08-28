@@ -19,6 +19,8 @@ class BuildingZone : public Building {
     unsigned int getStyle();
 
     unsigned int getInhabitants();
+    unsigned int getJobs();
+    unsigned int getStores();
 };
 
 #endif

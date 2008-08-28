@@ -60,6 +60,7 @@ class Point {
     * @param y the x value to add
     */
   void translate(int x, int y);
+  
   /**
     * Translates (adds) the given point to the current point.
     *

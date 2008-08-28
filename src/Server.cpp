@@ -229,12 +229,15 @@ void Server::updateThrive() {
 
   for(unsigned int pi = 0; pi < pman.count(); pi++) {
   
-    Player *p = pman.get_by_n(pi);
+    Player    *player = pman.get_by_n(pi);
+    ThriveMap *tMap   = player->getThriveMap();
   
-    std::cout << "   - Player: " << p->getSlot() << std::endl;
+    std::cout << "   - Player: " << player->getSlot() << std::endl;
 
     for(unsigned int x = 0; x < map->getWidth(); x++) {
       for(unsigned int y = 0; y < map->getHeight(); y++) {
+
+        Point point(x, y);
 
         // Update crime thrive values:
         // ---------------------------------------------------------------------
@@ -248,7 +251,7 @@ void Server::updateThrive() {
         
         for(unsigned int i = 0; i < bman.getSpecialBuildingCount(); i++) {
           if(bman.getSpecialBuilding(i)->getType() == Building::TYPE_POLICE
-              && bman.getSpecialBuilding(i)->getOwner() == p->getSlot()) {
+              && bman.getSpecialBuilding(i)->getOwner() == player->getSlot()) {
             
             int newDistance = Point::distance(Point(x, y),
                 bman.getSpecialBuilding(i)->getPosition() + Point(
@@ -265,31 +268,31 @@ void Server::updateThrive() {
         // the area gets a bad reputation if there isn't one. Will only 
         // return < 1. (TODO: Good reputation (randomed statistics?))
         
-        p->getThriveMap()->updateThrive(x, y, Thrive::TYPE_CRIME, 
-            (100 - distance) / 100);
+        tMap->updateThrive(point, Thrive::TYPE_CRIME, (100 - distance) / 100);
         
         // Update connection thrive
         // ---------------------------------------------------------------------        
-        if(map->getAdjacentRoads(Point(x, y)))
-          p->getThriveMap()->updateThrive(x, y, Thrive::TYPE_CONNECTIVITY, 0.3);
+        if(map->getAdjacentRoads(point))
+          tMap->updateThrive(point, Thrive::TYPE_CONNECTIVITY, 1.0);
         else
-          p->getThriveMap()->updateThrive(x, y, Thrive::TYPE_CONNECTIVITY, 0.0);
+          tMap->updateThrive(point, Thrive::TYPE_CONNECTIVITY, 0.0);
         
         // Update electricity thrive
         // ---------------------------------------------------------------------        
-        p->getThriveMap()->updateThrive(x, y, Thrive::TYPE_ELECTRICITY, 0.0);
+        tMap->updateThrive(point, Thrive::TYPE_ELECTRICITY, 0.0);
         
         // Update taxes thrive
         // ---------------------------------------------------------------------        
-        p->getThriveMap()->updateThrive(x, y, Thrive::TYPE_TAXES, 0.0);
-        
+        double taxThrive = 1.0 - ((double)player->getTax() / 100.0);        
+        tMap->updateThrive(point, Thrive::TYPE_TAXES, taxThrive);
+                
         // Update commerse thrive
         // ---------------------------------------------------------------------
-        p->getThriveMap()->updateThrive(x, y, Thrive::TYPE_COMMERSE, 0.0);
+        tMap->updateThrive(point, Thrive::TYPE_COMMERSE, 0.0);
         
         // Update work thrive
         // ---------------------------------------------------------------------
-        p->getThriveMap()->updateThrive(x, y, Thrive::TYPE_WORKERS, 0.0);
+        tMap->updateThrive(point, Thrive::TYPE_WORKERS, 0.0);
         
         // Update jobs thrive
         // ---------------------------------------------------------------------
@@ -305,9 +308,10 @@ void Server::updateThrive() {
           BuildingZone *b = bman.getZoneBuilding(i);
           if(b->getType() != Building::TYPE_RESIDENTIAL) {  // then you can get a job here
              // Checks at placement should prevent this from going out of bounds
-            if(Point::distance(Point(x, y),
-                Point(b->getPosition().getX() + b->getWidth()/2, 
-                b->getPosition().getY() + b->getHeight()/2)) < 30) {
+            Point bCenter = b->getPosition();
+            bCenter.translate(b->getWidth() / 2, b->getHeight() / 2);
+            
+            if(Point::distance(Point(x, y), bCenter) < 30) {
               // Employer nearby!
               // TODO: Move job functions to BuildingZone::
 
@@ -375,7 +379,7 @@ void Server::updateThrive() {
 
         //return thrive;
         
-        p->getThriveMap()->updateThrive(x, y, Thrive::TYPE_JOBS, 0.0);
+        tMap->updateThrive(point, Thrive::TYPE_JOBS, 0.0);
         
         // Update environment thrive:
         // ---------------------------------------------------------------------
@@ -391,7 +395,7 @@ void Server::updateThrive() {
           }
         }
         
-        p->getThriveMap()->updateThrive(x, y, Thrive::TYPE_ENVIRONMENT, noise / 100);
+        tMap->updateThrive(point, Thrive::TYPE_ENVIRONMENT, noise / 100);
       }
     }
   }
@@ -534,9 +538,7 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
         pman.changeMoney(from->getSlot(), from->getMoney() - cost);
       }
 
-
-
-    break;
+      break;
 
     } case NLPACKET_TYPE_SIMULTY_REQUEST_SPECIAL_BUILDING: {
         NLINT16 buildingType; NLINT32 x, y;
@@ -589,13 +591,36 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
 
         break;
 
-    } default: {
-        std::cerr << "** Got uknown message with id "
-                << NLPACKET_TYPE_SIMULTY_ZONE << " "
-                << pack.getType() << std::endl;
-        pack.print();
+    } case NLPACKET_TYPE_SIMULTY_REQUEST_DEBUG: {
+      
 
-        return false;
+      
+      Point p = Point::fromPacket(pack);
+      
+      std::cout << " PRINTING THRIVE VALUES FOR " << p.getX() << ", " << p.getY() << std::endl;
+
+      std::cout << " Total:  " <<  (double)from->getThriveMap()->getThrive(p) << std::endl;
+      std::cout << " Crime:  " <<  from->getThriveMap()->getThrive(p, Thrive::TYPE_CRIME) << std::endl;
+      std::cout << " Fire:   " <<  from->getThriveMap()->getThrive(p, Thrive::TYPE_FIRE) << std::endl;
+      std::cout << " Health: " <<  from->getThriveMap()->getThrive(p, Thrive::TYPE_HEALTH) << std::endl;
+      
+      std::cout << " Elect.: " <<  from->getThriveMap()->getThrive(p, Thrive::TYPE_ELECTRICITY) << std::endl;
+      std::cout << " Water:  " <<  from->getThriveMap()->getThrive(p, Thrive::TYPE_WATER) << std::endl;
+      std::cout << " Env.:   " <<  from->getThriveMap()->getThrive(p, Thrive::TYPE_ENVIRONMENT) << std::endl;
+      std::cout << " Con.:   " <<  from->getThriveMap()->getThrive(p, Thrive::TYPE_CONNECTIVITY) << std::endl;
+      std::cout << " Taxes:  " <<  from->getThriveMap()->getThrive(p, Thrive::TYPE_TAXES) << std::endl;
+      
+      std::cout << " Jobs:   " <<  from->getThriveMap()->getThrive(p, Thrive::TYPE_JOBS) << std::endl;
+      std::cout << " Com.:   " <<  from->getThriveMap()->getThrive(p, Thrive::TYPE_COMMERSE) << std::endl;
+      std::cout << " Work:   " <<  from->getThriveMap()->getThrive(p, Thrive::TYPE_WORKERS) << std::endl;
+    
+      break;
+    } default: {
+      std::cerr << "** Got uknown message with id "
+          << NLPACKET_TYPE_SIMULTY_ZONE << " " << pack.getType() << std::endl;
+      pack.print();
+
+      return false;
     }
   }
 

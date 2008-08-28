@@ -26,11 +26,11 @@ class ThriveMap {
   ThriveMap(int width, int height);
   ~ThriveMap();
   
-  double getThrive(int x, int y);
+  double getThrive(Point p);
   
-  double getThrive(int x, int y, int type);
-  void   setThrive(int x, int y, int type, double value);
-  void   updateThrive(int x, int y, int type, double value);
+  double getThrive(Point p, int type);
+  void   setThrive(Point p, int type, double value);
+  void   updateThrive(Point p, int type, double value);
   
   double getThriveFactor(int type);
   void   setThriveFactor(int type, double value);

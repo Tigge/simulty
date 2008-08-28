@@ -1,4 +1,8 @@
 
+#ifndef _THRIVE_HPP_
+#define _THRIVE_HPP_
+
+#include "Point.hpp"
 
 class Thrive {
 
@@ -33,4 +37,6 @@ class Thrive {
   }
   
 };
+
+#endif
 

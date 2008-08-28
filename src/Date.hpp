@@ -83,7 +83,7 @@ class Date {
     }
     unsigned int getTimeDiff(Date t1, Date t2) {
 
-      long long int day_diff = (t1.getYear()*12*30 + t1.getMonth()*30 + t1.getDay())
+      long int day_diff = (t1.getYear()*12*30 + t1.getMonth()*30 + t1.getDay())
                 -(t2.getYear()*12*30 + t2.getMonth()*30 + t2.getDay());
       if(day_diff < 0) day_diff *= -1;
 

@@ -39,23 +39,23 @@ class Building {
     Building(Point position, unsigned char owner, int w, int h, Date built);
     virtual ~Building();
 
-    virtual Point getPosition();
-    virtual void  setPosition(Point to);
+    virtual Point         getPosition();
+    virtual void          setPosition(Point to);
 
     virtual unsigned char getType() = 0;
     virtual unsigned char getWidth();
     virtual unsigned char getHeight();
 
-    virtual void setWidth(unsigned char width);
-    virtual void setHeight(unsigned char height);
+    virtual void          setWidth(unsigned char width);
+    virtual void          setHeight(unsigned char height);
 
-    virtual int getOwner();
-    virtual Date getBuildDate();
+    virtual int           getOwner();
+    virtual Date          getBuildDate();
 
     virtual unsigned int getZ();
 
-    virtual void render();
-    virtual void update();
+    virtual void         render();
+    virtual void         update();
 };
 
 #endif

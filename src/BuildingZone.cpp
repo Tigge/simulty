@@ -20,6 +20,15 @@ unsigned int BuildingZone::getInhabitants() {
   if(getType() != Building::TYPE_RESIDENTIAL)
     return 0;
 
-  // We take for granted that no households of more than 1 person is living in a shed. move *level inside pow?
-  return (unsigned int)(pow(width*height, 2.0)) * level;
+  // We take for granted that no households of more than 4 person is living in 
+  // a small villa (size 1). TODO: this should depend on thrive.
+  return (unsigned int)(pow(width * height * level, 2.0)) * 4 ;
 }
+
+unsigned int BuildingZone::getJobs() {
+  if(getType() != Building::TYPE_INDUSTRIAL)
+    return 0;
+  
+  return (unsigned int)(pow(width * height * level, 2.0)) * 4;
+}
+

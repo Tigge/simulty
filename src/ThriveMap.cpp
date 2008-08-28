@@ -32,31 +32,31 @@ ThriveMap::~ThriveMap() {
 }
 
 
-double ThriveMap::getThrive(int x, int y) {
+double ThriveMap::getThrive(Point p) {
   double t = 0.0;  
   for(int i = 0; i < Thrive::TYPE_COUNT; i++) {
-    t += thrive[x + y * width].thrive[i] * thriveCombine[i];
+    t += thrive[p.getX() + p.getY() * width].thrive[i] * thriveCombine[i];
   }
   return t;
 }
 
-double ThriveMap::getThrive(int x, int y, int type) {
-  return thrive[x + y * width].thrive[type];
+double ThriveMap::getThrive(Point p, int type) {
+  return thrive[p.getX() + p.getY() * width].thrive[type];
 }
 
-void ThriveMap::setThrive(int x, int y, int type, double value) {
+void ThriveMap::setThrive(Point p, int type, double value) {
 
 }
 
-void ThriveMap::updateThrive(int x, int y, int type, double value) {
-  thrive[x + y * width].thrive[type] = 
-      thrive[x + y * width].thrive[type] * thriveFactors[type] 
+void ThriveMap::updateThrive(Point p, int type, double value) {
+  thrive[p.getX() + p.getY() * width].thrive[type] = 
+      thrive[p.getX() + p.getY() * width].thrive[type] * thriveFactors[type] 
       + value * (1 - thriveFactors[type]);
   //std::cout << " -- " << x << ", " << y << " = " << type << " = " << value << std::endl;
 }
   
 double ThriveMap::getThriveFactor(int type) {
-
+  return thriveFactors[type];
 }
 
 void ThriveMap::setThriveFactor(int type, double value) {

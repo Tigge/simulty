@@ -19,23 +19,6 @@ class BuildingManager {
   public:
     virtual ~BuildingManager();
 
-    // Thrive values:
-    /*int getCrimeThrive(Map *m, char slot, Point where);
-    int getConnectionThrive(Map *m, char slot, Point where);
-    int getElectricityThrive(Map *m, char slot, Point where);
-    int getTaxesThrive(char slot);
-
-    int getCommersialThrive(Map *m, char slot, Point where);
-    int getIndustrialThrive(Map *m, char slot, Point where);
-    int getResidentialThrive(Map *m, char slot, Point where);
-
-    int getEnvoirmentThrive(Map *m, char slot, Point where); 
-
-    int getThrive(Map *m, char slot, Point where);
-
-    unsigned int getThriveLevel(Map *m, char owner, Point where);
-    unsigned int getThriveLevel(int thrive); */
-
     // Buildings:
     void          addSpecialBuilding(Map *, Building *);
     void          removeSpecialBuilding(Map *, unsigned int id);

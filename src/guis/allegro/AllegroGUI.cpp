@@ -235,6 +235,10 @@ void AllegroGUI::mousePressed (gcn::MouseEvent &e) {
       mouse_down_tile = mouse_up_tile = p;
       usingTool       = true;
     }
+    
+    if(e.getButton() == gcn::MouseEvent::RIGHT) {
+      client->debug(mr->toTileCoord(Point(e.getX(), e.getY()), camera));
+    }
   }
 }
 void AllegroGUI::mouseReleased (gcn::MouseEvent &e) {

@@ -84,6 +84,8 @@ class Client {
     void buyRoad(Point from, Point to);
     void buyZone(Point from, Point to, int type);
     void buyBuilding(Point where, int type);
+    
+    void debug(Point p);
 
     player_client_local *getMyPlayer();
 

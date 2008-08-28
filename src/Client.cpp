@@ -135,6 +135,16 @@ void Client::buyBuilding(Point where, int type) {
   net_client->packet_put(packet);
 }
 
+void Client::debug(Point p) {
+
+  gui->console_log("Debugging");
+  
+  NLPacket packet(NLPACKET_TYPE_SIMULTY_REQUEST_DEBUG);  
+  packet << (NLINT32)p.getX() << (NLINT32)p.getY();
+  net_client->packet_put(packet);
+
+}
+
 void Client::packet_handle(NLPacket p) {
 
   switch(p.getType()) {

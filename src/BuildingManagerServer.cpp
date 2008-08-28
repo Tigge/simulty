@@ -50,7 +50,7 @@ void BuildingManagerServer::updateZoneBuildings(Player *player, Map *map, Date d
             double zb_tot_thrive = 0;
             for(int zb_x = zb->getPosition().getX(); zb_x < zb->getPosition().getX() + zb->getWidth(); zb_x++)
               for(int zb_y = zb->getPosition().getY(); zb_y < zb->getPosition().getY() + zb->getHeight(); zb_y++)
-                zb_tot_thrive += tm->getThrive(x, y);
+                zb_tot_thrive += tm->getThrive(Point(x, y));
             zb_tot_thrive /= zb->getWidth() * zb->getHeight();
 
             
@@ -79,10 +79,10 @@ void BuildingManagerServer::updateZoneBuildings(Player *player, Map *map, Date d
             }
           }
           // If there is no building, we can build here. Is this area attractive enough?
-          else if(tm->getThrive(x, y) > 0) {
+          else if(tm->getThrive(Point(x, y)) > 0) {
           //else if(getThriveLevel(map, player->getSlot(), Point(x,y)) > 0) {
             
-            std::cout << "Thr > 0 at " << x << ", " << y << " = " << tm->getThrive(x, y) << std::endl;
+            std::cout << "Thr > 0 at " << x << ", " << y << " = " << tm->getThrive(Point(x, y)) << std::endl;
             
             // Theoreticly, all zones which meats the minimum value will be inhabited
             int tries = 0;
@@ -110,7 +110,7 @@ void BuildingManagerServer::updateZoneBuildings(Player *player, Map *map, Date d
                       std::cout << " - have road" << std::endl;
                     }
                     
-                    total_thrive += tm->getThrive(tile_x, tile_y);
+                    total_thrive += tm->getThrive(Point(tile_x, tile_y));
                     if(map->getTile(tile_x, tile_y)->getZone() != zone
                     || map->getTile(tile_x, tile_y)->getOwner() != player->getSlot()
                     || map->getTile(tile_x, tile_y)->isRoad()) {

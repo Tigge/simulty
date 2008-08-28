@@ -70,6 +70,8 @@ const unsigned char NLPACKET_TYPE_SIMULTY_REQUEST_SPECIAL_BUILDING = 154;
 const unsigned char NLPACKET_TYPE_SIMULTY_REQUEST_BULLDOZE         = 160;
 const unsigned char NLPACKET_TYPE_SIMULTY_REQUEST_DEZONE           = 161;
 
+const unsigned char NLPACKET_TYPE_SIMULTY_REQUEST_DEBUG            = 255;
+
 // Responese:
 
 const unsigned char NLPACKET_TYPE_SIMULTY_ROAD                     = 200;
