@@ -30,11 +30,11 @@ class Map {
     Map(unsigned int width, unsigned int height);
     virtual ~Map();
 
-    virtual Tile *getTile(unsigned int x, unsigned int y);
-    virtual Tile *getTile(Point p);
+    virtual Tile         *getTile(unsigned int x, unsigned int y);
+    virtual Tile         *getTile(Point p);
 
-    virtual unsigned int getWidth();
-    virtual unsigned int getHeight();
+    virtual unsigned int  getWidth();
+    virtual unsigned int  getHeight();
 
     virtual inline bool outOfBounds(Point p) {
       return (p.getX() < 0 || p.getY() < 0
@@ -60,6 +60,7 @@ class Map {
     virtual void markBuilding(Building *, int);
     virtual void unmarkBuilding(Building *);
 
+    virtual bool          isCloseToRoad(Point p);
     virtual unsigned char getAdjacentRoads(Point at);
     //virtual bool isConnectedToZone(Point start, unsigned char zone);
     virtual bool walkRoad(Point road, unsigned char direction, bool lookFor(Point));

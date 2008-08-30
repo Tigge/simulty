@@ -170,7 +170,7 @@ AllegroGUI::AllegroGUI() {
   console_show = false;
   usingTool    = false;
 
-  economyWindow = new EconomyWindow("Economy");
+  economyWindow = new EconomyWindow();
   top->add(economyWindow, 100, 100);
 
   toolbar       = new Toolbar();
@@ -413,7 +413,7 @@ void AllegroGUI::render() {
         cost = client->map->deZoneCost(client->getMyPlayer()->getSlot(),
             mouse_down_tile, mouse_up_tile);
       }
-      if(cost <= client->getMyPlayer()->getMoney())
+      if(cost <= client->getMyPlayer()->getBudget()->getBalance())
         textprintf_ex(buffer, font, c3.getX(), c3.getY(),
             makecol(0, 0, 0), -1, "%i", cost);
       else
@@ -437,7 +437,7 @@ void AllegroGUI::render() {
 
 
     textprintf_ex(buffer, font, 20, SCREEN_H - 40, makecol(0, 0, 0), -1,
-        "Money: %i", client->getMyPlayer()->getMoney());
+        "Money: %i", client->getMyPlayer()->getBudget()->getBalance());
     textprintf_ex(buffer, font, 20, SCREEN_H - 30, makecol(0, 0, 0), -1,
         "Time: %i %s %i", client->date.getYear(),
         client->date.getMonthAsString().c_str(), client->date.getDay());
@@ -506,6 +506,8 @@ void AllegroGUI::update() {
         client->state_menu = false; client->state_game = SIMULTY_CLIENT_STATE_GAME_START;
       }
     } else if(client->state_game == SIMULTY_CLIENT_STATE_GAME_ON) {
+
+          economyWindow->update(client->getMyPlayer()->getBudget());
 
         if(mouse_y < 15)
           camera.step(DIR_UP, scrollSpeed, client->map->getWidth() * TILE_W

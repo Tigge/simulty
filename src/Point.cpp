@@ -72,14 +72,14 @@ void Point::fixOrder(Point &a, Point &b) {
   }
 }
 
-bool Point::inArea(Point p, Point a, int w, int h) {
+bool Point::inArea(Point a, Point b) {
 
-  if(p.getX() >= a.getX() && p.getX() <= a.getX() + w
-      && p.getY() >= a.getY() && p.getY() <= a.getY() + h)
+  if(getX() >= a.getX() && getX() <= b.getX()
+      && getY() >= a .getY() && getY() <= b.getY()) {
     return true;
-  else
-    return false;
+  }
 
+  return false;
 }
 
 

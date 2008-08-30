@@ -38,6 +38,9 @@ class BuildingManager {
     virtual void  addZoneBuilding(Map *, unsigned char owner, int buildingType,
         Point p, int w, int h, Date built, int level, int style);
     void          removeZoneBuilding(Map *, unsigned int id);
+    
+    int           bulldozeCost(unsigned char player_slot, Map *, Point from, Point to);
+    void          bulldoze(unsigned char player_slot, Map *, Point from, Point to);
 };
 
 #endif

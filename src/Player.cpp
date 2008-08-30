@@ -3,41 +3,18 @@
 
 Player::Player(NLINT32 id_new, NLINT16 slot_new) {
 
-    id    = id_new;
-    slot  = slot_new;
-    type  = PLAYER_TYPE_BASE;
-    money = 20000;
-
-    // Taxes in percantage
-    tax = 10;
-    expences_year = expences_last = 0;
-    //= level_electricity = level_police = level_fire = level_education = 0;
+    // Set ID slot and type
+    id     = id_new;
+    slot   = slot_new;
+    type   = PLAYER_TYPE_BASE;
+    
+    // Assign starting money and tax
+    budget = new Budget(20000);
+    budget->setTax(0.10);
+    
 }
-
-/*
-Player::Player() : Player(-1, -1)
-{
-
-    type = Player_TYPE_BASE;
-    money = 20000;
-}
-*/
 
 Player::~Player() {
-}
-
-int  Player::getMoney() {
-  return money;
-}
-void Player::setMoney(int m) {
-  money = m;
-}
-
-int  Player::getTax() {
-  return tax;
-}
-void Player::setTax(unsigned int tax) {
-  this->tax = tax;
 }
 
 void Player::setThriveMap(ThriveMap *thriveMap) {
@@ -45,6 +22,13 @@ void Player::setThriveMap(ThriveMap *thriveMap) {
 }
 ThriveMap *Player::getThriveMap() {
   return this->thriveMap;
+}
+
+void Player::setBudget(Budget *budget) {
+  this->budget = budget;
+}
+Budget *Player::getBudget() {
+  return this->budget;
 }
 
 void Player::update() {

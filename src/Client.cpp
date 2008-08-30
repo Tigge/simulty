@@ -59,6 +59,7 @@ player_client_local *Client::getMyPlayer() {
 void Client::bulldoze(Point from, Point to) {
 
   gui->console_log("Bulldoze requested");
+  std::cout << "SENDING BULLDOZE REQUEST" << std::endl;
 
   NLPacket packet(NLPACKET_TYPE_SIMULTY_REQUEST_BULLDOZE);
 
@@ -211,16 +212,24 @@ void Client::packet_handle(NLPacket p) {
       date.advance();
       break;
     }
-    case NLPACKET_TYPE_SIMULTY_MONEY_CHANGE: {
+    case NLPACKET_TYPE_SIMULTY_BUDGET_UPDATE: {
 
-      NLINT16 player_affected; NLINT32 money_new;
-      p >> player_affected >> money_new;
+      NLINT16 playerAffected;
+      NLINT16 budgetMonth;
+      NLINT16 budgetItem;
+      NLINT32 balanceUpdate;
 
-      if(player_affected == getMyPlayer()->getSlot()) {
-        getMyPlayer()->setMoney(money_new);
+      p >> playerAffected >> budgetMonth >> budgetItem >> balanceUpdate;
+
+      if(playerAffected == getMyPlayer()->getSlot()) {
+        getMyPlayer()->getBudget()->updateBudgetItem(budgetItem, 
+            budgetMonth, balanceUpdate);
       }
+      
+      std::cout << "Budget changed. Item: " << budgetItem << " Month: " 
+          << budgetMonth << ", Amount: " << balanceUpdate << std::endl;
 
-      gui->console_log("Money changed");
+      gui->console_log("Budget changed");
 
       break;
     }
@@ -312,11 +321,14 @@ void Client::packet_handle(NLPacket p) {
     }
     case NLPACKET_TYPE_SIMULTY_BULLDOZE: {
 
+      std::cout << "GOT BULLDOZE PACKET" << std::endl;
+
       int   sl = p.nextInt16();
       Point fr = Point::fromPacket(p);
       Point to = Point::fromPacket(p);
 
       map->bulldoze(sl, fr, to);
+      bman.bulldoze(sl, map, fr, to);
 
       gui->console_log("Bulldozing");
       break;

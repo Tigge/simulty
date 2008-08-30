@@ -4,6 +4,7 @@
 #include <string>
 #include "NL.hpp"
 
+#include "Budget.hpp"
 #include "ThriveMap.hpp"
 
 const int PLAYER_TYPE_BASE = 0;
@@ -17,12 +18,14 @@ class Player {
     int id;
     int slot;
 
-    int money;
-    int tax;
+    //int money;
+    //int tax;
     int state;
     int type;
-    int expences_year;
-    int expences_last;
+    //int expences_year;
+    //int expences_last;
+    
+    Budget    *budget;
     
     ThriveMap *thriveMap;
     
@@ -34,25 +37,26 @@ class Player {
   // Operations
   public:
 
-    virtual int getId();
-    virtual int getSlot();
-    virtual int getType();
-
-    virtual int getTax();
-    virtual void setTax(unsigned int tax);
-
-    virtual int  getMoney();
-    virtual void setMoney(int m);
-
-    virtual void setThriveMap(ThriveMap *);
-    virtual ThriveMap *getThriveMap();
-  
-    virtual void update();
-
     Player(NLINT32, NLINT16);
     virtual ~Player ();
 
+    virtual int        getId();
+    virtual int        getSlot();
+    virtual int        getType();
 
+    //virtual int        getTax();
+    //virtual void       setTax(unsigned int tax);
+
+    //virtual int        getMoney();
+    //virtual void       setMoney(int m);
+
+    virtual void       setThriveMap(ThriveMap *);
+    virtual ThriveMap *getThriveMap();
+    
+    virtual void       setBudget(Budget *);
+    virtual Budget    *getBudget();
+  
+    virtual void       update();
 };
 
 #endif

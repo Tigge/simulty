@@ -14,7 +14,7 @@ class PlayerManagerServer : public PlayerManager {
   
     virtual int  nextSlot();
     
-    virtual void changeMoney(int slot, int money);
+    //virtual void changeMoney(int slot, int money);
 };
 
 #endif

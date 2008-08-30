@@ -29,7 +29,8 @@ ADD_EXECUTABLE(../simulty-server Server.cpp Point.cpp Map.cpp PlayerManager.cpp
     Building.cpp BuildingZone.cpp BuildingPolice.cpp BuildingFire.cpp
     BuildingHospital.cpp BuildingManager.cpp BuildingFactory.cpp
     BuildingResidential.cpp BuildingCommersial.cpp BuildingIndustrial.cpp
-    PlayerManagerServer.cpp BuildingManagerServer.cpp ThriveMap.cpp)
+    PlayerManagerServer.cpp BuildingManagerServer.cpp ThriveMap.cpp Date.cpp
+    Budget.cpp)
 
 IF(WIN32)
   TARGET_LINK_LIBRARIES(../simulty-server NL elog ${ALLEGRO} wsock32)
@@ -45,10 +46,11 @@ ENDIF(ALLEGROUNSHARABLE-NOTFOUND)
 # Client:
 ###############################################################################
 ADD_EXECUTABLE(../simulty-client Client.cpp Point.cpp Map.cpp PlayerManager.cpp
-    Tile.cpp Player.cpp player_client_local.cpp player_client_remote.cpp
+    Tile.cpp Player.cpp player_client_local.cpp player_client_remote.cpp 
     Building.cpp BuildingZone.cpp BuildingFactory.cpp BuildingFire.cpp
     BuildingHospital.cpp BuildingManager.cpp BuildingPolice.cpp
-    BuildingResidential.cpp BuildingCommersial.cpp BuildingIndustrial.cpp
+    BuildingResidential.cpp BuildingCommersial.cpp BuildingIndustrial.cpp 
+    Date.cpp Budget.cpp
 
     guis/allegro/AllegroGUI.cpp
     guis/allegro/MapRender.cpp

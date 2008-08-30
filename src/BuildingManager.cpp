@@ -116,3 +116,76 @@ void BuildingManager::removeZoneBuilding(Map *m, unsigned int id) {
   m->unmarkBuilding((*b));
   zoneBuildings.erase(b);
 }
+
+int BuildingManager::bulldozeCost(unsigned char player_slot, Map *m, Point from, Point to) {
+
+  std::cout << "Bulldozing from " << from << " to " << to << std::endl;
+
+  int cost = 0;;
+
+  for(unsigned int i = 0; i < getSpecialBuildingCount(); i++) {
+    Building *b = getSpecialBuilding(i);
+    Point     p1 = b->getPosition();
+    Point     p2 = b->getPosition() + Point(b->getWidth(), b->getHeight());
+    
+    if(b->getOwner() == player_slot) {
+      if(p1.inArea(from, to) || p2.inArea(from, to)) {
+        std::cout << "SBuilding in " << p1 << " is in demolition area" << std::endl;
+        cost += 100;
+      }
+    }
+  }
+  
+  for(unsigned int i = 0; i < getZoneBuildingCount(); i++) {
+    BuildingZone *b = getZoneBuilding(i);
+    Point     p1 = b->getPosition();
+    Point     p2 = b->getPosition() + Point(b->getWidth(), b->getHeight());
+
+    if(b->getOwner() == player_slot) {
+      if(p1.inArea(from, to) || p2.inArea(from, to)) {
+        std::cout << "ZBuilding in " << p1 << " is in demolition area" << std::endl;
+        cost += 20 * b->getLevel();
+      }
+    }
+  }
+  
+  
+  return cost;
+
+}
+
+void BuildingManager::bulldoze(unsigned char player_slot, Map *m, Point from, Point to) {
+
+  for(unsigned int i = 0; i < getSpecialBuildingCount();) {
+    Building *b = getSpecialBuilding(i);
+    Point     p1 = b->getPosition();
+    Point     p2 = b->getPosition() + Point(b->getWidth(), b->getHeight());
+
+    if(b->getOwner() == player_slot) {
+      if(p1.inArea(from, to) || p2.inArea(from, to)) {
+        BuildingManager::removeSpecialBuilding(m, i);
+        std::cout << "SBuilding in " << p1 << " is in demoled" << std::endl;
+        continue;
+      }
+    }
+    i++;
+  }
+  
+  for(unsigned int i = 0; i < getZoneBuildingCount();) {
+    BuildingZone *b = getZoneBuilding(i);
+    Point     p1 = b->getPosition();
+    Point     p2 = b->getPosition() + Point(b->getWidth(), b->getHeight());
+
+    std::cout << "ZBuilding in " << p1 << " ";
+
+    if(b->getOwner() == player_slot) {
+      if(p1.inArea(from, to) || p2.inArea(from, to)) {
+        BuildingManager::removeZoneBuilding(m, i);
+        continue;
+        std::cout << " is in demoled" << std::endl;
+      }
+    }
+    i++;
+  }
+}
+

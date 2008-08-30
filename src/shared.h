@@ -87,26 +87,12 @@ const unsigned char NLPACKET_TYPE_SIMULTY_DEZONE                   = 221;
 
 const unsigned char NLPACKET_TYPE_SIMULTY_THRIVEMAP                = 225;
 
-/*
-const unsigned char NPACKET_TYPE_SIMULTY_ROAD_BUILD       = 200;
-const unsigned char NPACKET_TYPE_SIMULTY_ROAD_DESTROY     = 201;
+// Other:
 
-const unsigned char NPACKET_TYPE_SIMULTY_BUILDING_BUILD   = 204;
-const unsigned char NPACKET_TYPE_SIMULTY_BUILDING_DESTROY = 205;
+const unsigned char NLPACKET_TYPE_SIMULTY_TIME_INCR               = 230;
+const unsigned char NLPACKET_TYPE_SIMULTY_TIME_SPEED              = 231;
 
-const unsigned char NPACKET_TYPE_SIMULTY_BULLDOZE         = 220;
-
-const unsigned char NPACKET_TYPE_SIMULTY_LAND_BUY  = 230;
-const unsigned char NPACKET_TYPE_SIMULTY_LAND_SELL = 231;
-
-const unsigned char NPACKET_TYPE_SIMULTY_LAND_ZONE   = 232;
-const unsigned char NPACKET_TYPE_SIMULTY_LAND_DEZONE = 233;
-*/
-
-const unsigned char NLPACKET_TYPE_SIMULTY_TIME_INCR  = 230;
-const unsigned char NLPACKET_TYPE_SIMULTY_TIME_SPEED = 231;
-
-const unsigned char NLPACKET_TYPE_SIMULTY_MONEY_CHANGE = 132;
+const unsigned char NLPACKET_TYPE_SIMULTY_BUDGET_UPDATE           = 132;
 
 
 

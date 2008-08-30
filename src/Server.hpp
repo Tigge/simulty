@@ -43,22 +43,24 @@ class Server {
   
   static Server* instance;
   
-  NLNetwork net;
-  Map *map;
+  NLNetwork      net;
+  Map           *map;
 
-  bool player_add(unsigned char player_type);
-  bool player_remove(Player *);
+  bool           player_add(unsigned char player_type);
+  bool           player_remove(Player *);
 
-  bool packet_handle(player_server_network *from, NLPacket pack);
+  bool           packet_handle(player_server_network *from, NLPacket pack);
 
   PlayerManagerServer   pman;
   BuildingManagerServer bman;
 
-  Date date;
+  Date           date;
 
-  bool time_advance;
-  int speed;
-  NLSocket *net_server;
+  bool           time_advance;
+  int            speed;
+  NLSocket      *net_server;
+
+  void           updateBalance(Player *, unsigned char, unsigned char, int);
 
   protected:
 
@@ -69,22 +71,22 @@ class Server {
   public:
 
   virtual ~Server();
-  static Server *getInstance();
+  static Server         *getInstance();
 
-  void packet_send(player_server_network *to, NLPacket pack);
-  void packet_send_to_all(NLPacket pack);
+  void                   packet_send(player_server_network *to, NLPacket pack);
+  void                   packet_send_to_all(NLPacket pack);
 
-  void setSpeed(int speed);
-  int  getSpeed();
+  void                   setSpeed(int speed);
+  int                    getSpeed();
   
-  Date getDate();
+  Date                   getDate();
   
   PlayerManagerServer   *getPlayerManager();
   BuildingManagerServer *getBuildingManager();
 
-  void static time_increment(void *);
-  void update();
-  void updateThrive();
+  void static            time_increment(void *);
+  void                   update();
+  void                   updateThrive();
 };
 
 extern Server *server;

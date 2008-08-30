@@ -94,7 +94,7 @@ class Point {
   static int  distance(Point a, Point b);
 
   static void fixOrder(Point &a, Point &b);
-  static bool inArea(Point p, Point a, int w, int h);
+  bool inArea(Point a, Point b);
   void unsign();
 
   static Point fromPacket(NLPacket &);

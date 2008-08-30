@@ -62,7 +62,6 @@ void Map::bulldoze(unsigned char owner, Point from, Point to) {
       if(!outOfBounds(Point(x, y))) {
         if(getTile(x, y)->getOwner() == owner) {
           getTile(x, y)->setRoad(false);
-          getTile(x, y)->setZone(0);
         }
       }
     }
@@ -80,7 +79,6 @@ int Map::bulldozeCost(unsigned char owner, Point from, Point to) {
       if(!outOfBounds(Point(x, y))) {
         if(getTile(x, y)->getOwner() == owner) {
           if(getTile(x, y)->isRoad())cost += 10;
-          if(getTile(x, y)->getZone() != 0)cost += 5;
         }
       }
     }
@@ -273,6 +271,19 @@ unsigned char Map::getAdjacentRoads(Point at) {
     maskMe |= ROAD_LEFT;
 
   return maskMe;
+}
+
+bool Map::isCloseToRoad(Point p) {
+
+  const int ROAD_DISTANCE_LIMIT = 3;
+  for(int x = p.getX() - ROAD_DISTANCE_LIMIT; x < p.getX() + ROAD_DISTANCE_LIMIT; x++) {
+    for(int y = p.getY() - ROAD_DISTANCE_LIMIT; y < p.getY() + ROAD_DISTANCE_LIMIT; y++) {
+      if(!outOfBounds(Point(x, y)) && getTile(x, y)->isRoad()) {
+        return true;
+      }
+    }
+  }
+  return false;
 }
 
 /*bool Map::isConnectedToZone(Point start, unsigned char zone) {

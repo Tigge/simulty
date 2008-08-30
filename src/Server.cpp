@@ -148,36 +148,77 @@ void Server::update () {
   // New stuff happening: (TODO: move to function)
   if(time_advance) {
 
+    // Increase date:
+    date.advance();
+
     // Do every new month:
     if(date.isEndOfMonth()) {
       std::cout << "It is now the end of " << date.getMonthAsString() << ", time to update zones" << std::endl;
+      
+      // Update budget
+      for(unsigned int p = 0; p < pman.count(); p++) {
+
+        Player *player = pman.get_by_n(p);
+
+        // Move to PlayerHandlerServer ?
+        int resIncome = 0, comIncome = 0, indIncome = 0;
+        for(unsigned int i = 0; i < bman.getZoneBuildingCount(); i++) {
+          if(bman.getZoneBuilding(i)->getOwner() == player->getSlot()) {
+            resIncome += bman.getZoneBuilding(i)->getInhabitants();
+            comIncome += bman.getZoneBuilding(i)->getStores();
+            indIncome += bman.getZoneBuilding(i)->getJobs();
+          }
+        }
+        
+        int crimeExpense = 0, fireExpense = 0, healthExpense = 0;
+        for(unsigned int i = 0; i < bman.getSpecialBuildingCount(); i++) {
+          if(bman.getSpecialBuilding(i)->getOwner() == player->getSlot()) {
+            int type = bman.getSpecialBuilding(i)->getType();
+              
+            if(type == Building::TYPE_POLICE)
+              crimeExpense -= 100;
+            else if(type == Building::TYPE_FIRE)
+              fireExpense -= 100;
+            else if(type == Building::TYPE_HOSPITAL)
+              healthExpense -= 100;
+          }
+        }
+        
+        resIncome = (double)resIncome / 120.0 / (1.0 - player->getBudget()->getTax());
+        comIncome = (double)comIncome / 120.0 / (1.0 - player->getBudget()->getTax());
+        indIncome = (double)indIncome / 120.0 / (1.0 - player->getBudget()->getTax());
+        
+        int balance  = player->getBudget()->getBalance();
+
+        updateBalance(player, date.getMonth(), 
+            Budget::ITEM_INCOME_TAXES_RESIDENTAL, resIncome);
+        updateBalance(player, date.getMonth(), 
+            Budget::ITEM_INCOME_TAXES_COMMERSIAL, comIncome);
+        updateBalance(player, date.getMonth(), 
+            Budget::ITEM_INCOME_TAXES_INDUSTRIAL, indIncome);
+        
+        updateBalance(player, date.getMonth(), 
+            Budget::ITEM_EXPENSE_CRIME, crimeExpense);
+        updateBalance(player, date.getMonth(), 
+            Budget::ITEM_EXPENSE_FIRE, fireExpense);
+        updateBalance(player, date.getMonth(), 
+            Budget::ITEM_EXPENSE_HEALTH, healthExpense);
+
+      }
+      
+      // Update zones:
       for(unsigned int i = 0; i < pman.count(); i++) {
         bman.updateZoneBuildings(pman.get_by_n(i), map, date.getMonth());
       }
+      
+      
+
     }
     // Do every new year:
     if(date.isEndOfYear()) {
       std::cout << "It is now the end of" << date.getYear() << ", time for *ka-ching!*" << std::endl;
-      for(unsigned int p = 0; p < pman.count(); p++) {
-
-        // Move to PlayerHandlerServer ?
-        int pop = 0;
-        for(unsigned int i = 0; i < bman.getZoneBuildingCount(); i++) {
-          if(bman.getZoneBuilding(i)->getOwner() == pman.get_by_n(p)->getSlot()) {
-
-            pop += bman.getZoneBuilding(i)->getInhabitants();
-          }
-        }
-        int income = pop * (1 + pman.get_by_n(p)->getTax() / 100);
-        int money  = pman.get_by_n(p)->getMoney();
-
-        std::cout << "Player " << p << " now has " << money + income << " money. (income was " << income << ")" << std::endl;
-        pman.changeMoney(pman.get_by_n(p)->getSlot(), money + income);
-      }
+      // TODO:  fix budget stuff
     }
-
-    // Increase date:
-    date.advance();
 
     // Update thrive values
     if(date.getDay() % 5 == 0) {
@@ -272,18 +313,18 @@ void Server::updateThrive() {
         
         // Update connection thrive
         // ---------------------------------------------------------------------        
-        if(map->getAdjacentRoads(point))
+        if(map->isCloseToRoad(point))
           tMap->updateThrive(point, Thrive::TYPE_CONNECTIVITY, 1.0);
         else
           tMap->updateThrive(point, Thrive::TYPE_CONNECTIVITY, 0.0);
         
         // Update electricity thrive
-        // ---------------------------------------------------------------------        
+        // ---------------------------------------------------------------------
         tMap->updateThrive(point, Thrive::TYPE_ELECTRICITY, 0.0);
         
         // Update taxes thrive
-        // ---------------------------------------------------------------------        
-        double taxThrive = 1.0 - ((double)player->getTax() / 100.0);        
+        // ---------------------------------------------------------------------
+        double taxThrive = 1.0 - player->getBudget()->getTax();
         tMap->updateThrive(point, Thrive::TYPE_TAXES, taxThrive);
                 
         // Update commerse thrive
@@ -390,12 +431,14 @@ void Server::updateThrive() {
           BuildingZone *b = bman.getZoneBuilding(i);
           if(b->getType() == Building::TYPE_INDUSTRIAL) {
             int d = Point::distance(Point(x, y), bman.getZoneBuilding(i)->getPosition());
-            if(d < 7)
-              noise += (d * 20) / bman.getZoneBuilding(i)->getLevel();
+            if(d < 10)
+              noise += (10 - d) * bman.getZoneBuilding(i)->getLevel();
           }
         }
-        
-        tMap->updateThrive(point, Thrive::TYPE_ENVIRONMENT, noise / 100);
+        // Small noise = High thrive, logical
+        double noiseThrive = 1 - (sqrt(noise) / 25.0);
+       
+        tMap->updateThrive(point, Thrive::TYPE_ENVIRONMENT, noiseThrive);
       }
     }
   }
@@ -437,9 +480,13 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
       Point fr = Point::fromPacket(pack);
       Point to = Point::fromPacket(pack);
 
+      // Cost to raise stuff on map
       int cost = map->bulldozeCost(from->getSlot(), fr ,to);
-      if(cost <= from->getMoney()) {
+      cost += bman.bulldozeCost(from->getSlot(), map, fr, to);
+      
+      if(cost <= from->getBudget()->getBalance()) {
         map->bulldoze(from->getSlot(), fr, to);
+        bman.bulldoze(from->getSlot(), map, fr, to);
 
         NLPacket packet(NLPACKET_TYPE_SIMULTY_BULLDOZE);
         packet << (NLINT16)from->getSlot() << (NLINT32)fr.getX()
@@ -450,7 +497,7 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
 
         bman.clearArea(map, fr, to);
 
-        pman.changeMoney(from->getSlot(), from->getMoney() - cost);
+        updateBalance(from, date.getMonth(), Budget::ITEM_EXPENSE_BUILD, -cost);
       }
 
       break;
@@ -469,7 +516,8 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
              << (NLINT32)to.getY();
              
       packet_send_to_all(packet);
-      pman.changeMoney(from->getSlot(), from->getMoney() - cost);
+      
+      updateBalance(from, date.getMonth(), Budget::ITEM_EXPENSE_BUILD, -cost);
       
       break;
     }
@@ -481,7 +529,7 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
       Point to = Point::fromPacket(pack);
 
       int cost = map->buyLandCost(from->getSlot(), fr, to);
-      if(cost <= from->getMoney()) {
+      if(cost <= from->getBudget()->getBalance()) {
         map->buyLand(from->getSlot(), fr, to);
 
         NLPacket packet(NLPACKET_TYPE_SIMULTY_LAND);
@@ -490,7 +538,8 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
                << (NLINT32)to.getY();
 
         packet_send_to_all(packet);
-        pman.changeMoney(from->getSlot(), from->getMoney() - cost);
+        
+        updateBalance(from, date.getMonth(), Budget::ITEM_EXPENSE_BUILD, -cost);
       }
 
       break;
@@ -503,7 +552,7 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
 
       std::cerr << "(" << fr.getX() << ", " << fr.getY() << ") -> (" << to.getX() << ", " << to.getY() << ")" << std::endl;
       int cost = map->buildRoadCost(from->getSlot(), fr, to);
-      if(cost <= from->getMoney()) {
+      if(cost <= from->getBudget()->getBalance()) {
         map->buildRoad(from->getSlot(), fr, to);
 
         NLPacket packet(NLPACKET_TYPE_SIMULTY_ROAD);
@@ -511,7 +560,8 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
                << (NLINT32)fr.getY()       << (NLINT32)to.getX()
                << (NLINT32)to.getY();
         packet_send_to_all(packet);
-        pman.changeMoney(from->getSlot(), from->getMoney() - cost);
+
+        updateBalance(from, date.getMonth(), Budget::ITEM_EXPENSE_BUILD, -cost);
       }
 
       break;
@@ -525,7 +575,7 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
 
       int cost = map->buildZoneCost(from->getSlot(), tp, fr, to);
 
-      if(cost <= from->getMoney()) {
+      if(cost <= from->getBudget()->getBalance()) {
 
         map->buildZone(from->getSlot(), tp, fr, to);
 
@@ -535,7 +585,8 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
                 << (NLINT32)to.getX() << (NLINT32)to.getY();
 
         packet_send_to_all(zonepak);
-        pman.changeMoney(from->getSlot(), from->getMoney() - cost);
+        
+        updateBalance(from, date.getMonth(), Budget::ITEM_EXPENSE_BUILD, -cost);
       }
 
       break;
@@ -575,7 +626,8 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
               std::cerr << "Space is not good" << std::endl;
             }
 
-            if(cost <= from->getMoney()  && bman.canBuildSpecialBuilding(b, from->getSlot(), map)) {
+            if(cost <= from->getBudget()->getBalance()  
+                && bman.canBuildSpecialBuilding(b, from->getSlot(), map)) {
 
               bman.addSpecialBuilding(map, b);
 
@@ -583,7 +635,7 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
               packet << (NLINT16)from->getSlot() << buildingType << x << y;
               packet_send_to_all(packet);
 
-              pman.changeMoney(from->getSlot(), from->getMoney() - cost);
+              updateBalance(from, date.getMonth(), Budget::ITEM_EXPENSE_BUILD, -cost);
             } else {
               delete b;
             }
@@ -624,7 +676,7 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
     }
   }
 
-  std::cerr << "Player has " << from->getMoney() << " money!" << std::endl;
+  std::cerr << "Player has " << from->getBudget()->getBalance() << " money!" << std::endl;
   return true;
 }
 
@@ -651,6 +703,29 @@ void Server::packet_send_to_all(NLPacket pack)
         }
     }
 
+}
+void Server::updateBalance(Player *p, unsigned char m, unsigned char t, int b) {
+
+  if(b != 0) {
+
+    // Update budget
+    Budget *budget = p->getBudget();
+    budget->updateBudgetItem(m, t, b);
+    
+    std::cout << "Updating budget. Item: " << (int)t << ", Month: " << (int)m << ", Balance: " << b << std::endl;
+    std::cout << "Player count: " << pman.count() << std::endl;
+    std::cout << "player %p - from arg  " << (int)p << std::endl;
+    std::cout << "player %p - from pman " << (int)pman.get_by_n(0) << std::endl;
+    std::cout << "Player id " << p->getId() << std::endl; 
+    std::cout << "Player slot " << p->getSlot() << std::endl;
+    // Tell about it
+    NLPacket packet(NLPACKET_TYPE_SIMULTY_BUDGET_UPDATE);
+    packet << (NLINT16)p->getSlot();
+    packet << (NLINT16)m;
+    packet << (NLINT16)t;
+    packet << (NLINT32)b;
+    packet_send_to_all(packet);
+  }
 }
 
 // PLAYER HANDLING:

@@ -32,3 +32,11 @@ unsigned int BuildingZone::getJobs() {
   return (unsigned int)(pow(width * height * level, 2.0)) * 4;
 }
 
+
+unsigned int BuildingZone::getStores() {
+  if(getType() != Building::TYPE_COMMERSIAL)
+    return 0;
+
+  return (unsigned int)(pow(width * height * level, 2.0)) * 4;
+}
+

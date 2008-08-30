@@ -31,6 +31,7 @@ int  PlayerManagerServer::nextSlot()
 
 }
 
+/*
 void PlayerManagerServer::changeMoney(int slot, int money) {
 
   Player *p = get_by_slot(slot);
@@ -45,3 +46,4 @@ void PlayerManagerServer::changeMoney(int slot, int money) {
   }
 
 }
+*/
