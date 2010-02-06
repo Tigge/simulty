@@ -1,5 +1,5 @@
-
 SUBDIRS(NL error)
+INCLUDE(FindSDL)
 
 IF(WIN32)
   SET(CMAKE_CXX_FLAGS "-D__GTHREAD_HIDE_WIN32API -g -Wall")
@@ -9,18 +9,38 @@ ELSE(WIN32)
   SET(CMAKE_CXX_FLAGS_DEBUG "-g -Wall -pedantic")
 ENDIF(WIN32)
 
+# SDL
+##############################################################################
 
-# TODO: Fix allegro unshareable problem
+Find_Package ( SDL       REQUIRED )
+Find_Package ( SDL_image REQUIRED )
+Find_Package ( SDL_mixer REQUIRED )
+Find_Package ( SDL_ttf   REQUIRED )
 
-FIND_LIBRARY(ALLEGRO NAMES alld-4.2.1 alld-4.2.0 alld)
-FIND_LIBRARY(GUICHAN NAMES guichan)
-FIND_LIBRARY(GUICHANALLEGRO NAMES guichan_allegro)
-FIND_LIBRARY(ALLEGROUNSHARABLE NAMES alld_unsharable)
-FIND_LIBRARY(GLYPHKEEPER glyph-alleg)
+if ( NOT SDL_FOUND )
+   message ( FATAL_ERROR "SDL not found!" )
+endif ( NOT SDL_FOUND )
 
-INCLUDE_DIRECTORIES(${Simulty_SOURCE_DIR}/src/NL ${Simulty_SOURCE_DIR}/src/error /usr/local/include)
+link_libraries (
+   ${SDL_LIBRARY}
+   ${SDLIMAGE_LIBRARY}
+   ${SDLTTF_LIBRARY}
+   SDLmain
+)
 
-LINK_DIRECTORIES(${Simulty_BINARY_DIR}/src/NL ${Simulty_BINARY_DIR}/src/error /usr/local/lib L/usr/X11R6/lib)
+# GUICHAN
+################################################################################
+
+Find_Library(GUICHAN NAMES guichan)
+Find_Library(GUICHANSDL NAMES guichan_sdl)
+
+
+INCLUDE_DIRECTORIES(${Simulty_SOURCE_DIR}/src/NL 
+                    ${Simulty_SOURCE_DIR}/src/error
+                    ${SDL_INCLUDE_DIR})
+
+LINK_DIRECTORIES(${Simulty_BINARY_DIR}/src/NL 
+                 ${Simulty_BINARY_DIR}/src/error)
 
 # Server:
 ###############################################################################
@@ -32,16 +52,7 @@ ADD_EXECUTABLE(../simulty-server Server.cpp Point.cpp Map.cpp PlayerManager.cpp
     PlayerManagerServer.cpp BuildingManagerServer.cpp ThriveMap.cpp Date.cpp
     Budget.cpp)
 
-IF(WIN32)
-  TARGET_LINK_LIBRARIES(../simulty-server NL elog ${ALLEGRO} wsock32)
-ELSE(WIN32)
-  TARGET_LINK_LIBRARIES(../simulty-server NL elog ${ALLEGRO})
-ENDIF(WIN32)
-
-IF(ALLEGROUNSHARABLE-NOTFOUND)
-ELSE(ALLEGROUNSHARABLE-NOTFOUND)
-  TARGET_LINK_LIBRARIES(../simulty-server ${ALLEGROUNSHARABLE})
-ENDIF(ALLEGROUNSHARABLE-NOTFOUND)
+target_link_libraries(../simulty-server NL elog)
 
 # Client:
 ###############################################################################
@@ -52,24 +63,13 @@ ADD_EXECUTABLE(../simulty-client Client.cpp Point.cpp Map.cpp PlayerManager.cpp
     BuildingResidential.cpp BuildingCommersial.cpp BuildingIndustrial.cpp 
     Date.cpp Budget.cpp
 
-    guis/allegro/AllegroGUI.cpp
-    guis/allegro/MapRender.cpp
-    guis/allegro/BuildingRender.cpp
-    guis/allegro/Mouse.cpp
-    guis/allegro/Camera.cpp
-    guis/allegro/widgets/MiniMap.cpp 
-    guis/allegro/widgets/allegrotruetypefont.cpp
-    guis/allegro/widgets/EconomyWindow.cpp
-    guis/allegro/widgets/Toolbar.cpp)
-
-IF(WIN32)
-  TARGET_LINK_LIBRARIES(../simulty-client NL elog ${GLYPHKEEPER} ${ALLEGRO} ${GUICHAN} ${GUICHANALLEGRO} wsock32 )
-ELSE(WIN32)
-  TARGET_LINK_LIBRARIES(../simulty-client NL elog ${GLYPHKEEPER} ${ALLEGRO} ${GUICHAN} ${GUICHANALLEGRO})
-ENDIF(WIN32)
-
-IF(ALLEGROUNSHARABLE-NOTFOUND)
-ELSE(ALLEGROUNSHARABLE-NOTFOUND)
-  TARGET_LINK_LIBRARIES(../simulty-client ${ALLEGROUNSHARABLE})
-ENDIF(ALLEGROUNSHARABLE-NOTFOUND)
-
+    guis/sdl/SDLGUI.cpp
+    guis/sdl/Camera.cpp
+    guis/sdl/MapRender.cpp
+    guis/sdl/BuildingRender.cpp
+    guis/sdl/widgets/MainMenu.cpp
+    guis/sdl/widgets/Toolbar.cpp
+    guis/sdl/widgets/MiniMap.cpp
+    guis/sdl/widgets/sdltruetypefont.cpp)
+    
+target_link_libraries(../simulty-client NL elog ${GUICHAN} ${GUICHANSDL})
