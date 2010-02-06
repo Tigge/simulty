@@ -6,6 +6,7 @@
 
 #include <vector>
 #include <iostream>
+#include <cstdio>
 
 class NLNetwork {
 
