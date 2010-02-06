@@ -6,6 +6,7 @@
 #include <exception>
 #include <string>
 #include <sstream>
+#include <cstdlib>
 
 #ifdef unix
 #ifdef __GNUC__
