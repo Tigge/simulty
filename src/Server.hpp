@@ -1,10 +1,7 @@
 #ifndef _SERVER_HPP_
 #define _SERVER_HPP_
 
-#include "allegro.h"
-#ifdef WIN32
-  #include "winalleg.h"
-#endif
+#include "SDL.h"
 
 #include "NL.hpp"
 
@@ -62,6 +59,8 @@ class Server {
 
   void           updateBalance(Player *, unsigned char, unsigned char, int);
 
+  SDL_TimerID    timerId;
+
   protected:
 
   Server();
@@ -84,7 +83,7 @@ class Server {
   PlayerManagerServer   *getPlayerManager();
   BuildingManagerServer *getBuildingManager();
 
-  void static            time_increment(void *);
+  Uint32 static          time_increment(Uint32, void *);
   void                   update();
   void                   updateThrive();
 };

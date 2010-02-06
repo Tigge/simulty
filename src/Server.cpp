@@ -35,7 +35,7 @@ int main(int argc, char *argv[]) {
 
     while(true) {
         server->update();
-        rest(0);
+        SDL_Delay(1);
     }
 
     delete server;
@@ -48,8 +48,7 @@ int main(int argc, char *argv[]) {
 
   }
   return 0;
-} END_OF_MAIN()
-
+}
 
 Server* Server::getInstance() {
   if (instance == NULL) {
@@ -62,13 +61,10 @@ Server* Server::getInstance() {
 // =====================================================================
 Server::Server() {
 
-  allegro_init();
-
-  install_timer();
-
+  SDL_Init(SDL_INIT_TIMER);
+  
   net_server = net.add();
   net_server->listen_on(5557);
-
 
   std::cout << "  _______ __                  __ __         " << std::endl;
   std::cout << " |     __|__|.--------.--.--.|  |  |_.--.--." << std::endl;
@@ -107,10 +103,10 @@ Server::~Server() {
 
 // Timer called once every second: TODO, make static!
 // =====================================================================
-void Server::time_increment(void *object) {
+Uint32 Server::time_increment(Uint32 interval, void *object) {
     ((Server *)object)->time_advance = true;
-} END_OF_FUNCTION()
-
+    return interval;
+}
 
 void Server::setSpeed(int speed) {
   if(speed >= 0 && speed <= 3) {
@@ -122,9 +118,10 @@ void Server::setSpeed(int speed) {
         case 2: msec = 400;  break;
         case 3: msec = 200;  break;
       }
-      install_param_int_ex(Server::time_increment, this, MSEC_TO_TIMER(msec));
+      SDL_RemoveTimer(timerId);
+      timerId = SDL_AddTimer(msec, Server::time_increment, this);
     } else {
-      remove_param_int(Server::time_increment, this);
+      SDL_RemoveTimer(timerId);
     }
   } else {
     throw SIMULTYEXCEPTION("The specified speed is not valid");
