@@ -42,6 +42,8 @@ class SDLGUI : public GUI, gcn::KeyListener, gcn::ActionListener, gcn::MouseList
   void render();
   void update();
   
+  void run();
+  
   private:
   
   gcn::SDLInput         *input;
@@ -71,8 +73,6 @@ class SDLGUI : public GUI, gcn::KeyListener, gcn::ActionListener, gcn::MouseList
   Point           mouse_up_tile;
     
   bool usingTool;
-  
-  int lmx, lmy;
   
   void init();
   

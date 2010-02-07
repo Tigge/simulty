@@ -12,6 +12,16 @@ BuildingRender::BuildingRender() {
     buildingHospital    = ImageLoader::getImage("img/special/hospital.pcx");
     //buildingResidential = ImageLoader::getImage("img/special/res.pcx");
 
+    buildingHouse1x1    = ImageLoader::getImage("img/buildings/house_1x1.png");
+    buildingHouse1x2    = ImageLoader::getImage("img/buildings/house_1x2.png");
+    buildingHouse1x3    = ImageLoader::getImage("img/buildings/house_1x3.png");
+    buildingHouse2x1    = ImageLoader::getImage("img/buildings/house_2x1.png");
+    buildingHouse2x2    = ImageLoader::getImage("img/buildings/house_2x2.png");
+    buildingHouse2x3    = ImageLoader::getImage("img/buildings/house_2x3.png");
+    buildingHouse3x1    = ImageLoader::getImage("img/buildings/house_3x1.png");
+    buildingHouse3x2    = ImageLoader::getImage("img/buildings/house_3x2.png");
+    buildingHouse3x3    = ImageLoader::getImage("img/buildings/house_3x3.png");
+
   } catch(ImageLoaderException e) {
     std::cout << "Error: " << e.what();
     exit(1);
@@ -24,6 +34,41 @@ BuildingRender::~BuildingRender() {
   SDL_FreeSurface(buildingFire);
   SDL_FreeSurface(buildingHospital);
   //SDL_FreeSurface(buildingResidential);
+  
+  SDL_FreeSurface(buildingHouse1x1);
+  SDL_FreeSurface(buildingHouse1x2);
+  SDL_FreeSurface(buildingHouse1x3);
+  SDL_FreeSurface(buildingHouse2x1);
+  SDL_FreeSurface(buildingHouse2x2);
+  SDL_FreeSurface(buildingHouse2x3);
+  SDL_FreeSurface(buildingHouse3x1);
+  SDL_FreeSurface(buildingHouse3x2);
+  SDL_FreeSurface(buildingHouse3x3);
+}
+
+SDL_Surface *BuildingRender::getZoneBuilding(int w, int h) {
+  if(w == 1 && h == 1) {
+    return buildingHouse1x1;
+  } else if(w == 1 && h == 2) {
+    return buildingHouse1x2;
+  } else if(w == 1 && h == 3) {
+    return buildingHouse1x3;
+  } else if(w == 2 && h == 1) {
+    return buildingHouse2x1;
+  } else if(w == 2 && h == 2) {
+    return buildingHouse2x2;
+  } else if(w == 2 && h == 3) {
+    return buildingHouse2x3;
+  } else if(w == 3 && h == 1) {
+    return buildingHouse3x1;
+  } else if(w == 3 && h == 2) {
+    return buildingHouse3x2;
+  } else if(w == 3 && h == 3) {
+    return buildingHouse3x3;
+  } else {
+    std::cout << "Unkown house " << w << "x" << h << std::endl;
+    throw "unknown house";
+  }
 }
 
 void BuildingRender::renderBuilding(SDL_Surface *r, Building *b, Point where) {
@@ -31,6 +76,14 @@ void BuildingRender::renderBuilding(SDL_Surface *r, Building *b, Point where) {
   if(b->getType() == Building::TYPE_COMMERSIAL
   || b->getType() == Building::TYPE_INDUSTRIAL
   || b->getType() == Building::TYPE_RESIDENTIAL) {
+  
+    //std::cout << "building: " << (int)b->getWidth() << ", " << (int)b->getHeight() << std::endl;
+    //std::cout << "building: " << where.getX() << ", " << where.getY() << std::endl;
+    SDL_Surface *bs = getZoneBuilding(b->getWidth(), b->getHeight());
+    
+    SDL_Rect dst = {where.getX() - TILE_W / 2 * (b->getWidth() - 1), 
+        where.getY() - bs->h + TILE_H / 2 * (b->getHeight() + b->getWidth()), bs->w, bs->h};
+    SDL_BlitSurface(bs, NULL, r, &dst);
     /*
     int color = makecol(255, 255, 255);
 
