@@ -11,12 +11,7 @@ int main(int argc, char *argv[]) {
     SDLGUI *gui = new SDLGUI();
     std::cerr << "New game client" << std::endl;
 
-    while(true) {
-    
-      gui->update();
-      gui->render();
-      //rest(0);
-    }
+    gui->run();
 
     std::cerr << "Deleting game client..." << std::endl;
     delete gui;
@@ -113,6 +108,15 @@ void SDLGUI::init() {
   top->add(toolbar, screen->w - 10 - toolbar->getWidth(), 10);
 }
 
+void SDLGUI::run() {
+  while(true) {
+    
+    update();
+    render();
+      //rest(0);
+  }
+}
+
 
 void SDLGUI::console_log(std::string s) {
   return;
@@ -173,6 +177,9 @@ void SDLGUI::mouseDragged (gcn::MouseEvent &e) {
 void SDLGUI::mousePressed (gcn::MouseEvent &e) {
   if(e.getSource() == top) {
     Point p = mr->toTileCoord(Point(e.getX(), e.getY()), camera);
+    
+    std::cout << "Point: " << p << std::endl;
+    
     if(!client->map->outOfBounds(p)) {
       mouse_down_tile = mouse_up_tile = p;
       usingTool       = true;
