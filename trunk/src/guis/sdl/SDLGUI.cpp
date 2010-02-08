@@ -157,44 +157,60 @@ void SDLGUI::render() {
 
 void SDLGUI::mouseDragged (gcn::MouseEvent &e) {
 
-  std::cout << "mouse dragged" << e.getX() << ", " << e.getY() << std::endl;
+  if(e.getSource() == top && e.getButton() == gcn::MouseEvent::RIGHT) {
+    camera.translate(mx - e.getX(), my - e.getY());
+    mx = e.getX();
+    my = e.getY();
+  } else {
 
-  if(e.getSource() == top) {
-    Point p = mr->toTileCoord(Point(e.getX(), e.getY()), camera);
-    if(p.getX() < 0)
-      p.setX(0);
-    if(p.getY() < 0)
-      p.setY(0);
-    if(p.getX() >= (int)client->map->getWidth())
-      p.setX((int)client->map->getWidth() - 1);
-    if(p.getY() >= (int)client->map->getHeight())
-      p.setY((int)client->map->getHeight() - 1);
+    std::cout << "mouse dragged" << e.getX() << ", " << e.getY() << std::endl;
 
-    mouse_up_tile = p;
+    if(e.getSource() == top) {
+      Point p = mr->toTileCoord(Point(e.getX(), e.getY()), camera);
+      if(p.getX() < 0)
+        p.setX(0);
+      if(p.getY() < 0)
+        p.setY(0);
+      if(p.getX() >= (int)client->map->getWidth())
+        p.setX((int)client->map->getWidth() - 1);
+      if(p.getY() >= (int)client->map->getHeight())
+        p.setY((int)client->map->getHeight() - 1);
+
+      mouse_up_tile = p;
+    }
   }
 }
 
 void SDLGUI::mousePressed (gcn::MouseEvent &e) {
-  if(e.getSource() == top) {
-    Point p = mr->toTileCoord(Point(e.getX(), e.getY()), camera);
-    
-    std::cout << "Point: " << p << std::endl;
-    
-    if(!client->map->outOfBounds(p)) {
-      mouse_down_tile = mouse_up_tile = p;
-      usingTool       = true;
-    }
-    
-    if(e.getButton() == gcn::MouseEvent::RIGHT) {
-      client->debug(mr->toTileCoord(Point(e.getX(), e.getY()), camera));
+
+  if(e.getSource() == top && e.getButton() == gcn::MouseEvent::RIGHT) {
+    mx = e.getX();
+    my = e.getY();
+  } else {
+
+    if(e.getSource() == top) {
+      Point p = mr->toTileCoord(Point(e.getX(), e.getY()), camera);
+      
+      std::cout << "Point: " << p << std::endl;
+      
+      if(!client->map->outOfBounds(p)) {
+        mouse_down_tile = mouse_up_tile = p;
+        usingTool       = true;
+      }
+      
+      if(e.getButton() == gcn::MouseEvent::RIGHT) {
+        client->debug(mr->toTileCoord(Point(e.getX(), e.getY()), camera));
+      }
     }
   }
 }
 
 void SDLGUI::mouseReleased (gcn::MouseEvent &e) {
-  if(e.getSource() == top) {
+  if(e.getSource() == top && e.getButton() == gcn::MouseEvent::RIGHT) {
+    
+  } else {
 
-  std::cout << "mouse dragged" << mouse_down_tile << ", " << mouse_up_tile << std::endl;
+    std::cout << "mouse dragged" << mouse_down_tile << ", " << mouse_up_tile << std::endl;
 
     if(usingTool) {
 
