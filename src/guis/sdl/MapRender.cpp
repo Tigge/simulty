@@ -8,11 +8,11 @@ MapRender::MapRender() {
   // Try to load all images:
   try {
 
-    t_zone_res   = ImageLoader::getImage("img/terrain_zone_res.pcx");
-    t_zone_com   = ImageLoader::getImage("img/terrain_zone_com.pcx");
-    t_zone_ind   = ImageLoader::getImage("img/terrain_zone_ind.pcx");
+    t_zone_res   = ImageLoader::getImage("img/terrain/terrain_zone_res.pcx");
+    t_zone_com   = ImageLoader::getImage("img/terrain/terrain_zone_com.pcx");
+    t_zone_ind   = ImageLoader::getImage("img/terrain/terrain_zone_ind.pcx");
 
-    t_owned      = ImageLoader::getImage("img/terrain_owned_2.pcx");
+    t_owned      = ImageLoader::getImage("img/terrain/terrain_owned_2.pcx");
 
     t_border     = new SDL_Surface *[4];
     t_border[DIR_UP]    = ImageLoader::getImage("img/line_up_terrain.pcx");
@@ -23,41 +23,41 @@ MapRender::MapRender() {
     mouse_hint   = ImageLoader::getImage("img/mouse_hint.pcx");
 
     t_terrain    = new SDL_Surface*[1];
-    t_terrain[0] = ImageLoader::getImage("img/terrain_grass_1.pcx");
+    t_terrain[0] = ImageLoader::getImage("img/terrain/terrain_grass_1.pcx");
 
     t_roads      = new SDL_Surface*[16];
 
     // Single road tile:
-    t_roads[0]   = ImageLoader::getImage("img/road_straight_ns_1.pcx");
+    t_roads[0]   = ImageLoader::getImage("img/roads/road_straight_ns_1.pcx");
 
     // End tiles:
-    t_roads[1]   = ImageLoader::getImage("img/road_straight_ns_1.pcx");
-    t_roads[2]   = ImageLoader::getImage("img/road_straight_ew_1.pcx");
-    t_roads[4]   = ImageLoader::getImage("img/road_straight_ns_1.pcx");
-    t_roads[8]   = ImageLoader::getImage("img/road_straight_ew_1.pcx");
+    t_roads[1]   = ImageLoader::getImage("img/roads/road_straight_ns_1.pcx");
+    t_roads[2]   = ImageLoader::getImage("img/roads/road_straight_ew_1.pcx");
+    t_roads[4]   = ImageLoader::getImage("img/roads/road_straight_ns_1.pcx");
+    t_roads[8]   = ImageLoader::getImage("img/roads/road_straight_ew_1.pcx");
 
     // Straight:
 
-    t_roads[5]   = ImageLoader::getImage("img/road_straight_ns_1.pcx");
-    t_roads[10]  = ImageLoader::getImage("img/road_straight_ew_1.pcx");
+    t_roads[5]   = ImageLoader::getImage("img/roads/road_straight_ns_1.pcx");
+    t_roads[10]  = ImageLoader::getImage("img/roads/road_straight_ew_1.pcx");
 
 
     // Corners:
-    t_roads[3]   = ImageLoader::getImage("img/road_corner_ne_1.pcx");
-    t_roads[6]   = ImageLoader::getImage("img/road_corner_es_1.pcx");
-    t_roads[12]  = ImageLoader::getImage("img/road_corner_sw_1.pcx");
-    t_roads[9]   = ImageLoader::getImage("img/road_corner_wn_1.pcx");
+    t_roads[3]   = ImageLoader::getImage("img/roads/road_corner_ne_1.pcx");
+    t_roads[6]   = ImageLoader::getImage("img/roads/road_corner_es_1.pcx");
+    t_roads[12]  = ImageLoader::getImage("img/roads/road_corner_sw_1.pcx");
+    t_roads[9]   = ImageLoader::getImage("img/roads/road_corner_wn_1.pcx");
 
     // Intersections: (3 way)
 
-    t_roads[7]   = ImageLoader::getImage("img/road_intersection_nes_1.pcx");
-    t_roads[14]  = ImageLoader::getImage("img/road_intersection_esw_1.pcx");
-    t_roads[13]  = ImageLoader::getImage("img/road_intersection_swn_1.pcx");
-    t_roads[11]  = ImageLoader::getImage("img/road_intersection_wne_1.pcx");
+    t_roads[7]   = ImageLoader::getImage("img/roads/road_intersection_nes_1.pcx");
+    t_roads[14]  = ImageLoader::getImage("img/roads/road_intersection_esw_1.pcx");
+    t_roads[13]  = ImageLoader::getImage("img/roads/road_intersection_swn_1.pcx");
+    t_roads[11]  = ImageLoader::getImage("img/roads/road_intersection_wne_1.pcx");
 
     // Intersections: (4 way)
 
-    t_roads[15]  = ImageLoader::getImage("img/road_intersection_nesw_1.pcx");
+    t_roads[15]  = ImageLoader::getImage("img/roads/road_intersection_nesw_1.pcx");
 
   } catch(ImageLoaderException e) {
     std::cout << "Error: " << e.what();
