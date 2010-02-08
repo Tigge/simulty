@@ -54,6 +54,7 @@ class SDLGUI : public GUI, gcn::KeyListener, gcn::ActionListener, gcn::MouseList
   gcn::Container        *top;
   gcn::contrib::SDLTrueTypeFont  *guiFont;
   Toolbar                        *toolbar;
+  MiniMap                        *miniMap;
   
   
   SDL_Surface *screen;

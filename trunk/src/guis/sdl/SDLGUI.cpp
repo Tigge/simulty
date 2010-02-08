@@ -106,6 +106,10 @@ void SDLGUI::init() {
   
   toolbar       = new Toolbar();
   top->add(toolbar, screen->w - 10 - toolbar->getWidth(), 10);
+  
+  miniMap       = new MiniMap(client->map, &camera);
+  top->add(miniMap, screen->w - miniMap->getWidth(),
+      screen->h - miniMap->getHeight());
 }
 
 void SDLGUI::run() {

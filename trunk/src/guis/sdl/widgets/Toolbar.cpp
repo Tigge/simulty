@@ -9,54 +9,54 @@ Toolbar::Toolbar() : gcn::Container() {
 
   gcn::ImageLoader *imageLoader = gcn::Image::getImageLoader();
 
-  indIcon   = imageLoader->load("img/menu_icon_ind.pcx", true);
+  indIcon   = imageLoader->load("img/icons/menu_icon_ind.pcx", true);
   indButton = new gcn::ImageButton(indIcon);
   indButton->addActionListener(this);
   add(indButton, 0, 0);
 
-  comIcon   = imageLoader->load("img/menu_icon_com.pcx", true);
+  comIcon   = imageLoader->load("img/icons/menu_icon_com.pcx", true);
   comButton = new gcn::ImageButton(comIcon);
   comButton->addActionListener(this);
   add(comButton, 45, 0);
 
-  resIcon   = imageLoader->load("img/menu_icon_res.pcx", true);
+  resIcon   = imageLoader->load("img/icons/menu_icon_res.pcx", true);
   resButton = new gcn::ImageButton(resIcon);
   resButton->addActionListener(this);
   add(resButton, 0, 45);
 
-  roadIcon  = imageLoader->load("img/menu_icon_road.pcx", true);
+  roadIcon  = imageLoader->load("img/icons/menu_icon_road.pcx", true);
   roadButton = new gcn::ImageButton(roadIcon);
   roadButton->addActionListener(this);
   add(roadButton, 45, 45);
 
-  landIcon  = imageLoader->load("img/menu_icon_land.pcx", true);
+  landIcon  = imageLoader->load("img/icons/menu_icon_land.pcx", true);
   landButton = new gcn::ImageButton(landIcon);
   landButton->addActionListener(this);
   add(landButton, 0, 90);
 
 
-  policeIcon   = imageLoader->load("img/menu_icon_police.pcx", true);
+  policeIcon   = imageLoader->load("img/icons/menu_icon_police.pcx", true);
   policeButton = new gcn::ImageButton(policeIcon);
   policeButton->addActionListener(this);
   add(policeButton, 45, 90);
 
-  fireIcon  = imageLoader->load("img/menu_icon_fire.pcx", true);
+  fireIcon  = imageLoader->load("img/icons/menu_icon_fire.pcx", true);
   fireButton = new gcn::ImageButton(fireIcon);
   fireButton->addActionListener(this);
   add(fireButton, 0, 135);
 
 
-  hospitalIcon  = imageLoader->load("img/menu_icon_hospital.pcx", true);
+  hospitalIcon  = imageLoader->load("img/icons/menu_icon_hospital.pcx", true);
   hospitalButton = new gcn::ImageButton(hospitalIcon);
   hospitalButton->addActionListener(this);
   add(hospitalButton, 45, 135);
 
-  bulldozerIcon  = imageLoader->load("img/menu_icon_bulldozer.pcx", true);
+  bulldozerIcon  = imageLoader->load("img/icons/menu_icon_bulldozer.pcx", true);
   bulldozerButton = new gcn::ImageButton(bulldozerIcon);
   bulldozerButton->addActionListener(this);
   add(bulldozerButton, 0, 180);
   
-  deZoneIcon  = imageLoader->load("img/menu_icon_dezone.pcx", true);
+  deZoneIcon  = imageLoader->load("img/icons/menu_icon_dezone.pcx", true);
   deZoneButton = new gcn::ImageButton(deZoneIcon);
   deZoneButton->addActionListener(this);
   add(deZoneButton, 45, 180);
