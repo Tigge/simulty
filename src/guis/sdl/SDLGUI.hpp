@@ -71,6 +71,7 @@ class SDLGUI : public GUI, gcn::KeyListener, gcn::ActionListener, gcn::MouseList
   
   Point           mouse_down_tile;
   Point           mouse_up_tile;
+  int             mx, my;
     
   bool usingTool;
   
