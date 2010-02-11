@@ -1,0 +1,55 @@
+= Zone Buildings =
+
+== Description ==
+There are three types of zones in Simulty: Residential, Industrial and Commerisal zones.
+
+An initial zone has barely any worth, but they will all evolve, depending on various [DesignDocumentConcepts#Thrive_factors "thrive factors"], such as crime, connections, electricity etc. And besides a good position, a zone needs time to grow
+
+Zones gain "levels" as their "thrivefactors" approve, and as they have more time to grow. Each zone has a styleset for each level, so that not all buildings of the same zone and level will look the same.
+
+As there is no buildings on zones at level 0, nobody lives in a Residential zone on lvl 0, and in the same way, the other two zones are worthless on level 0.
+
+Things needed to grow:
+  * Decent [DesignDocumentConcepts#Thrive_factors thrive factors]
+    * Roads (connection to other zones)
+    * Electricity
+  * etc
+    * Time
+    * Access to other zones (closely)
+
+== Formulas ==
+=== Calculating the level of zone-buildings ===
+
+Buildings can at present be 3x3 squares. We calculate their average thrive values, and based upon the average thrive, we decide the buildings levels, like this:
+
+{{{ level = thrive_factor / 30 }}}
+
+All zoned areas with a thrive above a preset minimum value (currently 1) will have a chance to have a building on it.
+
+=== Calculating the number of citizens ===
+
+  * All (residental?) houses have a number of inhibitants
+  * Size matters
+  * Level matters (thrive matters, wealth)
+
+{{{ citizens := sum forall res house: CONSTANT * level * building_size^2 }}}
+
+=== Calculating upgrades of zones ===
+
+  * Destroy old buildings
+  * Build new better one
+  * Let old now unused buildings become.. unused
+
+
+=== Calculating taxes from zones ===
+
+  * Zones (buildings) pay taxes
+  * Residents (Inhabitants, see above), industries and commerce pay taxes
+  * Different taxes?
+  * Level matters (thrive matters, wealth)
+
+
+== New ideas ==
+
+  * More realistic population (for each tile) by using logistic functions
+  * Transportation network built on stations paths and Dijkstras algoritm
