@@ -1,0 +1,8 @@
+#summary Sidebar
+
+  * Documentation
+    * [HowToPlay        How to play]
+  * Developing
+    * [DesignDocument   Design document]
+    * [Roadmap          Roadmap]
+    * [Building         Building]
