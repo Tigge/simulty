@@ -1,0 +1,198 @@
+= Design document =
+
+== Introduction ==
+
+=== Game idea === 
+
+Team up with one or more friends and cooperate or compete with each other to make your city the worlds greatest. You can also play by yourself. Build and manage your city placing resident zones, making sure there is enough power and that the people can get to their jobs by building roads.
+
+You can race with your friend to win by making the biggest or most populated city in a set number of years or you can take it easy and just play togheter helping each other make one great city.
+
+The game places you in position of mayor of a city or part of a city. Everyone can enjoy this game. Play in your own pace with a college at work or race with one of your class mates.
+
+=== Target group ===
+
+This game should appeal to everyone (13 years and up). 
+
+  * Building
+  * Managing
+  * Planning
+  * Socialising
+
+== Summary ==
+
+[DesignDocumentSummary Summary]
+
+== Concepts ==
+
+[DesignDocumentConcepts  Concepts]
+
+== Traffic ==
+
+[DesignDocumentTraffic Traffic]
+
+== Economy ==
+
+[DesignDocumentEconomy Economy]
+
+== Politics ==
+
+[DesignDocumentPolitics Politics]
+
+== Details ==
+
+=== Actions ===
+
+==== Economy ====
+
+  Adjust tax rate
+    tax rate = adjusted value
+
+
+==== Building ====
+
+  Buy land
+    Money -= 50- Land marked as owned by player X.
+  Build a building, road, etc
+    Money -= building cost. Add building to list.
+  Build a zone
+    Money -= cost `*` squares. Add to list.
+
+==== Multiplayer ==== 
+
+Not available in single play or mutliplayer with only AIs
+
+  Chat
+    Communicate,
+  Trade
+    Trade resources
+
+==== Statistics ====
+
+  View budget
+    Show economic information
+  View statistics
+    Show statistic information
+
+  View building info
+    Show information about a single building
+
+=== Landscape ===
+
+
+  * Random generated maps 
+  * 2D landscape
+  * View everything from the side (isometric view)
+
+The resources described in the concept area should also be visible on the map. 
+
+Water (in form of lakes and rivers), trees (in forms of forests or just some trees) and stone (in forms of quarries or just some small connection) should be very common, but not every small resource should be able to give a bonus. Only large quantities.
+
+The players must buy (piece by piece or a larger area)?  land to be able to do stuff there like build a building, zone or a road.
+
+=== Buildings / Buildable stuff ===
+
+  * [DesignDocumentBuildings      Buildings / Buildable stuff]
+  * [DesignDocumentZoneBuildings  Zone buildings and information about them]
+
+=== Multiplayer ===
+
+Multiplayer function. 
+
+You play with or against each other. While inside the game the multiplayer functions add the following to the game:
+
+  * Chatting
+
+  * Connect your transportation networks
+    * Trading resources
+    * Increased growth?
+    * Cooperation?
+    * Increase in commerce
+
+==== Mean stuff ====
+
+Perhaps?
+
+  * Poison water supply
+  * Bomb city
+  * Smear / Defamation
+  * "Steal" people
+
+=== Other ===
+
+[DesignDocumentCitySizes  City size and names]
+
+  * Pause
+  * Change speed
+
+Dependencies:
+
+  * Residental
+    * Require wares and jobs
+    * Generate people (4/4)
+  * Commercial
+    * Require people
+    * Generate wares (3/4)
+    * Generate jobs (1/4)
+  * Industrial
+    * Require people
+    * Generate jobs (3/4)
+    * Generate wares (1/4)
+
+
+Map editor
+Not much to edit though, but perhaps
+
+=== Interface ===
+
+  * Som kind of sidebar?
+  * Graphs, diagrams?
+
+  * Building bar
+    * All buildings
+    * Split up in categories somehow
+
+  * Minimap?
+    * Differnt modes?
+    * Lower right corner
+
+  * Player list 
+    * Ping values
+    * Status
+    * Start chat
+
+  * Economics (+tax slide)
+    * Income
+    * Expences
+
+  * Status bar
+    * Date (ingame y-m-d)
+    * Money
+    * Game Speed
+
+==== Technical ====
+
+Resolution: 640x480 16bit (32?) 
+
+This should be changeable, the player should also get the option of running fullscreen or windowed.
+
+
+Example of how the game and the interface could look like. This is an early concept sketch so don't expect this to be the final look.
+
+[[Image:Designdoc_1.png]]
+
+===== Protocol specification =====
+
+See [Protocol Protocol specifiction]
+
+===== Save game specification =====
+
+See [SaveGame Save Game Specifiction]
+
+== Inspiration ==
+
+  * [http://en.wikipedia.org/wiki/Sim_City Sim City]
+  * [http://en.wikipedia.org/wiki/Utopia_%28video_game%29 Utopia]
+  * [http://www.duke.edu/~tlove/simcity.htm SimCity Essay]
+  * [http://en.wikipedia.org/wiki/Municipal_government]
+  * [http://en.wikipedia.org/wiki/Government_simulation]
