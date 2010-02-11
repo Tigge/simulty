@@ -11,8 +11,9 @@
     * [DesignDocumentBuildings      Buildings]
     * [DesignDocumentZoneBuildings  Zone buildings]
     * [DesignDocumentCitySizes      City sizes]
-    * [DesignDocumentProtocol       Protocol spec.]
-    * [DesignDocumentSaveGame       Save game spec.]
+
   * Developing
+    * [Protocol         Protocol spec.]
+    * [SaveGame         Save game spec.]
     * [Roadmap          Roadmap]
     * [Building         Building]
