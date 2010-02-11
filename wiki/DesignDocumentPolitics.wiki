@@ -1,0 +1,230 @@
+= Political ideas =
+The idea is that Simulty eventually will get its own political simulator. This documents outlines the design of that system.
+
+== Summary ==
+
+A political simulator will influence game play in certain ways making it harder or easier to do stuff. One example could be that if the environmentalist get into power they '''pass a law / ordinance''' prohibit building coal and oil plants and make you pay fees for cheaper public transportation.
+
+'''Events''' influence how much support the parties have. If few of the citizens have jobs the support for the Socialist party raises or if there is a warning for global warming the environmentalist get a bit more support. Also random scandals of different types affect the support of different parties. Also more in-game events like destroying a police station could please the anarchists.
+
+'''Elections''' occur Voting happens every X year (perhaps every 5th year) and the one with most support probably wins the election. The winning party controls / influences the state / city (more or less) during the next five years.
+
+== Parties ==
+
+Anarchists, Conservatives, Environmentalists, Feminists, Liberals, Nationalists, Religious, Socialists
+
+== Agendas ==
+
+TODO: merge with chart
+
+  * Environmentalists (Green)
+    * No pollution
+    * Public transportation
+    * No nuclear reactors
+    * No coal / oil plant ?
+    * No heavy industries ?
+    * Gun control
+    * No land clearing
+
+  * Socialist
+    * Worker
+    * Common health care
+    * Unemployment programs
+
+  * Religious ?
+    * More churches
+    * Ban
+
+  * Humanist
+    * ...
+
+  * Liberal
+    * Free market
+    * Favours business
+    * Privatisation
+
+  * Conservative
+    * ...
+
+  * Communists
+    * Five year plans
+    * State owns everything
+    * ...
+
+== Issues ==
+
+Environment, Immigration, Military, Education, Healthcare, Law-enforcement, Taxes, Business, Foreign politics, Economics, Social safety nets, Social equality,  
+
+Abortion, Animal Rights, Death Penalty, Drug policy, Firearms policy, Nuclear testing, 
+
+
+
+<table width="100%" border="1">
+ <tr><td></td><th>Anarchists</th><th>Conservatives</th><th>Environmentalists</th><th>Feminists</th>
+ <th>Liberals</th><th>Nationalists</th><th>Religious</th><th>Socialists</th></tr>
+
+ <tr><td>Full immigration</td><td></td><td></td><td></td><td></td>
+ <td></td><td>-1.0</td><td></td><td></td></tr>
+
+ <tr><td>Environment</td><td></td><td></td><td>+1.0</td><td></td>
+ <td></td><td></td><td></td><td></td></tr>
+
+ <tr><td>Privatize healthcare</td><td></td><td></td><td></td><td></td>
+ <td></td><td></td><td></td><td></td></tr>
+
+ <tr><td>Issue..</td><td></td><td></td><td></td><td></td>
+ <td></td><td></td><td></td><td></td></tr>
+
+ <tr><td>Issue..</td><td></td><td></td><td></td><td></td>
+ <td></td><td></td><td></td><td></td></tr>
+
+ <tr><td>Issue..</td><td></td><td></td><td></td><td></td>
+ <td></td><td></td><td></td><td></td></tr>
+
+</table>
+
+
+== Events ==
+
+Certain kind of events could tip the political 
+
+=== Singe party ===
+
+  * Political scandal (One or many politics is involved in a scandal. Could be in one of the Issues so party is more or less affected by it)
+    * Crimes
+      * Insider
+      * Bribes
+      * Speeding ticket
+      * Fraud
+      * ...
+    * Sex scandal
+    * Drug / alcohol problem
+    * Cover ups
+
+  * Event about on of the different Issues
+    * Environmental disaster
+    * Immigrants killed coming here
+    * ..
+
+=== Multi party ===
+
+  * Political scandal (One or many politics is involved in a scandal. Could be in one of the Issues so party is more or less affected by it)
+    * Se above
+  * Terrorist attack  (Sitting party raises?, Nationalist party raises?)
+  * War
+  * Economic crash
+  * Strike
+  * Riot
+
+Disasters:
+
+  * Man made
+    * Crash (air, bus, car, train)
+    * War disasters
+    * Dam/dike/levee disasters
+    * Environmental disasters
+    * Mining disasters
+    * Industrial disasters
+    * Explosion disasters
+    * Fire disasters
+    * Miscellaneous
+
+  * Natural disasters
+    * Flood
+    * Tornado
+    * Earthquake
+    * Epedemy
+    * Famine
+
+== Technical ==
+
+=== UML (draft) ===
+
+[[Image:simulty_political_uml.png]]
+
+=== Support (Popularity) ===
+Totally 100% of the popularity are divided among the different parties. 
+At all time the total support must equal 100%. In this simulation 100% = 1.0.
+
+=== Issues ===
+
+Party support for different issues range from 100% non supportive (-1.0) to 100% supportive (1.0).
+Need to be equal to 0.0 in the end? (I don't see the need for this yet)
+
+=== Events ===
+
+Events can be targeted at one party or all paries.
+
+
+== Other loose stuff ==
+
+Enviromental, social, reformists, concervatives, etcc.. Should push you in some ways to make certain decition or force you to build stuff, raise health level, education level etc..  (Or perhaps give you freebies)
+
+  * Freebies
+  * Pass laws
+
+  * Voting?
+
+  * Reflect current situation
+
+If there are much polution the enviromentalismt party raises, if there are few jobs the socialts rises, if there are no libraries the humanists rises, etc.
+
+  * Laws (Perhaps pay to get, or pay to don't get)
+    * Prohbit things (like more industries, residets, etc)
+    * Voting?
+  * Elect leader (or take turns)
+    * Benefits?
+
+== Ordinances / Laws ==
+
+=== State level ===
+
+  * Social
+    * Free healthcare (pop `*` 0.1 ???)
+    * Job programs (pop `*` 0.01 ???)
+
+  * Communist
+    * State owned factories (no income or costs from factories)
+    * State owned housing (no income or costs from houses)
+    * State owned stores (no income or costs from storse)
+
+  * Liberal
+    * Privatize
+      * Fire stations (No cost, fix)
+      * Health (No cost, fix)
+      * Education (No cost, fix)
+      * Police (No cost, fix)
+    * No finance reforms (No cost, fix)
+
+  * Environmental
+    * No nuclear stuff (free)
+
+=== City level ===
+
+  * Environmental
+    * Bike and/or walk friendly city (sum + road `*` 0.5 ???)
+    * noise / sound levels
+    * pollution
+    * garbage / recycling
+    * parking fees
+
+  * Social
+    * liquor license
+    * ban gaming
+    * voluntary fire-fighters
+
+
+  * Culture, music
+  * Equality
+  *
+
+== References ==
+
+  * http://www.theadvocates.org/quiz.html
+  * http://www.friesian.com/quiz.htm
+  * http://www.quiz2d.com/ (Nice)
+  * http://politicalcompass.org/
+  * http://civilities.net/CommonPoliticalGrid
+  * http://en.wikipedia.org/wiki/Nolan_chart
+  * http://en.wikipedia.org/wiki/Political_spectrum
+  * http://en.wikipedia.org/wiki/Ideologies_of_parties
