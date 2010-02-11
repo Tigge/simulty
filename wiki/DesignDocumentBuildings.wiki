@@ -1,0 +1,419 @@
+= Buildings =
+
+== Infrastructure ==
+
+
+<table border="1" width="100%">
+ <tr>    
+  <th width="150">Building</th>
+  <th width="100">Cost</th>
+  <th width="100">Maintenance</th>
+  <th width="100">Tax income</th>
+  <th>Notes</th>
+ </tr>
+ <tr>
+  <td>Roads</td>
+  <td>10</td>
+  <td>1</td>
+  <td>0</td>
+  <td>
+  * Connectivity
+  </td>
+ </tr>
+ <tr>
+  <td>Power lines</td>
+  <td>-</td>
+  <td>-</td>
+  <td>-</td>
+  <td>This is left out for the first version</td>
+ </tr>
+</table>
+
+== Zones ==
+
+<table border="1" width="100%">
+ <tr>    
+  <th width="150">Building</th>
+  <th width="100">Cost</th>
+  <th width="100">Maintenance</th>
+  <th width="100">Tax income</th>
+  <th>Notes</th>
+ </tr>
+ <tr>
+  <td>Industrial</td>
+  <td>200</td>
+  <td>0</td>
+  <td>15</td>
+  <td>-</td>
+ </tr>
+ <tr>
+  <td>Residental</td>
+  <td>150</td>
+  <td>0</td>
+  <td>20</td>
+  <td>-</td>
+ </tr>
+ <tr>
+  <td>Commersial</td>
+  <td>250</td>
+  <td>0</td>
+  <td>25</td>
+  <td>-</td>
+ </tr>
+</table>
+
+== Special buildings ==
+
+=== Power plants ===
+
+<table border="1" width="100%">
+ <tr>    
+  <th width="150">Building</th>
+  <th width="100">Cost</th>
+  <th width="100">Maintenance</th>
+  <th width="100">Tax income</th>
+  <th>Size</th>
+  <th>Notes</th>
+ </tr>
+ <tr> 
+  <td>Coal plant</td>
+  <td>10 000</td>
+  <td>1000 (500 with coal)</td>
+  <td></td>
+  <td></td>
+  <td>
+  * Raises power supply (by ???)
+  * Raises polution (by ???)
+  </td>
+ </tr>
+ <tr>
+  <td>Oil plant</td>
+  <td>20 000</td>
+  <td>1500 (750 with oil)</td>
+  <td></td>
+  <td></td>
+  <td>
+  * Raises power supply (by ???)
+  * Raises polution (by ???)
+  </td>
+ </tr>
+ <tr>
+  <td>Nuclear plant</td>
+  <td>50 000</td>
+  <td>3000 (2000 with uranium)</td>
+  <td></td>
+  <td></td>
+  <td>
+  * Raises power supply (by ???)
+  * Raises polution (by ???)
+  </td>
+ </tr>
+ <tr>
+  <td>Solar plant</td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td>
+  * Raises power supply (by ???)
+  </td>
+ </tr>
+
+ <tr>
+  <td>Wind turbine</td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td>
+  * Raises power supply (by ???)
+  </td>
+ </tr>
+ <tr>
+  <td>Water turbine</td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td>
+  * Raises power supply (by ???)
+  </td>
+ </tr>
+</table>
+
+=== Culture ===
+
+<table border="1" width="100%">
+ <tr>    
+  <th width="150">Building</th>
+  <th width="100">Cost</th>
+  <th width="100">Maintenance</th>
+  <th width="100">Tax income</th>
+  <th>Size</th>
+  <th>Notes</th>
+ </tr>
+
+ <tr>
+  <td>Opera</td>
+  <td>???</td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td>
+  * Raises culture level
+  </td>
+ </tr>
+
+ <tr>
+  <td>Teather</td>
+  <td>???</td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td>
+  * Raises culture level
+  </td>
+ </tr>
+
+ <tr>
+  <td>Museum</td>
+  <td>???</td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td>
+  * Raises culture level
+  </td>
+ </tr>
+
+ <tr>
+  <td>Library</td>
+  <td>???</td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td>
+  * Raises culture level
+  </td>
+ </tr>
+
+</table>
+
+=== Education ===
+
+<table border="1" width="100%">
+ <tr>    
+  <th width="150">Building</th>
+  <th width="100">Cost</th>
+  <th width="100">Maintenance</th>
+  <th width="100">Tax income</th>
+  <th>Size</th>
+  <th>Notes</th>
+ </tr>
+
+ <tr>
+  <td>University</td>
+  <td>25 000</td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td>
+  * Raises education level
+  </td>
+ </tr>
+
+ <tr>
+  <td>School</td>
+  <td>5 000</td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td>
+  * Raises education level
+  </td>
+ </tr>
+
+ <tr>
+  <td>Kindergarten</td>
+  <td>3 000</td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td>
+  * Raises education level
+  </td>
+ </tr>
+
+</table>
+
+=== Law enforcement ===
+
+<table border="1" width="100%">
+ <tr>    
+  <th width="150">Building</th>
+  <th width="100">Cost</th>
+  <th width="100">Maintenance</th>
+  <th width="100">Tax income</th>
+  <th>Size</th>
+  <th>Notes</th>
+ </tr>
+
+ <tr>
+  <td>Police station</td>
+  <td>5 000</td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td>
+  * Raises resistance to sabotage
+  * Raises crime protection level
+  </td>
+ </tr>
+
+ <tr>
+  <td>Court house</td>
+  <td>5 000</td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td>
+???
+  </td>
+ </tr>
+
+ <tr>
+  <td>Prison</td>
+  <td>5 000</td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td>
+???
+  </td>
+ </tr>
+</table>
+
+=== Fire fighting ===
+<table border="1" width="100%">
+ <tr>    
+  <th width="150">Building</th>
+  <th width="100">Cost</th>
+  <th width="100">Maintenance</th>
+  <th width="100">Tax income</th>
+  <th>Size</th>
+  <th>Notes</th>
+ </tr>
+
+ <tr>
+  <td>Fire station</td>
+  <td>5 000</td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td>
+  * Raises fire protection level
+  </td>
+ </tr>
+</table>
+
+=== Health care ===
+
+<table border="1" width="100%">
+ <tr>    
+  <th width="150">Building</th>
+  <th width="100">Cost</th>
+  <th width="100">Maintenance</th>
+  <th width="100">Tax income</th>
+  <th>Size</th>
+  <th>Notes</th>
+  <th>Img</th>
+ </tr>
+
+ <tr>
+  <td>Hospital</td>
+  <td>5 000</td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td>
+  * Raises health service level
+  </td>
+  <td>[[Image:simulty_building_hospital.png|thumb|Hospital sketch]]</td>
+ </tr>
+
+ <tr>
+  <td>Clinic</td>
+  <td>2 000</td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td>
+  * Raises health service level
+  </td>
+  <td>[[Image:simulty_building_clinic.png|thumb|Hospital sketch]]</td>
+ </tr>
+
+ <tr>
+  <td>Nursing home?</td>
+  <td>2 000</td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td>
+  * Raises health service level
+  </td>
+  <td>[[Image:simulty_building_nursinghome.png|thumb|Hospital sketch]]</td>
+ </tr>
+
+=== Recreation ===
+
+<table border="1" width="100%">
+ <tr>    
+  <th width="150">Building</th>
+  <th width="100">Cost</th>
+  <th width="100">Maintenance</th>
+  <th width="100">Tax income</th>
+  <th>Size</th>
+  <th>Notes</th>
+  <th>Img</th>
+ </tr>
+
+ <tr>
+  <td>Arena?</td>
+  <td>5 000</td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td>
+  * Raises recreation levels
+  </td>
+  <td>[[Image:simulty_building_arenal.png|thumb|Arena sketch]]</td>
+ </tr>
+
+ <tr>
+  <td>Park?</td>
+  <td>2 000</td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td>
+  * Raises recreation levels
+  </td>
+  <td>[[Image:simulty_building_park.png|thumb|Park sketch]]</td>
+ </tr>
+
+ <tr>
+  <td>...</td>
+  <td>2 000</td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td>
+  * Raises recreation levels
+  </td>
+  <td>[[Image:simulty_building_.png|thumb|... Sketch]]</td>
+ </tr>
+
+</table>
+
+Building stuff costs (differnt amounts of) money. You can only build on land you own yourself. You don't have to manage the construction. As soon as you place the building it starts to get built (if the conditions are right, aka the thrive conditions are fulfilled)
