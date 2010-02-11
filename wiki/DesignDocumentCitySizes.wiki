@@ -1,0 +1,42 @@
+When first starting a game, we have no city and no population so.. when you first start out the game you have a 'Small village'. When your population raises your city will become a Village, Large village and then a Small town.
+
+Below here are the different names and population limits in use:
+
+<table width="100%" border="1">
+ <tr>
+  <th>Name</th>
+  <th>Small pop</th>
+  <th>Medium pop</th>
+  <th>Large pop</th>
+ </tr>
+ <tr>
+  <td>Village</td>
+  <td>0</td>
+  <td>5 000</td>
+  <td>10 000</td>
+ </tr>
+ <tr>
+  <td>Town</td>
+  <td>100 000</td>
+  <td>200 000</td>
+  <td>300 000</td>
+ </tr>
+ <tr>
+  <td>City</td>
+  <td>100 000</td>
+  <td>200 000</td>
+  <td>300 000</td>
+ </tr>
+ <tr>
+  <td>Metropolis</td>
+  <td>500 000</td>
+  <td>1 000 000</td>
+  <td>5 000 000</td>
+ </tr>
+ <tr>
+  <td>Capital?</td>
+  <td>10 000 000</td>
+  <td>20 000 000</td>
+  <td>50 000 000</td>
+ </tr>
+</table>
