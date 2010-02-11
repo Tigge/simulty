@@ -1,0 +1,192 @@
+= Summary =
+
+Simulty builds upon the NL library's packet handling and thus uses this structure for its packets:
+
+  * Header (Always 4 bytes)
+    * 1b - message id
+    * 3b - size of data
+
+  * Data
+    * xb - data (must be same size as headers 'size of data')
+
+Different types of data can be sent and recieved: 
+
+  * int16 - 2b
+  * int32 - 4b
+  * string - xb ended with a '\0' char
+
+= NL packet types =
+
+Reserves packet IDs 0 to 99
+
+= Traffic specification =
+
+Handshake / getting server information:
+
+  * Client connects
+  * Server sends welcome message (ID 100 NPACKET_TYPE_SIMULTY_WELCOME)
+  * Client sends version package (ID ...)
+
+
+  * Version
+    * Client sends
+
+= Simulty packet types =
+
+  * The NL library reserves IDs 0 to 100 for internal purposes so Simulty starts using packet IDs 100 to 255.
+
+<table width="100%" border="1">
+ <tr>
+  <th>ID #</th>
+  <th>Name</th>
+  <th>Parameters</th>
+  <th>Direction</th>
+  <th>Description</th>
+ </tr>
+
+ <tr>
+  <th colspan="5">Handshake</th>
+ </tr>
+
+ <tr>
+  <td>100</td>
+  <td>NPACKET_TYPE_SIMULTY_WELCOME</td>
+  <td>Message, player count, status</td>
+  <td>S => C</td>
+  <td>Is sent to newly connected clients. Contains welcome message and status of the server (full, player count, etc)</td>
+ </tr>
+
+ <tr>
+  <td>101</td>
+  <td>NPACKET_TYPE_SIMULTY_VERSION</td>
+  <td>Message, player count, status</td>
+  <td>C => S</td>
+  <td></td>
+ </tr>
+
+ <tr>
+  <td>110</td>
+  <td>NPACKET_TYPE_SIMULTY_GAMEDATA</td>
+  <td>Message, player count, status</td>
+  <td>S => C</td>
+  <td></td>
+ </tr>
+
+ <tr>
+  <td>120</td>
+  <td>NPACKET_TYPE_SIMULTY_PLAYER_JOINED</td>
+  <td>Message, player count, status</td>
+  <td>S => C</td>
+  <td></td>
+ </tr>
+ <tr>
+  <td>121</td>
+  <td>NPACKET_TYPE_SIMULTY_PLAYER_LEFT</td>
+  <td>Message, player count, status</td>
+  <td>S => C</td>
+  <td></td>
+ </tr>
+
+ <tr>
+  <th colspan="5">Player requests</th>
+ </tr>
+
+ <tr>
+  <td>150</td>
+  <td>NPACKET_TYPE_SIMULTY_REQUEST_ROAD</td>
+  <td>i32 fX, i32 fY, i32 tX, i32 tY</td>
+  <td>C => S</td>
+  <td></td>
+ </tr>
+
+ <tr>
+  <td>151</td>
+  <td>NPACKET_TYPE_SIMULTY_REQUEST_ZONE</td>
+  <td>i32 fX, i32 fY, i32 tX, i32 tY</td>
+  <td>C => S</td>
+  <td></td>
+ </tr>
+
+ <tr>
+  <td>152</td>
+  <td>NPACKET_TYPE_SIMULTY_REQUEST_LAND</td>
+  <td>i32 fX, i32 fY, i32 tX, i32 tY</td>
+  <td>C => S</td>
+  <td></td>
+ </tr>
+
+
+ <tr>
+  <td>153</td>
+  <td>NPACKET_TYPE_SIMULTY_REQUEST_CHAT</td>
+  <td>str message</td>
+  <td>C => S</td>
+  <td></td>
+ </tr>
+
+
+
+ <tr>
+  <td>154</td>
+  <td>NPACKET_TYPE_SIMULTY_REQUEST_SPECIAL_BUILDING</td>
+  <td>i16 type, i32 wX, i32 wY</td>
+  <td>C => S</td>
+  <td></td>
+ </tr>
+
+ <tr>
+  <th colspan="5">Server responses / orders</th>
+ </tr>
+
+ <tr>
+  <td>200</td>
+  <td>NPACKET_TYPE_SIMULTY_ROAD</td>
+  <td>slot, i32 fX, i32 fY, i32 tX, i32 tY</td>
+  <td>S => C</td>
+  <td></td>
+ </tr>
+
+ <tr>
+  <td>201</td>
+  <td>NPACKET_TYPE_SIMULTY_ZONE</td>
+  <td>slot, i32 fX, i32 fY, i32 tX, i32 tY</td>
+  <td>S => C</td>
+  <td></td>
+ </tr>
+
+
+ <tr>
+  <td>202</td>
+  <td>NPACKET_TYPE_SIMULTY_LAND</td>
+  <td>slot, i32 fX, i32 fY, i32 tX, i32 tY</td>
+  <td>S => C</td>
+  <td></td>
+ </tr>
+
+
+ <tr>
+  <td>203</td>
+  <td>NPACKET_TYPE_SIMULTY_CHAT</td>
+  <td>slot, i32 fX, i32 fY, i32 tX, i32 tY</td>
+  <td>S => C</td>
+  <td></td>
+ </tr>
+
+
+ <tr>
+  <td>204</td>
+  <td>NPACKET_TYPE_SIMULTY_SPECIAL_BUILDING</td>
+  <td>slot, i32 fX, i32 fY, i32 tX, i32 tY</td>
+  <td>S => C</td>
+  <td></td>
+ </tr>
+
+ <tr>
+  <td>205</td>
+  <td>NPACKET_TYPE_SIMULTY_ZONE_BUILDING</td>
+  <td>slot, i32 fX, i32 fY, i32 tX, i32 tY</td>
+  <td>S => C</td>
+  <td></td>
+ </tr>
+
+</table>
