@@ -1,0 +1,14 @@
+=Short summary=
+
+You play online versus on or many opponents. When you first start a new game a new random landscape is generated, thus you get a different landscape every time. You get appointed a piece of land (or you get to buy one yourself) and some money and then the game starts.
+
+Your goal is to manage and expand your city by building roads and buildings while you buy land and take care of your economy. You balance your income (taxes, exports, etc) and expenses (build costs, maintenance, etc.).
+
+You can choose to play an open ended game or set a goal. If you choose open ended you can play for as long as you like. If you choose a set goal the game will end in X years or if someone reach a goal.
+
+=Game types=
+
+  * Open ended - The game doesn't end but continues as long as you like.
+  * Best city in X years - The game ends after X number of years. The best city is then calculated.
+  * First city to X Population -
+  * First city to X Money -
