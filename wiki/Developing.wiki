@@ -1,0 +1,8 @@
+= Developing =
+
+  # Check out source code (see [http://code.google.com/p/simulty/source/checkout Source tab])
+  # [Build Build Simulty]
+  # Check the [DesignDocument Design document]
+  # Check the [http://code.google.com/p/simulty/issues/list Issues]
+  # Implement feature
+  # Commit
