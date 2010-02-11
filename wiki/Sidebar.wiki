@@ -2,7 +2,17 @@
 
   * Documentation
     * [HowToPlay        How to play]
+  * [DesignDocument Design Document]
+    * [DesignDocumentSummary        Summary]
+    * [DesignDocumentConcepts       Concepts]
+    * [DesignDocumentTraffic        Traffic]
+    * [DesignDocumentEconomy        Economy]
+    * [DesignDocumentPolitics       Politics]
+    * [DesignDocumentBuildings      Buildings]
+    * [DesignDocumentZoneBuildings  Zone buildings]
+    * [DesignDocumentCitySizes      City sizes]
+    * [DesignDocumentProtocol       Protocol spec.]
+    * [DesignDocumentSaveGame       Save game spec.]
   * Developing
-    * [DesignDocument   Design document]
     * [Roadmap          Roadmap]
     * [Building         Building]
