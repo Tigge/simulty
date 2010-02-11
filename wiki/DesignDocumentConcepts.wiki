@@ -1,0 +1,125 @@
+= Concepts =
+
+== Zones ==
+
+Instead of placing every single resident and industrial building you mark special areas as commercial or resident zones. These areas will grow if enough thrive factors are met otherwise they will be deserted. This is shown with buildings.
+
+  * Residental
+  * Commersial
+  * Industrial 
+
+== Time ==
+
+Everything runs in cycles of years. 
+
+The Economy is calculated at the end of each year. Then income and expenses are calculated and you get the remainder (plus the money you already have) to spend on construction and other stuff during the next year.
+
+
+  * The game speed can be changed
+  * The game can be paused
+
+== Thrive factors ==
+
+The list is sorted with the most important things first
+
+Needs to be at least 70 before anything starts to build at all, the higher the combined factor is the more gets built.
+
+<table border="1" width="100%">
+ <tr>
+  <th>Factor</th><th>Importance</th>
+ </tr>
+ <tr>
+  <td>Connectivity (Roads, Railroads, etc)</td><td>20</td>
+ </tr>
+ <tr>
+  <td>Electricity</td><td>20</td>
+ </tr>
+ <tr>
+  <td>Low living cost (taxes)</td><td>0 - 20</td>
+ </tr>
+ <tr>
+  <td>
+Jobs, wares, and people
+  * Industries: Need people
+  * Commercial: Need people
+  * Residental: Need jobs and wares (60%/40%)
+   </td>
+  <td>20</td>
+ </tr>
+ <tr>
+  <td>Education</td><td>3</td>
+ </tr>
+ <tr>
+  <td>Health service</td><td>3</td>
+ </tr>
+ <tr>
+  <td>Crime protection level</td><td>3</td>
+ </tr>
+ <tr>
+  <td>Fire protection level</td><td>3</td>
+ </tr>
+</table>
+
+  * Water (Left out for now)
+  * Culture (Left out for now)
+
+
+=== Roads ===
+
+Everything needs to be connected with roads. Anything more then (three?) steps from a road is considered not connected and is thus not able to buld anything or produce.
+
+To satisfy the connectivity need every building needs to have a road at least tree tiles away.
+
+=== Electricity ===
+
+Every tile in each <one needs a certain amount of electricty (1) and special buildings require even more. 
+
+To satisfy the electricity need the city needs to have sufficient power to supply the whole city.
+
+=== Education ===
+
+To satisfy the education need the city needs to have a sufficient ammount of schools to supply the whole city
+
+=== Health, Crime and Fire ===
+
+To satisfy these needs the city needs to have a sufficient ammount of the designated buildings to support the whole city.
+
+== Resources ==
+
+To make the game more interesting and add some good multiplayer touches we introduce the concept of resources. These are natural resources placed randomly on the map that will benefit the players finances.
+
+Resources:
+
+For cheaper powerplants:
+
+  * Coal
+  * Oil
+  * Uran
+
+For cheaper building:
+
+  * Iron
+  * Stone
+  * Trees
+
+Undecided:
+
+  * Water
+
+== Special buildings ==
+
+  * Police station
+  * Fire station
+  * Hospital
+  * Power plants
+    * Coal
+    * Oil
+  *
+
+== More ideas ==
+
+  * Trading 
+  * Transportaion
+  * Politics
+  * Sabotage
+  *
