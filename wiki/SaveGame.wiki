@@ -1,0 +1,17 @@
+= Save Game Specification =
+
+== What to save ==
+
+  * Everything
+    * Players
+      * Count 
+      * Slots
+      * etc, moneym etc
+    * Map
+      * Width 
+      * Height
+      * Tiles (w * h)
+        * owner, etc
+    * Buildings
+    * Politics
+      * ...
