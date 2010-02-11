@@ -1,0 +1,98 @@
+This page is under construction and is subject to changes. Please contact the project administrator before adding stuff.
+
+= Milestone 1 =
+
+  * ~~Basic Client / Server architecture~~  Done
+  * ~~Basic Framework~~                     Done
+
+== Server ==
+
+  * ~~Handle basic player events (join, leave, timeout)~~ Done
+
+== Client ==
+
+  * ~~View and scroll around map~~  Done
+  * ~~Debug console~~               Done
+
+= Milestone 2 =
+
+  * Chat
+  * ~~Land (buy)~~              Done
+  * ~~Borders & land (gfx)~~    Done
+  * ~~Roads~~                   Done
+  * ~~Zones (No growth yet)~~   Done
+
+== Client specifics ==
+
+  * ~~Main menu~~ - Done
+  * ~~Simple GUI~~ - Done
+
+== Server specifics ==
+
+= Milestone 3 =
+
+  * ~~Time model working (Pause, speed)~~ - Done, but no GUI
+  * ~~Place buildings~~ -                   Partly done
+  * Thrive values -                         Partly done
+  * Things cost money -                     Partly done
+  * Water on map
+
+  * Handle different map sizes
+== Client ==
+
+  * Handle different resolutions / color depths
+
+== Server ==
+
+  * Better player / slot handling
+
+= Milestone 4 =
+
+  * Preliminary zone buildings    - Partly done
+  * Simple economic model test
+  * Simple transport model test
+  * Simple population model test
+
+== Client ==
+
+  * [http://guichan.sourceforge.net/ Guichan] test GUI - Partly done
+  * ~~Simple mini map~~ - Done
+  * Simple budget GUI
+
+== Server ==
+
+  * Can change taxes
+
+= Future =
+
+  * Lobby
+  * gettext support
+
+  * Initial gameplay
+
+  * Political simulator [[Simulty:Designdoc:Politics | more info here]]
+  * Traffic simulator 
+
+  * Simple AI
+  * Graphics
+
+  * Configuration
+
+  * More interface
+    * Adjust tax
+    * Check economy
+    * Status
+    * Histograms
+      * Population
+      * Pollution
+    * Maps
+      * Pollution
+      * Population
+      * etc..
+
+  * Random maps
+
+  * Better interface
+
+  * Resources
+    * Trade resources
