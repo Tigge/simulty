@@ -1,0 +1,26 @@
+#summary One-sentence summary of this page.
+
+= Prerequisites =
+
+  * [http://www.cmake.org/   CMake] (build system)
+  * [http://www.libsdl.org/  SDL]
+  * SDL_image
+  * SDL_ttf 
+
+= Building =
+
+You build using the CMake build system. Instructions for different platforms follows. Until this information is complete some [http://www.cmake.org/cmake/help/runningcmake.html general instructions] for building projects that use the CMake build system.
+
+== Window ==
+
+...
+
+== Linux ==
+
+<pre>
+cmake .
+make
+</pre>
+
+...
+
