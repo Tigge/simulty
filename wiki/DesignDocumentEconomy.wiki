@@ -1,0 +1,32 @@
+= Economy =
+
+The most important resource is money. The other resources are used to reduce costs.  If you have a coal plant and you have the resource coal the maintenace is lower.
+
+Resources are also an excellent way to make money since you can trade resources for money with the other players.
+ 
+<table border="1">
+ <tr>
+  <th colspan="2">Income</th>
+ </tr>
+ <tr>
+  <td>Taxes</td><td>Every resident and company zone you have generate taxes. You can set the tax slide to adjust your income. This is more or less the only direct control you have over your cash flow.</td>
+ </tr>
+ <tr>
+  <td>Resource export</td><td>You can export resources to other players and make some money</td>
+ </tr>
+ <tr>
+  <th colspan="2">Expences</th>
+ </tr>
+ <tr>
+  <td>Bulding (many things)</td><td>This will be splitted in the view. Contains the amount of money you spent on construction the last year.</td>
+ </tr>
+ <tr>
+  <td>Maintenance</td><td>Amount of maintenace for roads, buildings, etc</td>
+ </tr>
+ <tr>
+  <td>Buy land</td><td>Amount of money spent on buying land</td>
+ </tr>
+ <tr>
+  <td>Resource import</td><td>Amount of money spent on buying resources (Any resource not aviable to you or by import from other friends is here.</td>
+ </tr>
+</table>
