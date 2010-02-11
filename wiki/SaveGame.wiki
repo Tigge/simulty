@@ -10,7 +10,7 @@
     * Map
       * Width 
       * Height
-      * Tiles (w * h)
+      * Tiles (w `*` h)
         * owner, etc
     * Buildings
     * Politics
