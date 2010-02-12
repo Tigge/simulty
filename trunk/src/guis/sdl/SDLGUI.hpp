@@ -17,6 +17,7 @@
 
 #include "MapRender.hpp"
 #include "BuildingRender.hpp"
+#include "ToolRender.hpp"
 
 #include <string>
 #include <iostream>
@@ -68,6 +69,7 @@ class SDLGUI : public GUI, gcn::KeyListener, gcn::ActionListener, gcn::MouseList
   
   MapRender       *mr;
   BuildingRender  *br;
+  ToolRender      *tr;
   Camera camera;
   
   Point           mouse_down_tile;

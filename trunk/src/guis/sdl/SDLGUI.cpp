@@ -76,6 +76,7 @@ void SDLGUI::init() {
   mr->setMap(client->map);
 
   br = new BuildingRender();
+
   
   // Guichan:
   
@@ -110,6 +111,8 @@ void SDLGUI::init() {
   miniMap       = new MiniMap(client->map, &camera);
   top->add(miniMap, screen->w - miniMap->getWidth(),
       screen->h - miniMap->getHeight());
+      
+  tr = new ToolRender(gui);
 }
 
 void SDLGUI::run() {
@@ -150,6 +153,10 @@ void SDLGUI::render() {
     mr->render(screen, camera);
     // Render buildings:
     br->render(screen, mr, camera, &client->bman);
+    
+    if(usingTool) {
+      tr->render(screen, mr, camera, client, toolbar->getTool(), mouse_down_tile, mouse_up_tile);
+    }
   }
   
   gui->draw();

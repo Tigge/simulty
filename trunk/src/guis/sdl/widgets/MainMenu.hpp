@@ -8,10 +8,11 @@ class MainMenu : public gcn::Window {
 
   private:
   
-  gcn::Label  *label;
+  gcn::Label     *connectLabel;
+  gcn::TextField *address;
+  gcn::Button    *connect;
   
-  gcn::Button *connect;
-  gcn::Button *exit;
+  gcn::Button    *exit;
 
   public:
   
