@@ -23,6 +23,57 @@ ToolRender::~ToolRender() {
   free(costLabel);
 }
 
+void ToolRender::renderArea(SDL_Surface *on, MapRender *mr, Camera camera, Point from, Point to) {
+
+  Point::fixOrder(from, to);
+
+  SDL_Rect pos;
+  for(int x = from.getX(); x <= to.getX(); x++) {
+    for(int y = from.getY(); y <= to.getY(); y++) {
+      
+      Point sc = mr->toScreenCoord(Point(x, y), camera);
+      pos.x = sc.getX();
+      pos.y = sc.getY();
+      SDL_BlitSurface(selector, NULL, on, &pos);
+    }
+  }
+}
+
+void ToolRender::renderTrail(SDL_Surface *on, MapRender *mr, Camera camera, Point from, Point to) {
+
+  Point line;
+
+  // XXX: fix, make more clear
+  if((from.getX() - to.getX())*(from.getX() - to.getX() < 0 ? -1 : 1)
+   > (from.getY() - to.getY())*(from.getY() - to.getY() < 0 ? -1 : 1)) {  // delta x > delta y
+    line.setY(from.getY());
+    line.setX(to.getX());
+  }
+  else {
+    line.setX(from.getX());
+    line.setY(to.getY());
+  }
+
+  Point::fixOrder(from, to);
+
+  SDL_Rect pos;
+  
+  for(int x = from.getX(); x <= to.getX(); x++) {
+    Point sc = mr->toScreenCoord(Point(x, line.getY()), camera);
+    pos.x = sc.getX();
+    pos.y = sc.getY();
+    SDL_BlitSurface(selector, NULL, on, &pos);
+  }
+
+  for(int y = from.getY(); y <= to.getY(); y++) {
+    Point sc = mr->toScreenCoord(Point(line.getX(), y), camera);
+    pos.x = sc.getX();
+    pos.y = sc.getY();
+    SDL_BlitSurface(selector, NULL, on, &pos);  
+  }
+}
+
+
 void ToolRender::render(SDL_Surface *on, MapRender *mr, Camera camera, Client *client, int tool, Point from, Point to) {
 
   if(tool == SIMULTY_CLIENT_TOOL_ZONE_COM
@@ -30,19 +81,11 @@ void ToolRender::render(SDL_Surface *on, MapRender *mr, Camera camera, Client *c
       || tool == SIMULTY_CLIENT_TOOL_ZONE_IND
       || tool == SIMULTY_CLIENT_TOOL_BULLDOZER
       || tool == SIMULTY_CLIENT_TOOL_LAND) {
-      
-    Point::fixOrder(from, to);
-    
-    SDL_Rect pos;
-    for(int x = from.getX(); x <= to.getX(); x++) {
-      for(int y = from.getY(); y <= to.getY(); y++) {
-        
-        Point sc = mr->toScreenCoord(Point(x, y), camera);
-        pos.x = sc.getX();
-        pos.y = sc.getY();
-        SDL_BlitSurface(selector, NULL, on, &pos);
-      }
-    }
+
+    renderArea(on, mr, camera, from, to);
+
+  } else if(tool == SIMULTY_CLIENT_TOOL_ROAD) {
+    renderTrail(on, mr, camera, from, to);
   }
   
   // Write text
@@ -55,10 +98,10 @@ void ToolRender::render(SDL_Surface *on, MapRender *mr, Camera camera, Client *c
       || tool == SIMULTY_CLIENT_TOOL_ZONE_RES
       || tool == SIMULTY_CLIENT_TOOL_ZONE_IND) {
     cost = client->map->buildZoneCost(client->getMyPlayer()->getSlot(), tool, from, to);
-    //std::cout << "z: " << cost << " " << c1 << c3 << std::endl;
   } else if(tool == SIMULTY_CLIENT_TOOL_LAND) {
     cost = client->map->buyLandCost(client->getMyPlayer()->getSlot(), from, to);
-    //std::cout << "l: " << cost << " " << c1 << c3 << std::endl;
+  } else if(tool == SIMULTY_CLIENT_TOOL_ROAD) {
+    cost = client->map->buildRoadCost(client->getMyPlayer()->getSlot(), from, to);
   } else if(tool == SIMULTY_CLIENT_TOOL_BULLDOZER) {
     cost = client->map->bulldozeCost(client->getMyPlayer()->getSlot(), from, to);
   } else if(tool == SIMULTY_CLIENT_TOOL_DEZONE) {
