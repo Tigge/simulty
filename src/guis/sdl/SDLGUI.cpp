@@ -231,12 +231,16 @@ void SDLGUI::mouseReleased (gcn::MouseEvent &e) {
 
       int tool = toolbar->getTool();
 
+      if(tool == SIMULTY_CLIENT_TOOL_ROAD) {
+          // draw road
+          client->buyRoad(mouse_down_tile, mouse_up_tile);
+      }
+      Point::fixOrder(mouse_down_tile, mouse_up_tile);
+      
       if(tool == SIMULTY_CLIENT_TOOL_LAND) {
           // buy land
           client->buyLand(mouse_down_tile, mouse_up_tile);
-      } else if(tool == SIMULTY_CLIENT_TOOL_ROAD) {
-          // draw road
-          client->buyRoad(mouse_down_tile, mouse_up_tile);
+
       } else if(tool == SIMULTY_CLIENT_TOOL_ZONE_RES ||
               tool == SIMULTY_CLIENT_TOOL_ZONE_COM ||
               tool == SIMULTY_CLIENT_TOOL_ZONE_IND) {
