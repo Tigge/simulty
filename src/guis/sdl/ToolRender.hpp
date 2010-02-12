@@ -24,6 +24,9 @@ class ToolRender {
   
   ToolRender(gcn::Gui *gui);
   virtual ~ToolRender();
+  
+  virtual void renderArea(SDL_Surface *on, MapRender *mr, Camera camera, Point from, Point to);
+  virtual void renderTrail(SDL_Surface *on, MapRender *mr, Camera camera, Point from, Point to);
   virtual void render(SDL_Surface *on, MapRender *mr, Camera camera, Client *c, int tool, Point from, Point to);
 };
 
