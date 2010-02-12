@@ -10,6 +10,7 @@
 #include "widgets/sdltruetypefont.hpp"
 #include "widgets/Toolbar.hpp"
 #include "widgets/MiniMap.hpp"
+#include "widgets/Console.hpp"
 
 #include "../../shared.h"
 #include "../../GUI.hpp"
@@ -56,6 +57,7 @@ class SDLGUI : public GUI, gcn::KeyListener, gcn::ActionListener, gcn::MouseList
   gcn::contrib::SDLTrueTypeFont  *guiFont;
   Toolbar                        *toolbar;
   MiniMap                        *miniMap;
+  Console                        *console;
   
   
   SDL_Surface *screen;
