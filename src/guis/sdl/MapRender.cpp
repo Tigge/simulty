@@ -126,10 +126,10 @@ Point MapRender::toTileCoord(Point screenCoord) {
       screenCoord.getX() - shavedScreenCoord.getX(),
       screenCoord.getY() - shavedScreenCoord.getY());
 
-  if(mouse_hint_color == SDL_MapRGB(mouse_hint->format, 255, 0, 0))      tileCoord.translate(0, -1);
-  else if(mouse_hint_color == SDL_MapRGB(mouse_hint->format, 0, 255, 0)) tileCoord.translate(-1, 0);
-  else if(mouse_hint_color == SDL_MapRGB(mouse_hint->format, 0, 0, 255)) tileCoord.translate(1,  0);
-  else if(mouse_hint_color == SDL_MapRGB(mouse_hint->format, 0, 0, 0))   tileCoord.translate(0,  1);
+  if(mouse_hint_color == SDL_MapRGB(mouse_hint->format, 255, 0, 0))        {tileCoord.translate(0, -1);}
+  else if(mouse_hint_color == SDL_MapRGB(mouse_hint->format, 255, 255, 0)) {tileCoord.translate(-1, 0);}
+  else if(mouse_hint_color == SDL_MapRGB(mouse_hint->format, 0, 0, 255))   {tileCoord.translate(1,  0);}
+  else if(mouse_hint_color == SDL_MapRGB(mouse_hint->format, 0, 0, 0))     {tileCoord.translate(0,  1);}
 
   return tileCoord;
 
