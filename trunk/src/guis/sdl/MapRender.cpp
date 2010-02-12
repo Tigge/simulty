@@ -202,6 +202,7 @@ void MapRender::render (SDL_Surface *b, Camera cam) {
             SDL_BlitSurface(t_terrain[tile->getTerrain()], &srcR, b, &dstR);
             //masked_blit(t_terrain[tile->getTerrain()], b, 1, 1, pos.getX(), pos.getY(), TILE_W, TILE_H);
 
+            dstR.x = pos.getX(); dstR.y = pos.getY();
             // Draw zone:
             if(tile->getZone() == SIMULTY_CLIENT_TOOL_ZONE_RES)
                 SDL_BlitSurface(t_zone_res, &srcR, b, &dstR);
@@ -210,10 +211,12 @@ void MapRender::render (SDL_Surface *b, Camera cam) {
             else if(tile->getZone() == SIMULTY_CLIENT_TOOL_ZONE_IND)
                 SDL_BlitSurface(t_zone_ind, &srcR, b, &dstR);
 
+            dstR.x = pos.getX(); dstR.y = pos.getY();
             // Draw road:
             if(tile->isRoad())
                 SDL_BlitSurface(getRoadBitmap(x, y), &srcR, b, &dstR);
 
+            dstR.x = pos.getX(); dstR.y = pos.getY();
             // Draw borders:
             if(tile->getOwner() != -1) {
 
