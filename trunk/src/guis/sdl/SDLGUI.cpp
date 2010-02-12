@@ -111,7 +111,11 @@ void SDLGUI::init() {
   miniMap       = new MiniMap(client->map, &camera);
   top->add(miniMap, screen->w - miniMap->getWidth(),
       screen->h - miniMap->getHeight());
-      
+  
+  console       = new Console();
+  top->add(console, 0, 0);
+  console->setWidth(screen->w);
+  console->setHeight(100);  
   tr = new ToolRender(gui);
 }
 
@@ -126,7 +130,7 @@ void SDLGUI::run() {
 
 
 void SDLGUI::console_log(std::string s) {
-  return;
+  console->addLine(s);
 }
 
 void SDLGUI::update() {
@@ -271,7 +275,13 @@ void SDLGUI::keyPressed(gcn::KeyEvent &keyEvent) {
 }
 
 void SDLGUI::keyReleased(gcn::KeyEvent &keyEvent) {
-  std::cout << "key released" << std::endl;
+  std::cout << "key released - " << ((int)keyEvent.getKey().getValue()) << std::endl;
+  
+  if(keyEvent.getKey().getValue() == 167) {
+    std::cout << "toggling console" << std::endl;
+    console->toggle();
+  }
+  
 }
 
 void SDLGUI::action(const gcn::ActionEvent &actionEvent) {
