@@ -12,6 +12,7 @@ ToolRender::ToolRender(gcn::Gui *gui) {
   try {
     selector = ImageLoader::getImage("img/selector.png");
   } catch(ImageLoaderException e) {
+    std::cout << e.what() << std::endl;
     exit(1);
   }
 
