@@ -72,7 +72,7 @@ class SDLGUI : public GUI, gcn::KeyListener, gcn::ActionListener, gcn::MouseList
   MapRender       *mr;
   BuildingRender  *br;
   ToolRender      *tr;
-  Camera camera;
+  Camera          *camera;
   
   Point           mouse_down_tile;
   Point           mouse_up_tile;
