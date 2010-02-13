@@ -118,6 +118,15 @@ void SDLGUI::init() {
   top->add(console, 0, 0);
   console->setWidth(screen->w);
   console->setHeight(100);  
+  
+  statusBar = new StatusBar(client);
+  statusBar->setWidth(screen->w);
+  top->add(statusBar, 0, screen->h - statusBar->getHeight());
+  
+  miniMap       = new MiniMap(client->map, camera);
+  top->add(miniMap, screen->w - miniMap->getWidth(),
+      screen->h - miniMap->getHeight() - statusBar->getHeight());
+  
   tr = new ToolRender(gui, client, mr, camera);
 }
 

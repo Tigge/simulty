@@ -11,6 +11,7 @@
 #include "widgets/Toolbar.hpp"
 #include "widgets/MiniMap.hpp"
 #include "widgets/Console.hpp"
+#include "widgets/StatusBar.hpp"
 
 #include "../../shared.h"
 #include "../../GUI.hpp"
@@ -58,6 +59,7 @@ class SDLGUI : public GUI, gcn::KeyListener, gcn::ActionListener, gcn::MouseList
   Toolbar                        *toolbar;
   MiniMap                        *miniMap;
   Console                        *console;
+  StatusBar                      *statusBar;
   
   
   SDL_Surface *screen;

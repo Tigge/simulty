@@ -224,6 +224,7 @@ void Client::packet_handle(NLPacket p) {
       if(playerAffected == getMyPlayer()->getSlot()) {
         getMyPlayer()->getBudget()->updateBudgetItem(budgetItem, 
             budgetMonth, balanceUpdate);
+        gui->console_log("My budget changed");
       }
       
       std::cout << "Budget changed. Item: " << budgetItem << " Month: " 

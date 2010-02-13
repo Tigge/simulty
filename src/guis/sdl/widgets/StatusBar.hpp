@@ -3,12 +3,21 @@
 
 #include "guichan.hpp"
 
-class StatusBar : public gcn::Widget {
+#include "../../../Client.hpp"
+
+class StatusBar : public gcn::Container {
 
   private:
   
+  Client     *client;
+  
+  gcn::Label *moneyLabel;
+  gcn::Label *timeLabel;
+  
   public:
   
+  StatusBar(Client *client);
+  virtual void logic();
 };
 
 #endif
