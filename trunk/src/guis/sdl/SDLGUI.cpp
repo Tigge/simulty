@@ -74,6 +74,8 @@ void SDLGUI::init() {
   
   mr = new MapRender();
   mr->setMap(client->map);
+  
+  camera = new Camera();
 
   br = new BuildingRender();
 
@@ -108,7 +110,7 @@ void SDLGUI::init() {
   toolbar       = new Toolbar();
   top->add(toolbar, screen->w - 10 - toolbar->getWidth(), 10);
   
-  miniMap       = new MiniMap(client->map, &camera);
+  miniMap       = new MiniMap(client->map, camera);
   top->add(miniMap, screen->w - miniMap->getWidth(),
       screen->h - miniMap->getHeight());
   
@@ -116,7 +118,7 @@ void SDLGUI::init() {
   top->add(console, 0, 0);
   console->setWidth(screen->w);
   console->setHeight(100);  
-  tr = new ToolRender(gui);
+  tr = new ToolRender(gui, client, mr, camera);
 }
 
 void SDLGUI::run() {
@@ -154,12 +156,12 @@ void SDLGUI::render() {
     
   } else if(client->state_game == SIMULTY_CLIENT_STATE_GAME_ON) {
     // TODO
-    mr->render(screen, camera);
+    mr->render(screen, *camera);
     // Render buildings:
-    br->render(screen, mr, camera, &client->bman);
+    br->render(screen, mr, *camera, &client->bman);
     
     if(usingTool) {
-      tr->render(screen, mr, camera, client, toolbar->getTool(), mouse_down_tile, mouse_up_tile);
+      tr->render(screen);
     }
   }
   
@@ -173,7 +175,7 @@ void SDLGUI::render() {
 void SDLGUI::mouseDragged (gcn::MouseEvent &e) {
 
   if(e.getSource() == top && e.getButton() == gcn::MouseEvent::RIGHT) {
-    camera.translate(mx - e.getX(), my - e.getY());
+    camera->translate(mx - e.getX(), my - e.getY());
     mx = e.getX();
     my = e.getY();
   } else {
@@ -181,7 +183,7 @@ void SDLGUI::mouseDragged (gcn::MouseEvent &e) {
     std::cout << "mouse dragged" << e.getX() << ", " << e.getY() << std::endl;
 
     if(e.getSource() == top) {
-      Point p = mr->toTileCoord(Point(e.getX(), e.getY()), camera);
+      Point p = mr->toTileCoord(Point(e.getX(), e.getY()), *camera);
       if(p.getX() < 0)
         p.setX(0);
       if(p.getY() < 0)
@@ -191,6 +193,7 @@ void SDLGUI::mouseDragged (gcn::MouseEvent &e) {
       if(p.getY() >= (int)client->map->getHeight())
         p.setY((int)client->map->getHeight() - 1);
 
+      tr->toolUpdate(p);
       mouse_up_tile = p;
     }
   }
@@ -204,17 +207,18 @@ void SDLGUI::mousePressed (gcn::MouseEvent &e) {
   } else {
 
     if(e.getSource() == top) {
-      Point p = mr->toTileCoord(Point(e.getX(), e.getY()), camera);
+      Point p = mr->toTileCoord(Point(e.getX(), e.getY()), *camera);
       
       std::cout << "Point: " << p << std::endl;
       
       if(!client->map->outOfBounds(p)) {
         mouse_down_tile = mouse_up_tile = p;
         usingTool       = true;
+        tr->toolStart(toolbar->getTool(), p);
       }
       
       if(e.getButton() == gcn::MouseEvent::RIGHT) {
-        client->debug(mr->toTileCoord(Point(e.getX(), e.getY()), camera));
+        client->debug(mr->toTileCoord(Point(e.getX(), e.getY()), *camera));
       }
     }
   }
@@ -228,6 +232,8 @@ void SDLGUI::mouseReleased (gcn::MouseEvent &e) {
     std::cout << "mouse dragged" << mouse_down_tile << ", " << mouse_up_tile << std::endl;
 
     if(usingTool) {
+
+      tr->toolEnd();
 
       int tool = toolbar->getTool();
 
@@ -264,16 +270,16 @@ void SDLGUI::mouseReleased (gcn::MouseEvent &e) {
 
 void SDLGUI::keyPressed(gcn::KeyEvent &keyEvent) {
   if(keyEvent.getKey().getValue() == gcn::Key::UP) {
-    camera.step(DIR_UP, 9, client->map->getWidth() * TILE_W - screen->w,
+    camera->step(DIR_UP, 9, client->map->getWidth() * TILE_W - screen->w,
         client->map->getHeight() * TILE_H - screen->h);
   } else if(keyEvent.getKey().getValue() == gcn::Key::RIGHT) {
-    camera.step(DIR_RIGHT, 9, client->map->getWidth() * TILE_W - screen->w,
+    camera->step(DIR_RIGHT, 9, client->map->getWidth() * TILE_W - screen->w,
         client->map->getHeight() * TILE_H - screen->h);
   } else if(keyEvent.getKey().getValue() == gcn::Key::DOWN) {
-    camera.step(DIR_DOWN, 9, client->map->getWidth() * TILE_W - screen->w,
+    camera->step(DIR_DOWN, 9, client->map->getWidth() * TILE_W - screen->w,
         client->map->getHeight() * TILE_H - screen->h);
   } else if(keyEvent.getKey().getValue() == gcn::Key::LEFT) {
-    camera.step(DIR_LEFT, 9, client->map->getWidth() * TILE_W - screen->w,
+    camera->step(DIR_LEFT, 9, client->map->getWidth() * TILE_W - screen->w,
         client->map->getHeight() * TILE_H - screen->h);
   }
 }
