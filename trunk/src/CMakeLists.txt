@@ -72,6 +72,7 @@ ADD_EXECUTABLE(../simulty-client Client.cpp Point.cpp Map.cpp PlayerManager.cpp
     guis/sdl/widgets/Toolbar.cpp
     guis/sdl/widgets/MiniMap.cpp
     guis/sdl/widgets/Console.cpp
+    guis/sdl/widgets/StatusBar.cpp
     guis/sdl/widgets/sdltruetypefont.cpp)
     
 target_link_libraries(../simulty-client NL elog ${GUICHAN} ${GUICHANSDL})
