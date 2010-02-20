@@ -33,7 +33,7 @@ class MapRender {
     SDL_Surface *mouse_hint;
 
     SDL_Surface *getRoadBitmap(int x, int y);
-
+    void renderTile(SDL_Surface *tile, SDL_Surface *to, int x, int y);
   // Operations
   public:
     
