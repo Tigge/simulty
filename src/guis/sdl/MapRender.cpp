@@ -158,6 +158,13 @@ Point MapRender::toScreenCoord(Point tileCoord, Camera cam) {
 
 }
 
+
+void MapRender::renderTile(SDL_Surface *tile, SDL_Surface *to, int x, int y) {
+  SDL_Rect srcR = {1, 1, TILE_W, TILE_H};
+  SDL_Rect dstR = {x, y, TILE_W, TILE_H};
+  SDL_BlitSurface(tile, &srcR, to, &dstR);
+} 
+
 void MapRender::render (SDL_Surface *b, Camera cam) {
   Point start, end;
 
@@ -197,37 +204,31 @@ void MapRender::render (SDL_Surface *b, Camera cam) {
             //std::cout << "drawing " << x << ", " << y << std::endl;
             //std::cout << "     to " << pos.getX() << ", " << pos.getY() << std::endl;
             // Draw terrain:
-            SDL_Rect srcR = {1, 1, TILE_W, TILE_H};
-            SDL_Rect dstR = {pos.getX(), pos.getY(), TILE_W, TILE_H};
-            SDL_BlitSurface(t_terrain[tile->getTerrain()], &srcR, b, &dstR);
-            //masked_blit(t_terrain[tile->getTerrain()], b, 1, 1, pos.getX(), pos.getY(), TILE_W, TILE_H);
+            renderTile(t_terrain[tile->getTerrain()], b, pos.getX(), pos.getY());
 
-            dstR.x = pos.getX(); dstR.y = pos.getY();
             // Draw zone:
             if(tile->getZone() == SIMULTY_CLIENT_TOOL_ZONE_RES)
-                SDL_BlitSurface(t_zone_res, &srcR, b, &dstR);
+                renderTile(t_zone_res, b, pos.getX(), pos.getY());
             else if(tile->getZone() == SIMULTY_CLIENT_TOOL_ZONE_COM)
-                SDL_BlitSurface(t_zone_com, &srcR, b, &dstR);
+                renderTile(t_zone_com, b, pos.getX(), pos.getY());
             else if(tile->getZone() == SIMULTY_CLIENT_TOOL_ZONE_IND)
-                SDL_BlitSurface(t_zone_ind, &srcR, b, &dstR);
+                renderTile(t_zone_ind, b, pos.getX(), pos.getY());
 
-            dstR.x = pos.getX(); dstR.y = pos.getY();
             // Draw road:
             if(tile->isRoad())
-                SDL_BlitSurface(getRoadBitmap(x, y), &srcR, b, &dstR);
+                renderTile(getRoadBitmap(x, y), b, pos.getX(), pos.getY());
 
-            dstR.x = pos.getX(); dstR.y = pos.getY();
             // Draw borders:
             if(tile->getOwner() != -1) {
 
               if(y > 0 && m->getTile(x, y - 1)->getOwner() != m->getTile(x, y)->getOwner())
-                  SDL_BlitSurface(t_border[DIR_LEFT], &srcR, b, &dstR);
+                  renderTile(t_border[DIR_LEFT], b, pos.getX(), pos.getY());
               if(x < (int)m->getWidth() - 1 && m->getTile(x + 1, y)->getOwner() != m->getTile(x, y)->getOwner())
-                  SDL_BlitSurface(t_border[DIR_DOWN], &srcR, b, &dstR);
+                  renderTile(t_border[DIR_DOWN], b, pos.getX(), pos.getY());
               if(y < (int)m->getHeight() - 1 && m->getTile(x, y + 1)->getOwner() != m->getTile(x, y)->getOwner())
-                  SDL_BlitSurface(t_border[DIR_RIGHT], &srcR, b, &dstR);
+                  renderTile(t_border[DIR_RIGHT], b, pos.getX(), pos.getY());
               if(x > 0 && m->getTile(x - 1, y)->getOwner() != m->getTile(x, y)->getOwner())
-                  SDL_BlitSurface(t_border[DIR_UP], &srcR, b, &dstR);
+                  renderTile(t_border[DIR_UP], b, pos.getX(), pos.getY());
 
               //textprintf_ex(b, font, pos.getX() + 10 , pos.getY() + 16, makecol(0, 0, 0), -1, "%i,%i", tile->getOwner(), tile->getZone());
               }
