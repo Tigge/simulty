@@ -43,24 +43,32 @@ void ToolRender::toolUpdate(Point end) {
   // Write text
   int cost = 0;
   
+  Point from = toolStartPos;
+  Point to   = toolEndPos;
+  
   if(tool == SIMULTY_CLIENT_TOOL_ZONE_COM
       || tool == SIMULTY_CLIENT_TOOL_ZONE_RES
       || tool == SIMULTY_CLIENT_TOOL_ZONE_IND) {
-    cost = client->map->buildZoneCost(client->getMyPlayer()->getSlot(), tool, toolStartPos, toolEndPos);
+    cost = client->map->buildZoneCost(client->getMyPlayer()->getSlot(), tool, from, to);
   } else if(tool == SIMULTY_CLIENT_TOOL_LAND) {
-    cost = client->map->buyLandCost(client->getMyPlayer()->getSlot(), toolStartPos, toolEndPos);
+    cost = client->map->buyLandCost(client->getMyPlayer()->getSlot(), from, to);
   } else if(tool == SIMULTY_CLIENT_TOOL_ROAD) {
-    cost = client->map->buildRoadCost(client->getMyPlayer()->getSlot(), toolStartPos, toolEndPos);
+    cost = client->map->buildRoadCost(client->getMyPlayer()->getSlot(), from, to);
   } else if(tool == SIMULTY_CLIENT_TOOL_BULLDOZER) {
-    cost = client->map->bulldozeCost(client->getMyPlayer()->getSlot(), toolStartPos, toolEndPos);
+    cost = client->map->bulldozeCost(client->getMyPlayer()->getSlot(), from, to);
   } else if(tool == SIMULTY_CLIENT_TOOL_DEZONE) {
-    cost = client->map->deZoneCost(client->getMyPlayer()->getSlot(), toolStartPos, toolEndPos);
+    cost = client->map->deZoneCost(client->getMyPlayer()->getSlot(), from, to);
   }
   
-  if(cost > client->getMyPlayer()->getBudget()->getBalance())
+  // TODO: Does not work, need new Color label (I guess)
+  if(cost > client->getMyPlayer()->getBudget()->getBalance()) {
+    costLabel->setBackgroundColor(gcn::Color(255, 0, 0));
     costLabel->setBaseColor(gcn::Color(255, 0, 0));
-  else
+    std::cout << "to much" << std::endl;
+  } else {
+    costLabel->setBackgroundColor(gcn::Color(0, 0, 0));
     costLabel->setBaseColor(gcn::Color(0, 0, 0));
+  }
   
   char text[256];
   sprintf(text, "%i", cost);

@@ -24,6 +24,9 @@ unsigned int Map::getHeight() {
 }
 
 void Map::buyLand(unsigned char owner, Point from, Point to) {
+
+  Point::fixOrder(from, to);
+
   for(unsigned int x = from.getX(); x <= (unsigned int)to.getX(); x++) {
     for(unsigned int y = from.getY(); y <= (unsigned int)to.getY(); y++) {
       if(!outOfBounds(Point(x, y))) {
@@ -38,6 +41,7 @@ int  Map::buyLandCost(unsigned char owner, Point from, Point to) {
 
   from.unsign();
   to.unsign();
+  Point::fixOrder(from, to);
 
   int cost = 0;
   for(unsigned int x = from.getX(); x <= (unsigned int)to.getX(); x++) {
@@ -56,6 +60,7 @@ int  Map::buyLandCost(unsigned char owner, Point from, Point to) {
 void Map::bulldoze(unsigned char owner, Point from, Point to) {
 
   // TODO, check for valid points
+  Point::fixOrder(from, to);
 
   for(unsigned int x = from.getX(); x <= (unsigned int)to.getX(); x++) {
     for(unsigned int y = from.getY(); y <= (unsigned int)to.getY(); y++) {
@@ -72,6 +77,7 @@ int Map::bulldozeCost(unsigned char owner, Point from, Point to) {
 
   from.unsign();
   to.unsign();
+  Point::fixOrder(from, to);
 
   int cost = 0;
   for(unsigned int x = from.getX(); x <= (unsigned int)to.getX(); x++) {
@@ -88,6 +94,7 @@ int Map::bulldozeCost(unsigned char owner, Point from, Point to) {
 
 void Map::buildRoad(unsigned char owner, Point from, Point to) {
 
+  // TODO: XXX, fix more general
   Point line;
 
   if((from.getX() - to.getX())*(from.getX() - to.getX() < 0 ? -1 : 1)
@@ -126,25 +133,50 @@ void Map::buildRoad(unsigned char owner, Point from, Point to) {
 }
 int Map::buildRoadCost(unsigned char owner, Point from, Point to) {
 
-  from.unsign();
-  to.unsign();
-
+  Point line;
   int cost = 0;
 
+  if((from.getX() - to.getX())*(from.getX() - to.getX() < 0 ? -1 : 1)
+   > (from.getY() - to.getY())*(from.getY() - to.getY() < 0 ? -1 : 1)) {  // delta x > delta y
+    line.setY(from.getY());
+    line.setX(to.getX());
+  }
+  else {
+    line.setX(from.getX());
+    line.setY(to.getY());
+  }
+
+  Point::fixOrder(from, to);
+
+  // Horizontal
   for(unsigned int x = from.getX(); x <= (unsigned int)to.getX(); x++) {
-    for(unsigned int y = from.getY(); y <= (unsigned int)to.getY(); y++) {
-      if(!outOfBounds(Point(x, y))) {
-        if(getTile(x, y)->isRoad() == false && getTile(x, y)->getZone() == 0) {
-          cost += SIMULTY_COST_ROAD;
-        }
+    if(!outOfBounds(Point(x, line.getY()))) {
+      if(getTile(x, line.getY())->isRoad() == false
+      && getTile(x, line.getY())->getZone() == 0
+      && getTile(x, line.getY())->getOwner() == owner) {
+        cost += SIMULTY_COST_ROAD;
       }
     }
   }
-  return cost;
 
+  // Vertical
+  for(unsigned int y = from.getY() + 1; y <= (unsigned int)to.getY(); y++) {
+    if(!outOfBounds(Point(line.getX(), y))) {
+      if(getTile(line.getX(), y)->isRoad() == false
+      && getTile(line.getX(), y)->getZone() == 0
+      && getTile(line.getX(), y)->getOwner() == owner) {
+        cost += SIMULTY_COST_ROAD;
+      }
+    }
+  }
+
+  return cost;
 }
 
 void Map::buildZone(unsigned char owner, int type, Point from, Point to) {
+
+  Point::fixOrder(from, to);
+
   for(unsigned int x = from.getX(); x <= (unsigned int)to.getX(); x++) {
     for(unsigned int y = from.getY(); y <= (unsigned int)to.getY(); y++) {
     if(!outOfBounds(Point(x, y))) {
@@ -160,6 +192,7 @@ int  Map::buildZoneCost(unsigned char owner, int type, Point from, Point to) {
 
   from.unsign();
   to.unsign();
+  Point::fixOrder(from, to);
 
   int cost = 0;
   int cost_per_tile;
@@ -191,6 +224,9 @@ int  Map::buildZoneCost(unsigned char owner, int type, Point from, Point to) {
 }
 
 void Map::deZone(unsigned char owner, Point from, Point to) {
+
+  Point::fixOrder(from, to);
+
   for(int x = from.getX(); x <= to.getX(); x++) {
     for(int y = from.getY(); y <= to.getY(); y++) {
       if(getTile(x, y)->getOwner() == owner 
@@ -204,6 +240,9 @@ void Map::deZone(unsigned char owner, Point from, Point to) {
 }
 
 int Map::deZoneCost(unsigned char owner, Point from, Point to) {
+
+  Point::fixOrder(from, to);
+
   int cost = 0;
   for(int x = from.getX(); x <= to.getX(); x++) {
     for(int y = from.getY(); y <= to.getY(); y++) {
