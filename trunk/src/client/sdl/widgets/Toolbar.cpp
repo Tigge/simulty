@@ -1,7 +1,7 @@
 #include "Toolbar.hpp"
 
-#include "../../../shared.h"
 #include <iostream>
+
 Toolbar::Toolbar() : gcn::Container() {
 
   setWidth(90);

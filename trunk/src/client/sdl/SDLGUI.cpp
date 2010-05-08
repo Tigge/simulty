@@ -41,12 +41,15 @@ SDLGUI::~SDLGUI() {
 
 void SDLGUI::init() {
 
+  int screenWidth  = 1024;
+  int screenHeight = 768;
+
   if(SDL_Init( SDL_INIT_EVERYTHING) == -1) {
     fprintf(stderr, "Unable to init SDL: %s\n", SDL_GetError());
     exit(1);
   }
   
-  screen = SDL_SetVideoMode( 640, 480, 32, SDL_SWSURFACE | SDL_DOUBLEBUF);
+  screen = SDL_SetVideoMode(screenWidth, screenHeight, 32, SDL_SWSURFACE | SDL_DOUBLEBUF);
   
   if(TTF_Init()==-1) {
     printf("TTF_Init: %s\n", TTF_GetError());
@@ -89,7 +92,7 @@ void SDLGUI::init() {
   input = new gcn::SDLInput();
 
   top = new gcn::Container();
-  top->setDimension(gcn::Rectangle(0, 0, 640, 480));
+  top->setDimension(gcn::Rectangle(0, 0, screenWidth, screenHeight));
   top->setOpaque(false);
   top->addMouseListener(this);
 

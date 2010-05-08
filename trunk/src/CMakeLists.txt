@@ -1,4 +1,3 @@
-SUBDIRS(NL error)
 INCLUDE(FindSDL)
 
 IF(WIN32)
@@ -35,44 +34,51 @@ Find_Library(GUICHAN NAMES guichan)
 Find_Library(GUICHANSDL NAMES guichan_sdl)
 
 
-INCLUDE_DIRECTORIES(${Simulty_SOURCE_DIR}/src/NL 
-                    ${Simulty_SOURCE_DIR}/src/error
-                    ${SDL_INCLUDE_DIR})
+INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR}/lib/NL
+                    ${PROJECT_SOURCE_DIR}/lib/error
+                    ${SDL_INCLUDE_DIR}
+                    common)
 
-LINK_DIRECTORIES(${Simulty_BINARY_DIR}/src/NL 
-                 ${Simulty_BINARY_DIR}/src/error)
+LINK_DIRECTORIES(${PROJECT_BINARY_DIR}/lib/NL
+                 ${PROJECT_BINARY_DIR}/lib/error)
 
 # Server:
 ###############################################################################
-ADD_EXECUTABLE(../simulty-server Server.cpp Point.cpp Map.cpp PlayerManager.cpp
-    Tile.cpp Player.cpp player_server_network.cpp player_server_ai.cpp
-    Building.cpp BuildingZone.cpp BuildingPolice.cpp BuildingFire.cpp
-    BuildingHospital.cpp BuildingManager.cpp BuildingFactory.cpp
-    BuildingResidential.cpp BuildingCommersial.cpp BuildingIndustrial.cpp
-    PlayerManagerServer.cpp BuildingManagerServer.cpp ThriveMap.cpp Date.cpp
-    Budget.cpp)
+ADD_EXECUTABLE(../simulty-server server/Server.cpp common/Point.cpp 
+    common/Map.cpp common/PlayerManager.cpp common/Tile.cpp common/Player.cpp 
+    server/player_server_network.cpp server/player_server_ai.cpp
+    common/Building.cpp common/BuildingZone.cpp common/BuildingPolice.cpp 
+    common/BuildingFire.cpp common/BuildingHospital.cpp 
+    common/BuildingManager.cpp common/BuildingFactory.cpp
+    common/BuildingResidential.cpp common/BuildingCommersial.cpp 
+    common/BuildingIndustrial.cpp server/PlayerManagerServer.cpp 
+    server/BuildingManagerServer.cpp common/ThriveMap.cpp common/Date.cpp
+    common/Budget.cpp)
 
 target_link_libraries(../simulty-server NL elog)
 
 # Client:
 ###############################################################################
-ADD_EXECUTABLE(../simulty-client Client.cpp Point.cpp Map.cpp PlayerManager.cpp
-    Tile.cpp Player.cpp player_client_local.cpp player_client_remote.cpp 
-    Building.cpp BuildingZone.cpp BuildingFactory.cpp BuildingFire.cpp
-    BuildingHospital.cpp BuildingManager.cpp BuildingPolice.cpp
-    BuildingResidential.cpp BuildingCommersial.cpp BuildingIndustrial.cpp 
-    Date.cpp Budget.cpp
+ADD_EXECUTABLE(../simulty-client client/Client.cpp common/Point.cpp 
+    common/Map.cpp common/PlayerManager.cpp common/Tile.cpp common/Player.cpp 
+    client/player_client_local.cpp client/player_client_remote.cpp 
+    common/Building.cpp common/BuildingZone.cpp common/BuildingFactory.cpp 
+    common/BuildingFire.cpp common/BuildingHospital.cpp 
+    common/BuildingManager.cpp common/BuildingPolice.cpp 
+    common/BuildingResidential.cpp common/BuildingCommersial.cpp 
+    common/BuildingIndustrial.cpp 
+    common/Date.cpp common/Budget.cpp
 
-    guis/sdl/SDLGUI.cpp
-    guis/sdl/Camera.cpp
-    guis/sdl/MapRender.cpp
-    guis/sdl/BuildingRender.cpp
-    guis/sdl/ToolRender.cpp
-    guis/sdl/widgets/MainMenu.cpp
-    guis/sdl/widgets/Toolbar.cpp
-    guis/sdl/widgets/MiniMap.cpp
-    guis/sdl/widgets/Console.cpp
-    guis/sdl/widgets/StatusBar.cpp
-    guis/sdl/widgets/sdltruetypefont.cpp)
+    client/sdl/SDLGUI.cpp
+    client/sdl/Camera.cpp
+    client/sdl/MapRender.cpp
+    client/sdl/BuildingRender.cpp
+    client/sdl/ToolRender.cpp
+    client/sdl/widgets/MainMenu.cpp
+    client/sdl/widgets/Toolbar.cpp
+    client/sdl/widgets/MiniMap.cpp
+    client/sdl/widgets/Console.cpp
+    client/sdl/widgets/StatusBar.cpp
+    client/sdl/widgets/sdltruetypefont.cpp)
     
 target_link_libraries(../simulty-client NL elog ${GUICHAN} ${GUICHANSDL})

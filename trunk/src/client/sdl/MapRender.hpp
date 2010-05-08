@@ -1,10 +1,11 @@
 #ifndef _MAPRENDER_HPP_
 #define _MAPRENDER_HPP_
 
-#include "../../shared.h"
+#include "shared.h"
 
-#include "../../Map.hpp"
-#include "../../Point.hpp"
+#include "Map.hpp"
+#include "Tile.hpp"
+#include "Point.hpp"
 #include "Camera.hpp"
 
 #include "ImageLoader.hpp"

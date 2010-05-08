@@ -6,7 +6,9 @@ You can always find the latest version of Simulty at http://simulty.sf.net .
 
  To make the project type:
 
- cmake .
+ mkdir build
+ cd build
+ cmake ..
  make
 
  And to run:

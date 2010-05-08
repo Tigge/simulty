@@ -1,7 +1,7 @@
 #ifndef _TOOLRENDER_HPP_
 #define _TOOLRENDER_HPP_
 
-#include "../../shared.h"
+#include "shared.h"
 
 #include "SDL.h"
 #include "SDL_ttf.h"
@@ -11,7 +11,7 @@
 #include "Camera.hpp"
 #include "ImageLoader.hpp"
 #include "MapRender.hpp"
-#include "../../Client.hpp"
+#include "../Client.hpp"
 
 class ToolRender {
 

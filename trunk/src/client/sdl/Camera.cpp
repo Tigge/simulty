@@ -1,5 +1,3 @@
-
-#include "../../shared.h"
 #include "Camera.hpp"
 
 Camera::Camera() : Point(100, 100) {

@@ -3,7 +3,7 @@
 
 #include "guichan.hpp"
 
-#include "../../../Client.hpp"
+#include "../../Client.hpp"
 
 class StatusBar : public gcn::Container {
 

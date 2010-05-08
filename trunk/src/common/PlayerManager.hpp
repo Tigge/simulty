@@ -6,10 +6,10 @@
 #include "NL.hpp"
 
 #include "Player.hpp"
-#include "player_client_local.h"
-#include "player_client_remote.h"
-#include "player_server_network.h"
-#include "player_server_ai.h"
+#include "../client/player_client_local.h"
+#include "../client/player_client_remote.h"
+#include "../server/player_server_network.h"
+#include "../server/player_server_ai.h"
 
 class PlayerManager
 {
