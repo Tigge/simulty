@@ -1,11 +1,11 @@
 #ifndef _BUILDINGRENDER_HPP_
 #define _BUILDINGRENDER_HPP_
 
-#include "../../Building.hpp"
-#include "../../BuildingZone.hpp"
-#include "../../BuildingManager.hpp"
+#include "Building.hpp"
+#include "BuildingZone.hpp"
+#include "BuildingManager.hpp"
 
-#include "../../Point.hpp"
+#include "Point.hpp"
 #include "Camera.hpp"
 
 #include "MapRender.hpp"

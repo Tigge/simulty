@@ -6,9 +6,10 @@
 #include "Map.hpp"
 #include "Building.hpp"
 #include "BuildingZone.hpp"
+#include "BuildingFactory.hpp"
 
 #include "Date.hpp"
-
+#include "SimultyException.hpp"
 
 class BuildingManager {
 

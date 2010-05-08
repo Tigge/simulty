@@ -3,8 +3,8 @@
 
 #include "guichan.hpp"
 
-#include "../../../Map.hpp"
-#include "../../../Point.hpp"
+#include "Map.hpp"
+#include "Point.hpp"
 #include "../Camera.hpp"
 
 class MiniMap : public gcn::Widget, gcn::MouseListener {

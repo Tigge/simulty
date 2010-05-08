@@ -3,6 +3,7 @@
 #define _TOOLBAR_HPP_
 
 #include "guichan.hpp"
+#include "shared.h"
 
 //#include "ImageButton.hpp"
 

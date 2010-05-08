@@ -1,5 +1,5 @@
 #include "BuildingManager.hpp"
-#include "Client.hpp"
+//#include "Client.hpp"
 
 BuildingManager::~BuildingManager() {
 

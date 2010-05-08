@@ -13,9 +13,9 @@
 #include "widgets/Console.hpp"
 #include "widgets/StatusBar.hpp"
 
-#include "../../shared.h"
-#include "../../GUI.hpp"
-#include "../../Client.hpp"
+#include "shared.h"
+#include "../GUI.hpp"
+#include "../Client.hpp"
 
 #include "MapRender.hpp"
 #include "BuildingRender.hpp"

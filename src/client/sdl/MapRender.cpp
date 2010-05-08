@@ -1,8 +1,5 @@
 #include "MapRender.hpp"
 
-//#include "../../Client.hpp"
-#include "../../Tile.hpp"
-
 MapRender::MapRender() {
 
   // Try to load all images:
