@@ -1,8 +1,8 @@
-#ifndef _NL_H_
-#define _NL_H_
+#ifndef _NL_HPP_
+#define _NL_HPP_
 
 #ifdef DEBUGMODE
-  #define DEBUG(X) X    
+  #define DEBUG(X) X std::cout.flush();
 #else   
   #define DEBUG(X)   
 #endif
@@ -19,9 +19,10 @@
   #include <arpa/inet.h>
 #endif
 
-#include "NLException.hpp"
-#include "NLPacket.hpp"
-#include "NLSocket.hpp"
-#include "NLNetwork.hpp"
+#include "Network.hpp"
+#include "Socket.hpp"
+#include "ServerSocket.hpp"
+#include "Exception.hpp"
+#include "Packet.hpp"
 
 #endif
