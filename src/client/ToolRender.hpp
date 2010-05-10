@@ -11,7 +11,7 @@
 #include "Camera.hpp"
 #include "ImageLoader.hpp"
 #include "MapRender.hpp"
-#include "../Client.hpp"
+#include "Client.hpp"
 
 class ToolRender {
 

@@ -189,7 +189,7 @@ void BuildingManagerServer::addZoneBuilding(Map *m, unsigned char playerSlot,
 
   Server *server = Server::getInstance();
 
-  NLPacket packet(NLPACKET_TYPE_SIMULTY_BUILD_ZONE_BUILDING);
+  NL::Packet packet(NLPACKET_TYPE_SIMULTY_BUILD_ZONE_BUILDING);
   packet << (NLINT16)playerSlot << (NLINT16)buildingType << (NLINT32)p.getX()
          << (NLINT32)p.getY()   << (NLINT16)w            << (NLINT16)h
          << (NLINT16)level      << (NLINT16)style;
@@ -205,7 +205,7 @@ void BuildingManagerServer::removeZoneBuilding(Map *map, unsigned int id) {
 
   Server *server = Server::getInstance();
 
-  NLPacket packet(NLPACKET_TYPE_SIMULTY_REMOVE_ZONE_BUILDING);
+  NL::Packet packet(NLPACKET_TYPE_SIMULTY_REMOVE_ZONE_BUILDING);
   packet << (NLINT32)b->getPosition().getX() << (NLINT32)b->getPosition().getY();
 
   server->packet_send_to_all(packet);
@@ -219,7 +219,7 @@ void BuildingManagerServer::removeSpecialBuilding(Map *map, unsigned int id) {
 
   Server *server = Server::getInstance();
 
-  NLPacket packet(NLPACKET_TYPE_SIMULTY_REMOVE_SPECIAL_BUILDING);
+  NL::Packet packet(NLPACKET_TYPE_SIMULTY_REMOVE_SPECIAL_BUILDING);
   packet << (NLINT32)b->getPosition().getX() << (NLINT32)b->getPosition().getY();
 
   server->packet_send_to_all(packet);

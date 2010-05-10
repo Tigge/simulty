@@ -14,8 +14,7 @@
 #include "widgets/StatusBar.hpp"
 
 #include "shared.h"
-#include "../GUI.hpp"
-#include "../Client.hpp"
+#include "Client.hpp"
 
 #include "MapRender.hpp"
 #include "BuildingRender.hpp"
@@ -24,11 +23,11 @@
 #include <string>
 #include <iostream>
 
-class SDLGUI : public GUI, gcn::KeyListener, gcn::ActionListener, gcn::MouseListener {
+class SDLGUI: public GUI, gcn::KeyListener, gcn::ActionListener, gcn::MouseListener {
 
   public:
 
-  SDLGUI();
+  SDLGUI(Client *);
   ~SDLGUI();
 
   virtual void keyPressed(gcn::KeyEvent &keyEvent);
@@ -44,8 +43,7 @@ class SDLGUI : public GUI, gcn::KeyListener, gcn::ActionListener, gcn::MouseList
   
   void render();
   void update();
-  
-  void run();
+  void handleEvent(SDL_Event &);
   
   private:
   

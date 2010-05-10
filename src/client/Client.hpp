@@ -2,13 +2,15 @@
 #ifndef _CLIENT_HPP_
 #define _CLIENT_HPP_
 
+#include "SDL.h"
+
 #include "SimultyException.hpp"
 
 #include "PlayerManager.hpp"
 
 #include "Player.hpp"
-#include "player_client_local.h"
-#include "player_client_remote.h"
+#include "PlayerClientLocal.hpp"
+#include "PlayerClientRemote.hpp"
 
 #include "BuildingManager.hpp"
 #include "BuildingFactory.hpp"
@@ -37,19 +39,21 @@ class Client {
   private:
 
 
-    NLNetwork net;
+    NL::Network net;
 
   public:
 
     Date      date;
 
     PlayerManager pman;
-    player_client_local *myPlayer;
+    PlayerClientLocal *myPlayer;
 
     BuildingManager bman;
 
     //bool cam_move_step(int dir, int step);
     //bool cam_move_jump(int x, int y);
+
+    NL::Socket     *socket;
 
   public:
 
@@ -63,19 +67,21 @@ class Client {
     //Point cam;
     GUI *gui;
 
-    NLSocket *net_client;
+    PacketSender   *sender;
+    PacketReceiver *receiver;
 
   // Operations
   public:
-    Client(GUI *);
-
+    Client();
     ~Client();
 
     bool running();
 
+    void init();
     void update();
+    void render();    
 
-    void packet_handle(NLPacket p);
+    void packet_handle(NL::Packet p);
 
     void bulldoze(Point from, Point to);
     void deZone(Point from, Point to);
@@ -87,7 +93,7 @@ class Client {
     
     void debug(Point p);
 
-    player_client_local *getMyPlayer();
+    PlayerClientLocal *getMyPlayer();
 
 };
 

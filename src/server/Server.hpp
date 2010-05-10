@@ -10,8 +10,8 @@
 #include "PlayerManagerServer.hpp"
 
 #include "Player.hpp"
-#include "player_server_network.h"
-#include "player_server_ai.h"
+#include "PlayerServerNetwork.hpp"
+#include "PlayerServerAI.hpp"
 
 #include "BuildingManagerServer.hpp"
 
@@ -25,6 +25,8 @@
 #include "BuildingFactory.hpp"
 
 #include "LoaderSaver.hpp"
+
+#include "ServerListener.hpp"
 
 const unsigned char SIMULTY_SERVER_STATE_LOBBY      = 1;
 
@@ -40,22 +42,21 @@ class Server {
   
   static Server* instance;
   
-  NLNetwork      net;
+  NL::Network    net;
   Map           *map;
 
-  bool           player_add(unsigned char player_type);
+  bool           player_add(unsigned char player_type, NL::Socket *);
   bool           player_remove(Player *);
 
-  bool           packet_handle(player_server_network *from, NLPacket pack);
+  bool           packet_handle(PlayerServerNetwork *from, NL::Packet pack);
 
   PlayerManagerServer   pman;
   BuildingManagerServer bman;
 
-  Date           date;
+  Date            date;
 
-  bool           time_advance;
-  int            speed;
-  NLSocket      *net_server;
+  int             speed;
+  ServerListener *listener;
 
   void           updateBalance(Player *, unsigned char, unsigned char, int);
 
@@ -72,8 +73,8 @@ class Server {
   virtual ~Server();
   static Server         *getInstance();
 
-  void                   packet_send(player_server_network *to, NLPacket pack);
-  void                   packet_send_to_all(NLPacket pack);
+  void                   packet_send(PlayerServerNetwork *to, NL::Packet pack);
+  void                   packet_send_to_all(NL::Packet pack);
 
   void                   setSpeed(int speed);
   int                    getSpeed();
@@ -84,8 +85,9 @@ class Server {
   BuildingManagerServer *getBuildingManager();
 
   Uint32 static          time_increment(Uint32, void *);
-  void                   update();
+  void                   update(SDL_Event *);
   void                   updateThrive();
+  void                   advanceTime();
 };
 
 extern Server *server;

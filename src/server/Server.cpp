@@ -23,6 +23,10 @@
  * Version ##revision##
  */
 
+
+/* TODO: Update to use SDL event system for timer, getting packets, and 
+         receiving new player connections */
+
 #include "Server.hpp"
 #include "SimultyException.hpp"
 
@@ -33,9 +37,16 @@ int main(int argc, char *argv[]) {
   try {
     Server *server = Server::getInstance();
 
+    SDL_Event event;
     while(true) {
-        server->update();
-        SDL_Delay(1);
+        if(SDL_WaitEvent(&event) == 0) {
+            std::cerr << "Error while waiting for events" << std::endl;
+        } else {
+            std::cout << "Got event " << (int)event.type << " ("
+                    << SDL_USEREVENT << ")" << std::endl;
+        
+            server->update(&event);
+        }
     }
 
     delete server;
@@ -61,10 +72,10 @@ Server* Server::getInstance() {
 // =====================================================================
 Server::Server() {
 
-  SDL_Init(SDL_INIT_TIMER);
+  SDL_Init(SDL_INIT_TIMER | SDL_INIT_VIDEO);
   
-  net_server = net.add();
-  net_server->listen_on(5557);
+  listener = new ServerListener(5557);
+  listener->start();
 
   std::cout << "  _______ __                  __ __         " << std::endl;
   std::cout << " |     __|__|.--------.--.--.|  |  |_.--.--." << std::endl;
@@ -81,8 +92,6 @@ Server::Server() {
   std::cerr << std::endl;
 
   map = new Map(50, 50);
-
-  time_advance = false;
 
   // Set initial speed:
   setSpeed(1);
@@ -104,7 +113,14 @@ Server::~Server() {
 // Timer called once every second: TODO, make static!
 // =====================================================================
 Uint32 Server::time_increment(Uint32 interval, void *object) {
-    ((Server *)object)->time_advance = true;
+
+    SDL_Event event;
+    event.type = SDL_USEREVENT;
+    event.user.code  = USEREVENT_TIMEINCREMENT;
+    event.user.data1 = NULL;
+    event.user.data2 = NULL;
+    SDL_PushEvent(&event);
+
     return interval;
 }
 
@@ -114,9 +130,9 @@ void Server::setSpeed(int speed) {
     if(speed > 0) {
       int msec = 0;
       switch(speed) {
-        case 1: msec = 700; break;
-        case 2: msec = 400;  break;
-        case 3: msec = 200;  break;
+        case 1: msec = 7000; break;
+        case 2: msec = 4000;  break;
+        case 3: msec = 2000;  break;
       }
       SDL_RemoveTimer(timerId);
       timerId = SDL_AddTimer(msec, Server::time_increment, this);
@@ -137,125 +153,116 @@ Date Server::getDate() {
 
 // Server update loop, the main loop:
 // =====================================================================
-void Server::update () {
+void Server::update (SDL_Event *event) {
 
-  // Wait for network updates (max 250 ms, then move on)
-  net.update(100);
+  if(event->type == SDL_USEREVENT) {
+  
+      std::cout << "Got code: " << event->user.code << std::endl;
+  
+      if(event->user.code == USEREVENT_TIMEINCREMENT) {
+          advanceTime();
+      } else if(event->user.code == USEREVENT_GOTPLAYER) {
+          NL::Socket *socket = (NL::Socket *)event->user.data1;
+          player_add(PLAYER_TYPE_SERVER_NETWORK, socket); 
+      } else if(event->user.code == USEREVENT_LOSTPLAYER) {
+          //XXX: player_remove(pl);
+      } else if(event->user.code == USEREVENT_GOTPACKET) {
+          PlayerServerNetwork *player = (PlayerServerNetwork *)event->user.data1;
+          PacketReceiver *receiver = (PacketReceiver *)event->user.data2;
 
-  // New stuff happening: (TODO: move to function)
-  if(time_advance) {
+          packet_handle(player, receiver->popPacket());
+      }
+  }
 
-    // Increase date:
-    date.advance();
+}
 
-    // Do every new month:
-    if(date.isEndOfMonth()) {
-      std::cout << "It is now the end of " << date.getMonthAsString() << ", time to update zones" << std::endl;
-      
-      // Update budget
-      for(unsigned int p = 0; p < pman.count(); p++) {
 
-        Player *player = pman.get_by_n(p);
+void Server::advanceTime() {
 
-        // Move to PlayerHandlerServer ?
-        int resIncome = 0, comIncome = 0, indIncome = 0;
-        for(unsigned int i = 0; i < bman.getZoneBuildingCount(); i++) {
-          if(bman.getZoneBuilding(i)->getOwner() == player->getSlot()) {
-            resIncome += bman.getZoneBuilding(i)->getInhabitants();
-            comIncome += bman.getZoneBuilding(i)->getStores();
-            indIncome += bman.getZoneBuilding(i)->getJobs();
-          }
+  // Increase date:
+  date.advance();
+
+  // Do every new month:
+  if(date.isEndOfMonth()) {
+    std::cout << "It is now the end of " << date.getMonthAsString() << ", time to update zones" << std::endl;
+    
+    // Update budget
+    for(unsigned int p = 0; p < pman.count(); p++) {
+
+      Player *player = pman.get_by_n(p);
+
+      // Move to PlayerHandlerServer ?
+      int resIncome = 0, comIncome = 0, indIncome = 0;
+      for(unsigned int i = 0; i < bman.getZoneBuildingCount(); i++) {
+        if(bman.getZoneBuilding(i)->getOwner() == player->getSlot()) {
+          resIncome += bman.getZoneBuilding(i)->getInhabitants();
+          comIncome += bman.getZoneBuilding(i)->getStores();
+          indIncome += bman.getZoneBuilding(i)->getJobs();
         }
-        
-        int crimeExpense = 0, fireExpense = 0, healthExpense = 0;
-        for(unsigned int i = 0; i < bman.getSpecialBuildingCount(); i++) {
-          if(bman.getSpecialBuilding(i)->getOwner() == player->getSlot()) {
-            int type = bman.getSpecialBuilding(i)->getType();
-              
-            if(type == Building::TYPE_POLICE)
-              crimeExpense -= 100;
-            else if(type == Building::TYPE_FIRE)
-              fireExpense -= 100;
-            else if(type == Building::TYPE_HOSPITAL)
-              healthExpense -= 100;
-          }
-        }
-        
-        resIncome = (double)resIncome / 120.0 / (1.0 - player->getBudget()->getTax());
-        comIncome = (double)comIncome / 120.0 / (1.0 - player->getBudget()->getTax());
-        indIncome = (double)indIncome / 120.0 / (1.0 - player->getBudget()->getTax());
-        
-        int balance  = player->getBudget()->getBalance();
-
-        updateBalance(player, date.getMonth(), 
-            Budget::ITEM_INCOME_TAXES_RESIDENTAL, resIncome);
-        updateBalance(player, date.getMonth(), 
-            Budget::ITEM_INCOME_TAXES_COMMERSIAL, comIncome);
-        updateBalance(player, date.getMonth(), 
-            Budget::ITEM_INCOME_TAXES_INDUSTRIAL, indIncome);
-        
-        updateBalance(player, date.getMonth(), 
-            Budget::ITEM_EXPENSE_CRIME, crimeExpense);
-        updateBalance(player, date.getMonth(), 
-            Budget::ITEM_EXPENSE_FIRE, fireExpense);
-        updateBalance(player, date.getMonth(), 
-            Budget::ITEM_EXPENSE_HEALTH, healthExpense);
-
       }
       
-      // Update zones:
-      for(unsigned int i = 0; i < pman.count(); i++) {
-        bman.updateZoneBuildings(pman.get_by_n(i), map, date.getMonth());
+      int crimeExpense = 0, fireExpense = 0, healthExpense = 0;
+      for(unsigned int i = 0; i < bman.getSpecialBuildingCount(); i++) {
+        if(bman.getSpecialBuilding(i)->getOwner() == player->getSlot()) {
+          int type = bman.getSpecialBuilding(i)->getType();
+            
+          if(type == Building::TYPE_POLICE)
+            crimeExpense -= 100;
+          else if(type == Building::TYPE_FIRE)
+            fireExpense -= 100;
+          else if(type == Building::TYPE_HOSPITAL)
+            healthExpense -= 100;
+        }
       }
       
+      resIncome = (double)resIncome / 120.0 / (1.0 - player->getBudget()->getTax());
+      comIncome = (double)comIncome / 120.0 / (1.0 - player->getBudget()->getTax());
+      indIncome = (double)indIncome / 120.0 / (1.0 - player->getBudget()->getTax());
       
+      int balance  = player->getBudget()->getBalance();
+
+      updateBalance(player, date.getMonth(), 
+          Budget::ITEM_INCOME_TAXES_RESIDENTAL, resIncome);
+      updateBalance(player, date.getMonth(), 
+          Budget::ITEM_INCOME_TAXES_COMMERSIAL, comIncome);
+      updateBalance(player, date.getMonth(), 
+          Budget::ITEM_INCOME_TAXES_INDUSTRIAL, indIncome);
+      
+      updateBalance(player, date.getMonth(), 
+          Budget::ITEM_EXPENSE_CRIME, crimeExpense);
+      updateBalance(player, date.getMonth(), 
+          Budget::ITEM_EXPENSE_FIRE, fireExpense);
+      updateBalance(player, date.getMonth(), 
+          Budget::ITEM_EXPENSE_HEALTH, healthExpense);
 
     }
-    // Do every new year:
-    if(date.isEndOfYear()) {
-      std::cout << "It is now the end of" << date.getYear() << ", time for *ka-ching!*" << std::endl;
-      // TODO:  fix budget stuff
-    }
-
-    // Update thrive values
-    if(date.getDay() % 5 == 0) {
-      updateThrive();
-    }
-
-    // Tell clients we have a time increase
+    
+    // Update zones:
     for(unsigned int i = 0; i < pman.count(); i++) {
-      player_server_network *plr = (player_server_network *)pman.get_by_n(i);
-
-      if(plr->getType() == PLAYER_TYPE_SERVER_NETWORK) {
-        NLPacket p(NLPACKET_TYPE_SIMULTY_TIME_INCR);
-        plr->socket->packet_put(p);
-      }
+      bman.updateZoneBuildings(pman.get_by_n(i), map, date.getMonth());
     }
-    time_advance = false;
+    
+    
+
+  }
+  // Do every new year:
+  if(date.isEndOfYear()) {
+    std::cout << "It is now the end of" << date.getYear() << ", time for *ka-ching!*" << std::endl;
+    // TODO:  fix budget stuff
   }
 
-
-  // New connection:
-  // -----------------------------------------------------------------
-  if(net_server->got_connection()) {
-    player_add(PLAYER_TYPE_SERVER_NETWORK);
+  // Update thrive values
+  if(date.getDay() % 5 == 0) {
+    updateThrive();
   }
 
+  // Tell clients we have a time increase
   for(unsigned int i = 0; i < pman.count(); i++) {
-    // Do only remote players (TODO: Better idea to make ai and remote players work kinda like the same
-    if(pman.get_by_n(i)->getType() == PLAYER_TYPE_SERVER_NETWORK) {
-      player_server_network *pl = (player_server_network *)pman.get_by_n(i);
+    PlayerServerNetwork *plr = (PlayerServerNetwork *)pman.get_by_n(i);
 
-      // A player have left or got disconnected somehow:
-      if(pl->socket->is_connected() == false) {
-        player_remove(pl);
-      }
-
-      // We got a packet:
-      if(pl->socket->packet_exists()) {
-        //err << "* Server have recieved a package, from client " << pl->socket->get_id() << "... " << endl;
-        packet_handle(pl, pl->socket->packet_get());
-      }
+    if(plr->getType() == PLAYER_TYPE_SERVER_NETWORK) {
+      NL::Packet p(NLPACKET_TYPE_SIMULTY_TIME_INCR);
+      plr->sender->pushPacket(p);
     }
   }
 }
@@ -445,7 +452,7 @@ void Server::updateThrive() {
 // =============================================================================
 // =============================================================================
 
-bool Server::packet_handle(player_server_network *from, NLPacket pack)
+bool Server::packet_handle(PlayerServerNetwork *from, NL::Packet pack)
 {
   switch(pack.getType())
   {
@@ -454,17 +461,17 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
     {
         std::cerr << "** Got version info from client" << std::endl;
 
-        NLPacket pgd(NLPACKET_TYPE_SIMULTY_GAMEDATA);
+        NL::Packet pgd(NLPACKET_TYPE_SIMULTY_GAMEDATA);
         std::string data = LoaderSaver::saveGame(map, NULL, NULL);
         pgd << data;
         //std::cout << "The data is " << data.length() << " chars long and packet is " << pgd.getSize() << std::endl;
         //pgd.print();
-        from->socket->packet_put(pgd);
+        from->sender->pushPacket(pgd);
 
-        NLPacket pid(NLPACKET_TYPE_SIMULTY_ID);
+        NL::Packet pid(NLPACKET_TYPE_SIMULTY_ID);
         pid << (NLINT32)from->getId() << (NLINT16)from->getSlot();
 
-        from->socket->packet_put(pid);
+        from->sender->pushPacket(pid);
 
         break;
     }
@@ -485,7 +492,7 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
         map->bulldoze(from->getSlot(), fr, to);
         bman.bulldoze(from->getSlot(), map, fr, to);
 
-        NLPacket packet(NLPACKET_TYPE_SIMULTY_BULLDOZE);
+        NL::Packet packet(NLPACKET_TYPE_SIMULTY_BULLDOZE);
         packet << (NLINT16)from->getSlot() << (NLINT32)fr.getX()
                << (NLINT32)fr.getY()       << (NLINT32)to.getX()
                << (NLINT32)to.getY();
@@ -507,7 +514,7 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
       int cost = map->deZoneCost(from->getSlot(), fr, to);
       map->deZone(from->getSlot(), fr, to);
       
-      NLPacket packet(NLPACKET_TYPE_SIMULTY_DEZONE);
+      NL::Packet packet(NLPACKET_TYPE_SIMULTY_DEZONE);
       packet << (NLINT16)from->getSlot() << (NLINT32)fr.getX()
              << (NLINT32)fr.getY()       << (NLINT32)to.getX()
              << (NLINT32)to.getY();
@@ -529,7 +536,7 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
       if(cost <= from->getBudget()->getBalance()) {
         map->buyLand(from->getSlot(), fr, to);
 
-        NLPacket packet(NLPACKET_TYPE_SIMULTY_LAND);
+        NL::Packet packet(NLPACKET_TYPE_SIMULTY_LAND);
         packet << (NLINT16)from->getSlot() << (NLINT32)fr.getX()
                << (NLINT32)fr.getY()       << (NLINT32)to.getX()
                << (NLINT32)to.getY();
@@ -552,7 +559,7 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
       if(cost <= from->getBudget()->getBalance()) {
         map->buildRoad(from->getSlot(), fr, to);
 
-        NLPacket packet(NLPACKET_TYPE_SIMULTY_ROAD);
+        NL::Packet packet(NLPACKET_TYPE_SIMULTY_ROAD);
         packet << (NLINT16)from->getSlot() << (NLINT32)fr.getX()
                << (NLINT32)fr.getY()       << (NLINT32)to.getX()
                << (NLINT32)to.getY();
@@ -576,7 +583,7 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
 
         map->buildZone(from->getSlot(), tp, fr, to);
 
-        NLPacket zonepak(NLPACKET_TYPE_SIMULTY_ZONE);
+        NL::Packet zonepak(NLPACKET_TYPE_SIMULTY_ZONE);
         zonepak << (NLINT16)from->getSlot() << (NLINT16)tp
                 << (NLINT32)fr.getX() << (NLINT32)fr.getY()
                 << (NLINT32)to.getX() << (NLINT32)to.getY();
@@ -628,7 +635,7 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
 
               bman.addSpecialBuilding(map, b);
 
-              NLPacket packet(NLPACKET_TYPE_SIMULTY_BUILD_SPECIAL_BUILDING);
+              NL::Packet packet(NLPACKET_TYPE_SIMULTY_BUILD_SPECIAL_BUILDING);
               packet << (NLINT16)from->getSlot() << buildingType << x << y;
               packet_send_to_all(packet);
 
@@ -678,25 +685,25 @@ bool Server::packet_handle(player_server_network *from, NLPacket pack)
 }
 
 
-void Server::packet_send(player_server_network *to, NLPacket pack)
+void Server::packet_send(PlayerServerNetwork *to, NL::Packet pack)
 {
     if(to->getType() == PLAYER_TYPE_SERVER_NETWORK)
     {
-        to->socket->packet_put(pack);
+        to->sender->pushPacket(pack);
     }
 
 }
 
 
-void Server::packet_send_to_all(NLPacket pack)
+void Server::packet_send_to_all(NL::Packet pack)
 {
     // Loop and send to all players:
     for(unsigned int i = 0; i < pman.count(); i++)
     {
-        player_server_network *to = (player_server_network *)pman.get_by_n(i);
+        PlayerServerNetwork *to = (PlayerServerNetwork *)pman.get_by_n(i);
         if(to->getType() == PLAYER_TYPE_SERVER_NETWORK)
         {
-            to->socket->packet_put(pack);
+            to->sender->pushPacket(pack);
         }
     }
 
@@ -716,7 +723,7 @@ void Server::updateBalance(Player *p, unsigned char m, unsigned char t, int b) {
     std::cout << "Player id " << p->getId() << std::endl; 
     std::cout << "Player slot " << p->getSlot() << std::endl;
     // Tell about it
-    NLPacket packet(NLPACKET_TYPE_SIMULTY_BUDGET_UPDATE);
+    NL::Packet packet(NLPACKET_TYPE_SIMULTY_BUDGET_UPDATE);
     packet << (NLINT16)p->getSlot();
     packet << (NLINT16)m;
     packet << (NLINT16)t;
@@ -731,7 +738,7 @@ void Server::updateBalance(Player *p, unsigned char m, unsigned char t, int b) {
 
 // Player add, incomming from connection: (TODO, move to separate file)
 // =====================================================================
-bool Server::player_add(unsigned char type)
+bool Server::player_add(unsigned char type, NL::Socket *socket)
 {
     // Handle new connection
     std::cerr << "* Player joined" << std::endl;
@@ -745,7 +752,7 @@ bool Server::player_add(unsigned char type)
     // Player is an AI:
     if(type == PLAYER_TYPE_SERVER_AI)
     {
-        player_server_ai *player_ai_tmp = new player_server_ai(0 - (rand() % 1024), slot);
+        PlayerServerAI *player_ai_tmp = new PlayerServerAI(0 - (rand() % 1024), slot);
         player_tmp = player_ai_tmp;
 
         std::cerr << "  - Player is an AI running on the server" << std::endl;
@@ -756,52 +763,37 @@ bool Server::player_add(unsigned char type)
     }
     else if(type == PLAYER_TYPE_SERVER_NETWORK)
     {
-
-        if(net_server->got_connection())
+        if(socket != NULL)
         {
+            // Set up new player information:
+            PlayerServerNetwork *player_network_tmp = new PlayerServerNetwork(socket->getSocketId(), slot, socket);
 
-            // Get a NSocket from the NNetwork object:
-            NLSocket *socket_tmp = net.add(net_server);
+            player_tmp = player_network_tmp;
+            player_network_tmp->socket = socket;
 
-            if(socket_tmp != NULL)
-            {
-                // Set up new player information:
-                player_server_network *player_network_tmp = new player_server_network(socket_tmp->get_id(), slot);
+            // Print som useful information:
+            std::cerr << "  - Connected from " << socket->getAddress() << ":" 
+                    << socket->getPort() << std::endl;
 
-                player_tmp = player_network_tmp;
-                player_network_tmp->socket = socket_tmp;
+            // TODO SLOT, wich slot.. let the user decide?
 
-                // Print som useful information:
-                std::cerr << "  - Connected from " << player_network_tmp->socket->get_ip() << ":" << player_network_tmp->socket->get_port() << std::endl;
+            // TODO: REJECT IF ALREADY FULL AND STUFF!
 
-                // TODO SLOT, wich slot.. let the user decide?
+            // Compose a welcome packet for our new player:
+            NL::Packet welcome;
+            welcome.setType(NLPACKET_TYPE_SIMULTY_WELCOME);
+            welcome << "Simulty";
 
-                // TODO: REJECT IF ALREADY FULL AND STUFF!
+            // Send the welcome packet:
+            player_network_tmp->sender->pushPacket(welcome);
 
-                // Compose a welcome packet for our new player:
-                NLPacket welcome;
-                welcome.setType(NLPACKET_TYPE_SIMULTY_WELCOME);
-                welcome << "Simulty";
+            // welcome.print();
 
-                // Send the welcome packet:
-                player_network_tmp->socket->packet_put(welcome);
-
-                // welcome.print();
-
-            }
-            else
-            {
-                // TODO, delete tmp socket
-                std::cerr << "* New connection failed!" << std::endl;
-                return false;
-            }
         }
         else
         {
             return false;
         }
-
-
     }
 
     // Write info
@@ -815,7 +807,7 @@ bool Server::player_add(unsigned char type)
     pman.add(player_tmp);
 
     std::string nick = "player";
-    NLPacket joined(NLPACKET_TYPE_SIMULTY_PLAYER_JOINED);
+    NL::Packet joined(NLPACKET_TYPE_SIMULTY_PLAYER_JOINED);
     joined << player_tmp->getId() << player_tmp->getSlot() << nick;
 
     packet_send_to_all(joined);
@@ -832,7 +824,7 @@ bool Server::player_remove(Player *pl)
     std::cerr << "  - Had the the id " << pl->getId() << " and was assigned to slot " << pl->getSlot() << std::endl;
 
 
-    NLPacket left(NLPACKET_TYPE_SIMULTY_PLAYER_LEFT);
+    NL::Packet left(NLPACKET_TYPE_SIMULTY_PLAYER_LEFT);
     left << pl->getId();
 
     packet_send_to_all(left);

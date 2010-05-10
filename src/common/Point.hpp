@@ -97,7 +97,7 @@ class Point {
   bool inArea(Point a, Point b);
   void unsign();
 
-  static Point fromPacket(NLPacket &);
+  static Point fromPacket(NL::Packet &);
 
   // For output in streams:
   friend std::ostream& operator<<(std::ostream& output, const Point& p);

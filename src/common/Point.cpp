@@ -96,7 +96,7 @@ Point Point::operator-(Point p) {
   return Point(getX() - p.getX(), getY() - p.getY());
 }
 
-Point Point::fromPacket(NLPacket &p) {
+Point Point::fromPacket(NL::Packet &p) {
   int a = p.nextInt32();
   int b = p.nextInt32();
   return Point(a, b);

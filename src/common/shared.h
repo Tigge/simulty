@@ -95,5 +95,11 @@ const unsigned char NLPACKET_TYPE_SIMULTY_TIME_SPEED              = 231;
 const unsigned char NLPACKET_TYPE_SIMULTY_BUDGET_UPDATE           = 132;
 
 
+// Events:
+
+const int           USEREVENT_TIMEINCREMENT                       = 100;
+const int           USEREVENT_GOTPACKET                           = 200;
+const int           USEREVENT_GOTPLAYER                           = 300;
+const int           USEREVENT_LOSTPLAYER                          = 301;
 
 #endif
