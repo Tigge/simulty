@@ -44,9 +44,12 @@ LINK_DIRECTORIES(${PROJECT_BINARY_DIR}/lib/NL
 
 # Server:
 ###############################################################################
-ADD_EXECUTABLE(../simulty-server server/Server.cpp common/Point.cpp 
+ADD_EXECUTABLE(../simulty-server server/Server.cpp 
+    server/ServerListener.cpp common/PacketReceiver.cpp common/PacketSender.cpp
+    
+    common/Runnable.cpp common/Point.cpp 
     common/Map.cpp common/PlayerManager.cpp common/Tile.cpp common/Player.cpp 
-    server/player_server_network.cpp server/player_server_ai.cpp
+    server/PlayerServerNetwork.cpp server/PlayerServerAI.cpp
     common/Building.cpp common/BuildingZone.cpp common/BuildingPolice.cpp 
     common/BuildingFire.cpp common/BuildingHospital.cpp 
     common/BuildingManager.cpp common/BuildingFactory.cpp
@@ -60,8 +63,9 @@ target_link_libraries(../simulty-server NL elog)
 # Client:
 ###############################################################################
 ADD_EXECUTABLE(../simulty-client client/Client.cpp common/Point.cpp 
+    common/Runnable.cpp common/PacketReceiver.cpp common/PacketSender.cpp
     common/Map.cpp common/PlayerManager.cpp common/Tile.cpp common/Player.cpp 
-    client/player_client_local.cpp client/player_client_remote.cpp 
+    client/PlayerClientLocal.cpp client/PlayerClientRemote.cpp 
     common/Building.cpp common/BuildingZone.cpp common/BuildingFactory.cpp 
     common/BuildingFire.cpp common/BuildingHospital.cpp 
     common/BuildingManager.cpp common/BuildingPolice.cpp 
@@ -69,16 +73,16 @@ ADD_EXECUTABLE(../simulty-client client/Client.cpp common/Point.cpp
     common/BuildingIndustrial.cpp 
     common/Date.cpp common/Budget.cpp
 
-    client/sdl/SDLGUI.cpp
-    client/sdl/Camera.cpp
-    client/sdl/MapRender.cpp
-    client/sdl/BuildingRender.cpp
-    client/sdl/ToolRender.cpp
-    client/sdl/widgets/MainMenu.cpp
-    client/sdl/widgets/Toolbar.cpp
-    client/sdl/widgets/MiniMap.cpp
-    client/sdl/widgets/Console.cpp
-    client/sdl/widgets/StatusBar.cpp
-    client/sdl/widgets/sdltruetypefont.cpp)
+    client/SDLGUI.cpp
+    client/Camera.cpp
+    client/MapRender.cpp
+    client/BuildingRender.cpp
+    client/ToolRender.cpp
+    client/widgets/MainMenu.cpp
+    client/widgets/Toolbar.cpp
+    client/widgets/MiniMap.cpp
+    client/widgets/Console.cpp
+    client/widgets/StatusBar.cpp
+    client/widgets/sdltruetypefont.cpp)
     
 target_link_libraries(../simulty-client NL elog ${GUICHAN} ${GUICHANSDL})

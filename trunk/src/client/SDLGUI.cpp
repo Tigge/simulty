@@ -4,35 +4,9 @@
 #include "ImageLoaderException.hpp"
 #include "widgets/MainMenu.hpp"
 
-int main(int argc, char *argv[]) {
-
-  try {
-    std::cerr << "Starting..." << std::endl;
-    SDLGUI *gui = new SDLGUI();
-    std::cerr << "New game client" << std::endl;
-
-    gui->run();
-
-    std::cerr << "Deleting game client..." << std::endl;
-    delete gui;
-
-    std::cerr << "Ending..." << std::endl;
-  } catch (gcn::Exception &e) {
-    std::cerr << e.getMessage() << std::endl;
-    return 1;
-  } catch (std::exception &e) {
-    std::cerr << "Std exception: " << e.what() << std::endl;
-    return 1;
-  } catch (...) {
-    std::cerr << "Unknown exception" << std::endl;
-    return 1;
-  }
-  return 0;
-}
-
-
-SDLGUI::SDLGUI() {
-  init();
+SDLGUI::SDLGUI(Client *client) {
+    this->client = client;
+    //init();
 }
 
 SDLGUI::~SDLGUI() {
@@ -60,7 +34,7 @@ void SDLGUI::init() {
   SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY, SDL_DEFAULT_REPEAT_INTERVAL);
 
   
-  client = new Client(this);
+  //client = new Client(this);
   
   try {
 
@@ -133,28 +107,16 @@ void SDLGUI::init() {
   tr = new ToolRender(gui, client, mr, camera);
 }
 
-void SDLGUI::run() {
-  while(true) {
-    
-    update();
-    render();
-      //rest(0);
-  }
-}
-
-
 void SDLGUI::console_log(std::string s) {
   console->addLine(s);
 }
 
-void SDLGUI::update() {
-  SDL_Event event;
-  while(SDL_PollEvent(&event)) {
+void SDLGUI::handleEvent(SDL_Event &event) {
     input->pushInput(event);
-  }
-  
+}
+
+void SDLGUI::update() {
   gui->logic();
-  client->update();
 }
 
 void SDLGUI::render() {

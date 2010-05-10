@@ -68,15 +68,15 @@ bool PlayerManager::del_by_p(Player* p)
     // Delete memory and run deconstructor:
     if(p->getType() == PLAYER_TYPE_SERVER_NETWORK)
     {
-        player_server_network *play = (player_server_network *)p;
-        std::cerr << "  - Was connected from " << play->socket->get_ip() << ":" << play->socket->get_port() << std::endl;
+        PlayerServerNetwork *play = (PlayerServerNetwork *)p;
+        std::cerr << "  - Was connected from " << play->socket->getAddress() << ":" << play->socket->getPort() << std::endl;
 
-        delete (player_server_network *)p;
+        delete (PlayerServerNetwork *)p;
     }
     else if(p->getType() == PLAYER_TYPE_SERVER_AI)
     {
 
-        delete (player_server_ai *)p;
+        delete (PlayerServerAI *)p;
         std::cerr << "  - Was an AI that runned on the server" << std::endl;
     }
 

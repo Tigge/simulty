@@ -2,32 +2,47 @@
 #include "shared.h"
 
 #include "Client.hpp"
+#include "SDLGUI.hpp"
 #include "LoaderSaver.hpp"
 
 #define err std::cerr
 
 
+int main(int argc, char *argv[]) {
 
-Client::Client(GUI *gui) {
-
-    // Client is using this GUI:
-    this->gui = gui;
-
-    // Add local socket and connect it to server (TODO: move later)
-    net_client = net.add();
-    if(!net_client->connect_to("localhost", 5557)) {
-      std::cerr << "Can't connect to local server" << std::endl;
-      exit(0);
+  try {
+    std::cerr << "Starting..." << std::endl;
+    Client client;
+    std::cerr << "New game client" << std::endl;
+    
+    while(true) {
+        client.update();
+        client.render();
     }
 
-    state_running = true;
-    state_menu  = true;
-    state_game = false;
+    std::cerr << "Deleting game client..." << std::endl;
 
-    map = new Map(50, 50);
+    std::cerr << "Ending..." << std::endl;
+  /* TODO: } catch (gcn::Exception &e) {
+    std::cerr << e.getMessage() << std::endl;
+    return 1;
+  */} catch (std::exception &e) {
+    std::cerr << "Std exception: " << e.what() << std::endl;
+    return 1;
+  } catch (...) {
+    std::cerr << "Unknown exception" << std::endl;
+    return 1;
+  }
+  return 0;
+}
 
-    myPlayer = NULL;
 
+Client::Client() {
+
+    // Client is using this GUI:
+    this->gui = new SDLGUI(this);
+    
+    init();
 }
 
 Client::~Client (){
@@ -36,37 +51,77 @@ Client::~Client (){
 
 }
 
-void Client::update() {
+void Client::init() {
 
-  if(state_menu) {
+    state_running = true;
+    state_menu  = true;
+    state_game = false;
 
-  } else if(state_game) {
+    map = new Map(50, 50);
 
-    net.update(0);
+    myPlayer = NULL;
+    
+    gui->init();
+    
+    // Add local socket and connect it to server (TODO: move later)
+    try {
+        socket = new NL::Socket("localhost", 5557);
+        
+        sender = new PacketSender(socket);
+        sender->start();
+        receiver = new PacketReceiver(socket, USEREVENT_GOTPACKET, NULL);
+        receiver->start();
+    } catch(NL::Exception e) {
+        std::cerr << "Can't connect to local server" << std::endl;
+        exit(0);    
+    }	
 
-    while(net_client->packet_exists()) {
-      //err << "* Client have recieved a package... " << endl;
-      packet_handle(net_client->packet_get());
-
-    }
-  }
 }
 
-player_client_local *Client::getMyPlayer() {
-  return myPlayer;
+void Client::render() {
+    gui->render();
+}
+
+void Client::update() {
+
+    SDL_Event event;
+    while(SDL_PollEvent(&event)) {
+        if(event.type == SDL_USEREVENT) {
+            if(event.user.code == USEREVENT_GOTPACKET) {
+                PacketReceiver *receiver = (PacketReceiver *)event.user.data2;
+                //std::cout << "Got packet in main - ";
+                packet_handle(receiver->popPacket());
+
+            } else {
+                //TODO
+            }
+        } else if(event.type == SDL_QUIT) {
+            //TODO
+        } else {
+            gui->handleEvent(event); //TODO: input->pushInput(event);
+        }
+        //std::cout << ",";
+    }
+    //std::cout << ".";
+    gui->update();
+
+}
+
+PlayerClientLocal *Client::getMyPlayer() {
+    return myPlayer;
 }
 
 void Client::bulldoze(Point from, Point to) {
 
-  gui->console_log("Bulldoze requested");
-  std::cout << "SENDING BULLDOZE REQUEST" << std::endl;
+    gui->console_log("Bulldoze requested");
+    std::cout << "SENDING BULLDOZE REQUEST" << std::endl;
 
-  NLPacket packet(NLPACKET_TYPE_SIMULTY_REQUEST_BULLDOZE);
+    NL::Packet packet(NLPACKET_TYPE_SIMULTY_REQUEST_BULLDOZE);
 
-  packet << (NLINT32)from.getX() << (NLINT32)from.getY()
-         << (NLINT32)to.getX()   << (NLINT32)to.getY();
+    packet << (NLINT32)from.getX() << (NLINT32)from.getY()
+           << (NLINT32)to.getX()   << (NLINT32)to.getY();
 
-  net_client->packet_put(packet);
+    sender->pushPacket(packet);
 
 }
 
@@ -74,12 +129,12 @@ void Client::deZone(Point from, Point to) {
 
   gui->console_log("DeZone requested");
 
-  NLPacket packet(NLPACKET_TYPE_SIMULTY_REQUEST_DEZONE);
+  NL::Packet packet(NLPACKET_TYPE_SIMULTY_REQUEST_DEZONE);
 
   packet << (NLINT32)from.getX() << (NLINT32)from.getY()
          << (NLINT32)to.getX()   << (NLINT32)to.getY();
 
-  net_client->packet_put(packet);
+  sender->pushPacket(packet);
 
 }
 
@@ -88,11 +143,11 @@ void Client::buyLand(Point from, Point to) {
 
   gui->console_log("Land requested");
 
-  NLPacket packet(NLPACKET_TYPE_SIMULTY_REQUEST_LAND);
+  NL::Packet packet(NLPACKET_TYPE_SIMULTY_REQUEST_LAND);
   packet << (NLINT32)from.getX() << (NLINT32)from.getY()
          << (NLINT32)to.getX()   << (NLINT32)to.getY();
 
-  net_client->packet_put(packet);
+  sender->pushPacket(packet);
 }
 
 void Client::buyRoad(Point from, Point to) {
@@ -101,11 +156,11 @@ void Client::buyRoad(Point from, Point to) {
 
   // Only straight lines (for now):
   //if(from.getX() == to.getX() || from.getY() == to.getY()) {
-  NLPacket packet(NLPACKET_TYPE_SIMULTY_REQUEST_ROAD);
+  NL::Packet packet(NLPACKET_TYPE_SIMULTY_REQUEST_ROAD);
   packet << (NLINT32)from.getX() << (NLINT32)from.getY()
          << (NLINT32)to.getX()   << (NLINT32)to.getY();
 
-  net_client->packet_put(packet);
+  sender->pushPacket(packet);
   //}
 }
 
@@ -113,13 +168,13 @@ void Client::buyZone(Point from, Point to, int type) {
 
   gui->console_log("Zone requested");
 
-  NLPacket packet(NLPACKET_TYPE_SIMULTY_REQUEST_ZONE);
+  NL::Packet packet(NLPACKET_TYPE_SIMULTY_REQUEST_ZONE);
 
   packet << (NLINT16)type
          << (NLINT32)from.getX() << (NLINT32)from.getY()
          << (NLINT32)to.getX()   << (NLINT32)to.getY();
 
-  net_client->packet_put(packet);
+  sender->pushPacket(packet);
 
 }
 
@@ -128,25 +183,25 @@ void Client::buyBuilding(Point where, int type) {
 
   gui->console_log("Building requested");
 
-  NLPacket packet(NLPACKET_TYPE_SIMULTY_REQUEST_SPECIAL_BUILDING);
+  NL::Packet packet(NLPACKET_TYPE_SIMULTY_REQUEST_SPECIAL_BUILDING);
 
   packet << (NLINT16)type
          << (NLINT32)where.getX() << (NLINT32)where.getY();
 
-  net_client->packet_put(packet);
+  sender->pushPacket(packet);
 }
 
 void Client::debug(Point p) {
 
   gui->console_log("Debugging");
   
-  NLPacket packet(NLPACKET_TYPE_SIMULTY_REQUEST_DEBUG);  
+  NL::Packet packet(NLPACKET_TYPE_SIMULTY_REQUEST_DEBUG);  
   packet << (NLINT32)p.getX() << (NLINT32)p.getY();
-  net_client->packet_put(packet);
+  sender->pushPacket(packet);
 
 }
 
-void Client::packet_handle(NLPacket p) {
+void Client::packet_handle(NL::Packet p) {
 
   switch(p.getType()) {
 
@@ -156,9 +211,9 @@ void Client::packet_handle(NLPacket p) {
 
       std::string welcome; p >> welcome;
 
-      NLPacket ver(NLPACKET_TYPE_SIMULTY_VERSION_CLIENT);
+      NL::Packet ver(NLPACKET_TYPE_SIMULTY_VERSION_CLIENT);
       ver << (NLINT16)0 << (NLINT16)0 << (NLINT16)1;
-      net_client->packet_put(ver);
+      sender->pushPacket(ver);
 
       //alert("Welcome message from server", welcome.c_str(), NULL, "Ok", NULL, 0, 0);
 
@@ -181,7 +236,7 @@ void Client::packet_handle(NLPacket p) {
       NLINT32 id_new; NLINT16 slot_new; p >> id_new >> slot_new;
 
       // Create new local player and assign id and slot:
-      player_client_local *pl = new player_client_local(id_new, slot_new);
+      PlayerClientLocal *pl = new PlayerClientLocal(id_new, slot_new);
       //pl->get_id() = id_new; pl->slot = slot_new;
 
       // Add to player manager:
@@ -209,6 +264,7 @@ void Client::packet_handle(NLPacket p) {
     }
 
     case NLPACKET_TYPE_SIMULTY_TIME_INCR: {
+      std::cout << "time" << std::endl;
       date.advance();
       break;
     }
@@ -236,6 +292,7 @@ void Client::packet_handle(NLPacket p) {
     }
     case NLPACKET_TYPE_SIMULTY_LAND: {
 
+      std::cout << "land" << std::endl;
       int   sl = p.nextInt16();
       Point fr = Point::fromPacket(p);
       Point to = Point::fromPacket(p);
