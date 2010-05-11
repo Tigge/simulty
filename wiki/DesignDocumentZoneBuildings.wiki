@@ -1,28 +1,33 @@
 = Zone Buildings =
 
 == Description ==
-There are three types of zones in Simulty: Residential, Industrial and Commerisal zones.
+There are three types of zones in Simulty: 
+  * Residential
+  * Industrial
+  * Commercial
 
-An initial zone has barely any worth, but they will all evolve, depending on various [DesignDocumentConcepts#Thrive_factors "thrive factors"], such as crime, connections, electricity etc. And besides a good position, a zone needs time to grow
+An initial zone has barely worth anything, but they will all evolve, depending on various [DesignDocumentConcepts#Thrive_factors thrive factors], such as absence of crime, connections, electricity etc. Besides a good thrive status, a zone needs time to grow.
 
-Zones gain "levels" as their "thrivefactors" approve, and as they have more time to grow. Each zone has a styleset for each level, so that not all buildings of the same zone and level will look the same.
+Zones gain *levels* as their *thrive factors* approve, and as they have more time to grow. Each zone has a styleset for each level, so that not all buildings of the same zone and level will look the same.
 
 As there is no buildings on zones at level 0, nobody lives in a Residential zone on lvl 0, and in the same way, the other two zones are worthless on level 0.
 
 Things needed to grow:
-  * Decent [DesignDocumentConcepts#Thrive_factors thrive factors]
-    * Roads (connection to other zones)
+  * Decent [DesignDocumentConcepts#Thrive_factors thrive] values
+    * Communication (Roads, etc)
     * Electricity
-  * etc
+    * Low living cost
+    * Jobs/Wares/People
+    * etc
+  * Other
     * Time
-    * Access to other zones (closely)
 
 == Formulas ==
 === Calculating the level of zone-buildings ===
 
 Buildings can at present be 3x3 squares. We calculate their average thrive values, and based upon the average thrive, we decide the buildings levels, like this:
 
-{{{ level = thrive_factor / 30 }}}
+{{{ level = ceil(thrive_factor / 30)}}}
 
 All zoned areas with a thrive above a preset minimum value (currently 1) will have a chance to have a building on it.
 
