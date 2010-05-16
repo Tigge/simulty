@@ -1,10 +1,18 @@
 = Zone Buildings =
 
+<wiki:toc max_depth="3" />
+
 == Description ==
-There are three types of zones in Simulty: 
+There are three types of zones in Simulty which are codependent on each other in the following ways: 
   * Residential
+    * Need jobs      (industries, 0.7)
+    * Need wares     (commerce, 0.3)
   * Industrial
+    * Need workers   (residents, 0.6)
+    * Need buyers    (commerce, 0.4)
   * Commercial
+    * Need wares     (industries, 0.5)
+    * Need customers (residents,  0.5)
 
 An initial zone has barely worth anything, but they will all evolve, depending on various [DesignDocumentConcepts#Thrive_factors thrive factors], such as absence of crime, connections, electricity etc. Besides a good thrive status, a zone needs time to grow.
 
@@ -23,7 +31,30 @@ Things needed to grow:
     * Time
 
 == Formulas ==
-=== Calculating the level of zone-buildings ===
+
+WARNING: These are heavily under constuction.
+
+=== Building, upgrading, demolition ===
+
+==== Building new buildings ====
+
+{{{
+  thrive          = (thrive - 70) / 30
+  need            = available * factor
+  chance (0 .. 1) = thrive * 0.5 + need * 0.5
+  size   (1 .. 3) = By *city size* and *thrive* in some way
+}}}
+  * Thrive value > 70
+
+==== Calculating upgrades of zones ====
+
+  * Destroy old buildings
+  * Build new better one
+  * Let old now unused buildings become.. unused
+
+=== Population, Level, Taxes ===
+
+==== Calculating the level of zone-buildings ====
 
 Buildings can at present be 3x3 squares. We calculate their average thrive values, and based upon the average thrive, we decide the buildings levels, like this:
 
@@ -31,7 +62,7 @@ Buildings can at present be 3x3 squares. We calculate their average thrive value
 
 All zoned areas with a thrive above a preset minimum value (currently 1) will have a chance to have a building on it.
 
-=== Calculating the number of citizens ===
+==== Calculating the number of citizens (jobs, inhabitants, shop capacity) ====
 
   * All (residental?) houses have a number of inhibitants
   * Size matters
@@ -39,14 +70,7 @@ All zoned areas with a thrive above a preset minimum value (currently 1) will ha
 
 {{{ citizens := sum forall res house: CONSTANT * level * building_size^2 }}}
 
-=== Calculating upgrades of zones ===
-
-  * Destroy old buildings
-  * Build new better one
-  * Let old now unused buildings become.. unused
-
-
-=== Calculating taxes from zones ===
+==== Calculating taxes from zones ====
 
   * Zones (buildings) pay taxes
   * Residents (Inhabitants, see above), industries and commerce pay taxes
