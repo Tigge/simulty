@@ -4,15 +4,11 @@
 
 == Description ==
 There are three types of zones in Simulty which are codependent on each other in the following ways: 
-  * Residential
-    * Need jobs      (industries, 0.7)
-    * Need wares     (commerce, 0.3)
-  * Industrial
-    * Need workers   (residents, 0.6)
-    * Need buyers    (commerce, 0.4)
-  * Commercial
-    * Need wares     (industries, 0.5)
-    * Need customers (residents,  0.5)
+
+|| Y dep. on X  || _Residental_ || _Industrial_ || _Commercial_ ||
+|| *Residental* || _N/A_ (0.0)  || 0.7          || 0.3          ||
+|| *Industrial* || 0.4          || _N/A_ (0.0)  || 0.6          ||
+|| *Commercial* || 0.5          || 0.5          || _N/A_ (0.0)  ||
 
 An initial zone has barely worth anything, but they will all evolve, depending on various [DesignDocumentConcepts#Thrive_factors thrive factors], such as absence of crime, connections, electricity etc. Besides a good thrive status, a zone needs time to grow.
 
