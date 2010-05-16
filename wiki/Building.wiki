@@ -1,23 +1,31 @@
-#summary One-sentence summary of this page.
+#summary Building Simulty
 
-= Prerequisites =
+= Building Simulty =
+
+<wiki:toc max_depth="3" />
+
+== Prerequisites ==
 
   * [http://www.cmake.org/   CMake] (build system)
   * [http://www.libsdl.org/  SDL]
   * SDL_image
   * SDL_ttf 
 
-= Building =
+== Building ==
 
 You build using the CMake build system. Instructions for different platforms follows. Until this information is complete some [http://www.cmake.org/cmake/help/runningcmake.html general instructions] for building projects that use the CMake build system.
 
 We recommend that you do an [http://www.cmake.org/Wiki/CMake_FAQ#Out-of-source_build_trees out-of-source build] - meaning that the resulting files from compilation does not pollute up your source tree. The instructions below are for an out-of-source build.
 
-== Window ==
+=== Window ===
 
 _Simulty should run just fine on Windows due to the cross platform nature of Simulty and the libraries it use. We can't provide any build instructions simply because we don't run Windows._
 
-== Linux ==
+=== Mac ===
+
+_Same story with Mac as with Windows._
+
+=== Linux ===
 
 On a recent Ubuntu you should be able to get everything needed to build Simulty using the following command. Other distributions need to get the libraries using their package manager or build them yourself manually.
 <pre>
