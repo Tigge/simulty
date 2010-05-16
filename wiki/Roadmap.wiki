@@ -2,68 +2,53 @@ This page is under construction and is subject to changes. Please contact the pr
 
 = Milestone 1 =
 
-  * ~~Basic Client / Server architecture~~  Done
-  * ~~Basic Framework~~                     Done
+  * Thrive values -                         Partly done
+  * Zones evolve -                          Started
+  * Time model working (Pause, speed) -     Partly done
+  * Place buildings -                       Partly done
+  * Things cost money -                     Partly done
 
 == Server ==
 
-  * ~~Handle basic player events (join, leave, timeout)~~ Done
+  * Handle basic player events (leave, timeout)
 
 == Client ==
 
-  * ~~View and scroll around map~~  Done
-  * ~~Debug console~~               Done
+  * ~~Simple mini map~~ -                   Done
+  * Preliminary zone buildings -            Partly done
+
+-------------------------------------------------------
 
 = Milestone 2 =
 
+  * Can change taxes
   * Chat
-  * ~~Land (buy)~~              Done
-  * ~~Borders & land (gfx)~~    Done
-  * ~~Roads~~                   Done
-  * ~~Zones (No growth yet)~~   Done
 
 == Client specifics ==
 
-  * ~~Main menu~~ - Done
-  * ~~Simple GUI~~ - Done
+  * Simple budget GUI
 
 == Server specifics ==
 
-= Milestone 3 =
 
-  * ~~Time model working (Pause, speed)~~ - Done, but no GUI
-  * ~~Place buildings~~ -                   Partly done
-  * Thrive values -                         Partly done
-  * Things cost money -                     Partly done
+-------------------------------------------------------
+
+= Future =
+
   * Water on map
-
   * Handle different map sizes
-== Client ==
-
   * Handle different resolutions / color depths
-
-== Server ==
-
   * Better player / slot handling
 
-= Milestone 4 =
 
-  * Preliminary zone buildings    - Partly done
+
+
+
+== Client ==
+
   * Simple economic model test
   * Simple transport model test
   * Simple population model test
-
-== Client ==
-
-  * [http://guichan.sourceforge.net/ Guichan] test GUI - Partly done
-  * ~~Simple mini map~~ - Done
-  * Simple budget GUI
-
-== Server ==
-
-  * Can change taxes
-
-= Future =
 
   * Lobby
   * gettext support
