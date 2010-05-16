@@ -12,6 +12,7 @@
     * [DesignDocumentZoneBuildings  Zone buildings]
     * [DesignDocumentCitySizes      City sizes]
   * [Developing]
+    * [CodeConvention   Code conventions]
     * [Protocol         Protocol spec.]
     * [SaveGame         Save game spec.]
     * [Roadmap          Roadmap]
