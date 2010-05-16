@@ -40,7 +40,7 @@ WARNING: These are heavily under constuction.
 
 {{{
   thrive          = (thrive - 70) / 30
-  need            = available * factor
+  need            = available * factor (need to be close by, depends on transportation?)
   chance (0 .. 1) = thrive * 0.5 + need * 0.5
   size   (1 .. 3) = By *city size* and *thrive* in some way
 }}}
