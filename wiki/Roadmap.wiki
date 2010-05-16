@@ -17,6 +17,13 @@ This page is under construction and is subject to changes. Please contact the pr
   * ~~Simple mini map~~ -                   Done
   * Preliminary zone buildings -            Partly done
 
+== Network library ==
+
+  * Refactor for multi-threading -          Done 
+  * Add cause to exceptions -               
+  * Improve exception handling -
+  * Implement socket reusage - 
+
 -------------------------------------------------------
 
 = Milestone 2 =
