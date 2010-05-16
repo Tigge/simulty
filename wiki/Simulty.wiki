@@ -1,11 +1,25 @@
-#summary One-sentence summary of this page.
+#summary Start page for the Simulty wiki
 
-= Documentation =
+= Simulty Wiki =
 
-Learn how to [Building build] simulty.
+Welcome to the Simulty Wiki. Here you can find information about the game, the development and everything else related to the game. The wiki is divided into three different sections.
 
-...
+== Documentation ==
 
-= Developing =
+This is the end user documentation. Everything in this section is about how to play Simulty. This section is almost empty as the game is nowhere near being finished.
 
-...
+  * Learn [HowToPlay how to play]
+
+== Design Document ==
+
+This section contains all information on what the game *should* be like. All ideas, plans and concepts can be found here. Some of the sections are:
+
+  * [DesignDocumentSummary Summary]
+  * [DesignDocumentConcepts Concepts]
+
+== Developing ==
+
+Information about how to develop Simulty, build it or what needs to be done right now can be found in this section. Some good entry points are:
+
+  * Learn how to [Building build] Simulty.
+  * View the [Roadmap roadmap]
