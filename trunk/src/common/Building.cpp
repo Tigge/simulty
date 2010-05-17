@@ -8,6 +8,7 @@ Building::Building(Point position, unsigned char owner, int w, int h, Date built
   this->owner    = owner;
 
   this->built    = built;
+  this->powered  = true;
 
   setWidth(w);
   setHeight(h);

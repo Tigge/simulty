@@ -189,3 +189,89 @@ void BuildingManager::bulldoze(unsigned char player_slot, Map *m, Point from, Po
   }
 }
 
+
+class BuildingDistanceComparer {
+    private:
+    
+    Building *building;
+    
+    public:
+    
+    BuildingDistanceComparer(Building *building) {
+        this->building = building;
+    }
+  
+    bool operator() (Building *first, Building *second) const {
+        int fd = Point::distance(first->getPosition(), building->getPosition());
+        int sd = Point::distance(second->getPosition(), building->getPosition());
+        return fd > sd;
+    }
+};
+
+void BuildingManager::distributePower() {
+
+    std::cerr << "Starting to distribute power" << std::endl;
+
+    bool first = true;
+
+    typedef std::priority_queue<Building *, std::vector<Building *>, 
+            BuildingDistanceComparer> bdpq;
+    
+    bdpq *buildings = NULL;
+
+    for(unsigned int i = 0; i < getSpecialBuildingCount(); i++) {
+        Building *b = getSpecialBuilding(i);
+
+        if(b->getType() == Building::TYPE_POWERPLANT) {
+        
+            if(first) {
+                buildings = new bdpq(BuildingDistanceComparer(b));
+                for(unsigned int i = 0; i < getZoneBuildingCount(); i++) {
+                    buildings->push(getZoneBuilding(i));
+                }
+                first = false;
+            } else {
+                bdpq *buildingsNew = new bdpq(BuildingDistanceComparer(b));
+                while(!buildings->empty()) {
+                    buildingsNew->push(buildings->top());
+                    buildings->pop();
+                }                
+                delete buildings;
+                buildings = buildingsNew;
+            }
+            
+            int powerLeft = 10;           
+            while(powerLeft >= 0 && !buildings->empty()) {
+                std::cerr << "bpower: " << buildings->top() << std::endl;
+                buildings->top()->powered = true;
+                powerLeft -= buildings->top()->getWidth() * buildings->top()->getHeight();
+                buildings->pop();            
+            }
+        }
+    }
+    
+    // We have no powerplants
+    if(first) {
+        for(unsigned int i = 0; i < getZoneBuildingCount(); i++) {
+            getZoneBuilding(i)->powered = false;
+        }
+        return;
+    }
+    
+    // Remaining buildings are unpowered:
+    if(buildings != NULL) {
+        while(!buildings->empty()) {
+            std::cerr << "pqs: " << buildings->size() << std::endl;
+            buildings->top()->powered = false;
+            buildings->pop();
+        }
+        delete buildings;
+    }
+    
+    std::cerr << "Done distributing power" << std::endl;
+}
+
+
+
+
+

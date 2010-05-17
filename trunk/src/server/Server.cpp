@@ -130,9 +130,9 @@ void Server::setSpeed(int speed) {
     if(speed > 0) {
       int msec = 0;
       switch(speed) {
-        case 1: msec = 7000; break;
-        case 2: msec = 4000;  break;
-        case 3: msec = 2000;  break;
+        case 1: msec = 1700; break;
+        case 2: msec = 1400;  break;
+        case 3: msec = 1200;  break;
       }
       SDL_RemoveTimer(timerId);
       timerId = SDL_AddTimer(msec, Server::time_increment, this);
@@ -617,6 +617,9 @@ bool Server::packet_handle(PlayerServerNetwork *from, NL::Packet pack)
                 break;
               case Building::TYPE_FIRE:
                 cost = SIMULTY_COST_FIRE;
+                break;
+              case Building::TYPE_POWERPLANT:
+                cost = SIMULTY_COST_POWERPLANT;
                 break;
               default:
                 throw SIMULTYEXCEPTION("Unkown building type");

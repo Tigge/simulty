@@ -50,6 +50,11 @@ Toolbar::Toolbar() : gcn::Container() {
   hospitalButton = new gcn::ImageButton(hospitalIcon);
   hospitalButton->addActionListener(this);
   add(hospitalButton, 45, 135);
+  
+  powerplantIcon  = imageLoader->load("img/icons/menu_icon_powerplant.pcx", true);
+  powerplantButton = new gcn::ImageButton(powerplantIcon);
+  powerplantButton->addActionListener(this);
+  add(powerplantButton, 45, 135);
 
   bulldozerIcon  = imageLoader->load("img/icons/menu_icon_bulldozer.pcx", true);
   bulldozerButton = new gcn::ImageButton(bulldozerIcon);
@@ -82,6 +87,9 @@ Toolbar::~Toolbar() {
 
   delete hospitalIcon;
   delete hospitalButton;
+  
+  delete powerplantIcon;
+  delete powerplantButton;
 
   delete bulldozerIcon;
   delete bulldozerButton;
@@ -117,6 +125,8 @@ void Toolbar::action(const gcn::ActionEvent &e) {
     tool = SIMULTY_CLIENT_TOOL_BUILD_FIRE;
   } else if(e.getSource() == hospitalButton) {
     tool = SIMULTY_CLIENT_TOOL_BUILD_HOSPITAL;
+  } else if(e.getSource() == powerplantButton) {
+    tool = SIMULTY_CLIENT_TOOL_BUILD_POWERPLANT;
   } else if(e.getSource() == bulldozerButton) {
     tool = SIMULTY_CLIENT_TOOL_BULLDOZER;
   } else if(e.getSource() == deZoneButton) {

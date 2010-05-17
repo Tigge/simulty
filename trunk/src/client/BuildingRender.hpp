@@ -10,6 +10,9 @@
 
 #include "MapRender.hpp"
 
+#include <iostream>
+#include "SDL_ttf.h"
+
 class BuildingRender {
 
   private:
@@ -17,7 +20,7 @@ class BuildingRender {
   SDL_Surface *buildingPolice;
   SDL_Surface *buildingFire;
   SDL_Surface *buildingHospital;
-  SDL_Surface *buildingResidential;
+  SDL_Surface *buildingPowerplant;
 
   SDL_Surface *buildingHouse1x1;
   SDL_Surface *buildingHouse1x2;
@@ -36,6 +39,7 @@ class BuildingRender {
 
   SDL_Surface *getZoneBuilding(int w, int h);
   void         renderBuilding(SDL_Surface *r, Building *b, Point where);
+  void         renderBuildingInfo(SDL_Surface *r, Building *b, Point where);
   void         render(SDL_Surface *r, MapRender *m, Camera cam, BuildingManager *bm);
 
 

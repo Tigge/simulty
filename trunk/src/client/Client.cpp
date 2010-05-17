@@ -16,19 +16,25 @@ int main(int argc, char *argv[]) {
     std::cerr << "New game client" << std::endl;
     
     while(true) {
+        //std::cerr << "Update" << std::endl;
         client.update();
+        //std::cerr << "Render" << std::endl;
         client.render();
     }
 
     std::cerr << "Deleting game client..." << std::endl;
 
     std::cerr << "Ending..." << std::endl;
-  /* TODO: } catch (gcn::Exception &e) {
+  } catch (gcn::Exception &e) {
     std::cerr << e.getMessage() << std::endl;
     return 1;
-  */} catch (std::exception &e) {
+  } catch (std::exception &e) {
     std::cerr << "Std exception: " << e.what() << std::endl;
     return 1;
+  } catch (std::string &e) {
+    std::cerr << "String exception: " << e << std::endl;
+  } catch (char *e) {
+    std::cerr << "CString exception: " << e << std::endl;
   } catch (...) {
     std::cerr << "Unknown exception" << std::endl;
     return 1;
@@ -266,6 +272,7 @@ void Client::packet_handle(NL::Packet p) {
     case NLPACKET_TYPE_SIMULTY_TIME_INCR: {
       std::cout << "time" << std::endl;
       date.advance();
+      bman.distributePower();
       break;
     }
     case NLPACKET_TYPE_SIMULTY_BUDGET_UPDATE: {
