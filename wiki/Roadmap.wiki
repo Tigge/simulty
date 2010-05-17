@@ -7,6 +7,7 @@ This page is under construction and is subject to changes. Please contact the pr
   * Time model working (Pause, speed) -     Partly done
   * Place buildings -                       Partly done
   * Things cost money -                     Partly done
+  * Read buildings from files (XML) -       
 
 == Server ==
 
