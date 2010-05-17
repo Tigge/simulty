@@ -22,6 +22,7 @@ class Toolbar : public gcn::Container, gcn::ActionListener {
   gcn::Button      *policeButton;
   gcn::Button      *fireButton;
   gcn::Button      *hospitalButton;
+  gcn::Button      *powerplantButton;
   
   gcn::Button      *bulldozerButton;
   gcn::Button      *deZoneButton;
@@ -36,6 +37,7 @@ class Toolbar : public gcn::Container, gcn::ActionListener {
   gcn::Image       *policeIcon;
   gcn::Image       *fireIcon;
   gcn::Image       *hospitalIcon;
+  gcn::Image       *powerplantIcon;
   gcn::Image       *bulldozerIcon;
   gcn::Image       *deZoneIcon;
 

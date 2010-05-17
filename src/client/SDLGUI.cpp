@@ -130,15 +130,19 @@ void SDLGUI::render() {
     
   } else if(client->state_game == SIMULTY_CLIENT_STATE_GAME_ON) {
     // TODO
+    //std::cerr << "Render Map" << std::endl;  
     mr->render(screen, *camera);
     // Render buildings:
+    //std::cerr << "Render Buildings" << std::endl;  
     br->render(screen, mr, *camera, &client->bman);
-    
+
+    //std::cerr << "Render Tool" << std::endl;      
     if(usingTool) {
       tr->render(screen);
     }
   }
-  
+
+  //std::cerr << "Render GUI" << std::endl;  
   gui->draw();
   
   //Update Screen
@@ -232,6 +236,8 @@ void SDLGUI::mouseReleased (gcn::MouseEvent &e) {
         client->buyBuilding(mouse_down_tile, Building::TYPE_FIRE);
       } else if(tool == SIMULTY_CLIENT_TOOL_BUILD_HOSPITAL) {
         client->buyBuilding(mouse_down_tile, Building::TYPE_HOSPITAL);
+      } else if(tool == SIMULTY_CLIENT_TOOL_BUILD_POWERPLANT) {
+        client->buyBuilding(mouse_down_tile, Building::TYPE_POWERPLANT);
       } else if(tool == SIMULTY_CLIENT_TOOL_BULLDOZER) {
         client->bulldoze(mouse_down_tile, mouse_up_tile);
       } else if(tool == SIMULTY_CLIENT_TOOL_DEZONE) {

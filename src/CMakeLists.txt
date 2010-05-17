@@ -52,6 +52,7 @@ ADD_EXECUTABLE(../simulty-server server/Server.cpp
     server/PlayerServerNetwork.cpp server/PlayerServerAI.cpp
     common/Building.cpp common/BuildingZone.cpp common/BuildingPolice.cpp 
     common/BuildingFire.cpp common/BuildingHospital.cpp 
+    common/BuildingPowerplant.cpp
     common/BuildingManager.cpp common/BuildingFactory.cpp
     common/BuildingResidential.cpp common/BuildingCommersial.cpp 
     common/BuildingIndustrial.cpp server/PlayerManagerServer.cpp 
@@ -69,6 +70,7 @@ ADD_EXECUTABLE(../simulty-client client/Client.cpp common/Point.cpp
     common/Building.cpp common/BuildingZone.cpp common/BuildingFactory.cpp 
     common/BuildingFire.cpp common/BuildingHospital.cpp 
     common/BuildingManager.cpp common/BuildingPolice.cpp 
+    common/BuildingPowerplant.cpp
     common/BuildingResidential.cpp common/BuildingCommersial.cpp 
     common/BuildingIndustrial.cpp 
     common/Date.cpp common/Budget.cpp

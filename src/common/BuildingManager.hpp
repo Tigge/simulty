@@ -3,6 +3,7 @@
 #define _BUILDINGMANAGER_H_
 
 #include <vector>
+#include <queue>
 #include "Map.hpp"
 #include "Building.hpp"
 #include "BuildingZone.hpp"
@@ -19,6 +20,11 @@ class BuildingManager {
 
   public:
     virtual ~BuildingManager();
+
+
+    // XXX: TEST
+    void distributePower();
+    
 
     // Buildings:
     void          addSpecialBuilding(Map *, Building *);

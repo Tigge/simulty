@@ -19,33 +19,37 @@ const unsigned char DIR_NONE  = 4;
 
 // Tools: (for now)
 
-const unsigned char SIMULTY_CLIENT_TOOL_NONE           = 0;
-const unsigned char SIMULTY_CLIENT_TOOL_LAND           = 1;
-const unsigned char SIMULTY_CLIENT_TOOL_ROAD           = 2;
+const unsigned char SIMULTY_CLIENT_TOOL_NONE             = 0;
+const unsigned char SIMULTY_CLIENT_TOOL_LAND             = 1;
+const unsigned char SIMULTY_CLIENT_TOOL_ROAD             = 2;
 
-const unsigned char SIMULTY_CLIENT_TOOL_ZONE_RES       = 10;
-const unsigned char SIMULTY_CLIENT_TOOL_ZONE_COM       = 11;
-const unsigned char SIMULTY_CLIENT_TOOL_ZONE_IND       = 12;
+const unsigned char SIMULTY_CLIENT_TOOL_ZONE_RES         = 10;
+const unsigned char SIMULTY_CLIENT_TOOL_ZONE_COM         = 11;
+const unsigned char SIMULTY_CLIENT_TOOL_ZONE_IND         = 12;
 
-const unsigned char SIMULTY_CLIENT_TOOL_BUILD_POLICE   = 50;
-const unsigned char SIMULTY_CLIENT_TOOL_BUILD_HOSPITAL = 51;
-const unsigned char SIMULTY_CLIENT_TOOL_BUILD_FIRE     = 52;
+const unsigned char SIMULTY_CLIENT_TOOL_BUILD_POLICE     = 50;
+const unsigned char SIMULTY_CLIENT_TOOL_BUILD_HOSPITAL   = 51;
+const unsigned char SIMULTY_CLIENT_TOOL_BUILD_FIRE       = 52;
 
-const unsigned char SIMULTY_CLIENT_TOOL_BULLDOZER      = 100;
-const unsigned char SIMULTY_CLIENT_TOOL_DEZONE         = 101;
+const unsigned char SIMULTY_CLIENT_TOOL_BUILD_POWERPLANT = 70;
+
+const unsigned char SIMULTY_CLIENT_TOOL_BULLDOZER        = 100;
+const unsigned char SIMULTY_CLIENT_TOOL_DEZONE           = 101;
 
 // Costs: (for now)
 
-const unsigned NLINT16 SIMULTY_COST_ROAD     = 10;
-const unsigned NLINT16 SIMULTY_COST_LAND     = 10;
+const unsigned NLINT16 SIMULTY_COST_ROAD       = 10;
+const unsigned NLINT16 SIMULTY_COST_LAND       = 10;
 
-const unsigned NLINT16 SIMULTY_COST_IND      = 100;
-const unsigned NLINT16 SIMULTY_COST_COM      = 120;
-const unsigned NLINT16 SIMULTY_COST_RES      = 80;
+const unsigned NLINT16 SIMULTY_COST_IND        = 100;
+const unsigned NLINT16 SIMULTY_COST_COM        = 120;
+const unsigned NLINT16 SIMULTY_COST_RES        = 80;
 
-const unsigned NLINT16 SIMULTY_COST_POLICE   = 3000;
-const unsigned NLINT16 SIMULTY_COST_HOSPITAL = 2600;
-const unsigned NLINT16 SIMULTY_COST_FIRE     = 1800;
+const unsigned NLINT16 SIMULTY_COST_POLICE     = 3000;
+const unsigned NLINT16 SIMULTY_COST_HOSPITAL   = 2600;
+const unsigned NLINT16 SIMULTY_COST_FIRE       = 1800;
+
+const unsigned NLINT16 SIMULTY_COST_POWERPLANT = 5000;
 
 // Packets:
 // =============================================================================

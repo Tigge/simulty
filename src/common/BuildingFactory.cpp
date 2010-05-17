@@ -4,6 +4,7 @@
 #include "BuildingPolice.hpp"
 #include "BuildingFire.hpp"
 #include "BuildingHospital.hpp"
+#include "BuildingPowerplant.hpp"
 
 #include "BuildingResidential.hpp"
 #include "BuildingCommersial.hpp"
@@ -27,6 +28,10 @@ Building *BuildingFactory::getBuilding(int type, Point position,
 
     case Building::TYPE_HOSPITAL: {
       return new BuildingHospital(position, owner, built);
+    }
+    
+    case Building::TYPE_POWERPLANT: {
+      return new BuildingPowerplant(position, owner, built);
     }
 
   }
