@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<building id="10" type="crime">
+  <name>Police Station</name>
+  <description>TODO</description>
+  <cost buy="1500" demolish="300" upkeep="100"/>
+  <size width="3" height="3"/>
+  <graphic location="img/special/police.png"/>
+
+</building>
