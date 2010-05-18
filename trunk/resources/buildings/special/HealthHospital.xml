@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<building id="31" type="health">
+  <name>Hospital</name>
+  <description>TODO</description>
+  <cost buy="1500" demolish="300" upkeep="100"/>
+  <size width="3" height="3"/>
+  <graphic location="img/special/hospital.png"/>
+
+</building>

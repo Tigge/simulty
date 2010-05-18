@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<building id="40" type="powerplant">
+  <name>Coal Powerplant</name>
+  <description>The coal is pulverized and injected into the furnace where it 
+      instantly is ignited. Water going through pipes in the furnace is heated
+      up and the steam generated drives a turbine connected to a generator.
+      
+      The coal powerplant gives away both ash as a solid product but also lets
+      out carbon dioxide, sulphur dioxide and nitrogen oxides gases. A coal 
+      powerplant is one of the worst solutions in terms of enivornment but it 
+      is rather cheap and produces a good amount of electricity.</description>
+  <cost buy="5000" demolish="1000" upkeep="200"/>
+  <size width="3" height="3"/>
+  <graphic location="img/special/powerplant.png"/>
+
+  <powerplant capacity="5000" />
+</building>

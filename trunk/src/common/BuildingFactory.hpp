@@ -6,21 +6,15 @@
 #include "Map.hpp"
 #include "Building.hpp"
 #include "BuildingZone.hpp"
+#include "BuildingLoader.hpp"
 
 #include <map>
-#include <libxml/parser.h>
-#include <libxml/tree.h>
-
-class BuildingInformation {
-    std::string name;
-
-};
 
 class BuildingFactory {
     private:
 
     static bool inited;
-    static std::map<int,BuildingInformation *> buildings;
+    static std::map<int, BuildingInformation *> buildings;
 
     public:
     

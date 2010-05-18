@@ -15,31 +15,31 @@
 
 
 bool BuildingFactory::inited = false;
+std::map<int, BuildingInformation *> BuildingFactory::buildings;
 
 void BuildingFactory::init() {
 
+    const char *files[] = {"CrimePoliceStation.xml", "CrimePrison.xml", 
+            "FireStation.xml", "HealthClinic.xml", "HealthHospital.xml",
+            "PowerplantCoal.xml", "PowerplantNuclear.xml"};
+
     if(!inited) {
     
-        loadBuildingInformation("resources/PowerplantCoal.xml");    
+        for(int i = 0; i < 7; i++) {
+            std::string file = std::string("resources/buildings/special/") 
+                    + files[i];
+            BuildingInformation *bi = BuildingLoader::loadBuildingInformation(
+                    file);
+            buildings[bi->id] = bi;
+        }
         inited = true;
     }
     
 }
 
 void BuildingFactory::loadBuildingInformation(std::string file) {
-    xmlDoc *doc = NULL;
-    xmlNode *root_element = NULL;
 
-    LIBXML_TEST_VERSION
 
-    doc = xmlReadFile(file.c_str(), NULL, 0);
-    if (doc == NULL) {
-        std::cerr << "error: could not parse file " << file;
-    }
-
-    root_element = xmlDocGetRootElement(doc);
-    xmlFreeDoc(doc);
-    xmlCleanupParser();
 
 }
 

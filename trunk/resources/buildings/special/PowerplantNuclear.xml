@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<building id="41" type="powerplant">
+  <name>Nuclear Powerplant</name>
+  <description>TODO</description>
+  <cost buy="35000" demolish="15000" upkeep="1000"/>
+  <size width="3" height="3"/>
+  <graphic location="img/special/powerplant.png"/>
+
+  <powerplant capacity="50000" />
+</building>

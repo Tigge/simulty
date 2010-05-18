@@ -97,6 +97,8 @@ Server::Server() {
   setSpeed(1);
 
   srand(time(0));
+  
+  BuildingFactory::init();
 }
 
 // Destructor, cleans everything up:
