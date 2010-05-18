@@ -13,8 +13,40 @@
 #include "SimultyException.hpp"
 #include "Date.hpp"
 
+
+bool BuildingFactory::inited = false;
+
+void BuildingFactory::init() {
+
+    if(!inited) {
+    
+        loadBuildingInformation("resources/PowerplantCoal.xml");    
+        inited = true;
+    }
+    
+}
+
+void BuildingFactory::loadBuildingInformation(std::string file) {
+    xmlDoc *doc = NULL;
+    xmlNode *root_element = NULL;
+
+    LIBXML_TEST_VERSION
+
+    doc = xmlReadFile(file.c_str(), NULL, 0);
+    if (doc == NULL) {
+        std::cerr << "error: could not parse file " << file;
+    }
+
+    root_element = xmlDocGetRootElement(doc);
+    xmlFreeDoc(doc);
+    xmlCleanupParser();
+
+}
+
+
 Building *BuildingFactory::getBuilding(int type, Point position,
     unsigned char owner, Date built) {
+
 
   switch(type) {
 

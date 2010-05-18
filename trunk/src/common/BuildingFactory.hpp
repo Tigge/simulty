@@ -7,9 +7,26 @@
 #include "Building.hpp"
 #include "BuildingZone.hpp"
 
+#include <map>
+#include <libxml/parser.h>
+#include <libxml/tree.h>
+
+class BuildingInformation {
+    std::string name;
+
+};
+
 class BuildingFactory {
+    private:
+
+    static bool inited;
+    static std::map<int,BuildingInformation *> buildings;
 
     public:
+    
+    static void init();
+    
+    static void loadBuildingInformation(std::string);
 
     static Building *getBuilding(int buildingType, Point position,
         unsigned char owner, Date built);

@@ -16,6 +16,8 @@ Find_Package ( SDL_image REQUIRED )
 Find_Package ( SDL_mixer REQUIRED )
 Find_Package ( SDL_ttf   REQUIRED )
 
+Find_Package ( LibXml2   REQUIRED )
+
 if ( NOT SDL_FOUND )
    message ( FATAL_ERROR "SDL not found!" )
 endif ( NOT SDL_FOUND )
@@ -25,6 +27,7 @@ link_libraries (
    ${SDLIMAGE_LIBRARY}
    ${SDLTTF_LIBRARY}
    SDLmain
+   ${LIBXML2_LIBRARIES}
 )
 
 # GUICHAN
@@ -37,6 +40,7 @@ Find_Library(GUICHANSDL NAMES guichan_sdl)
 INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR}/lib/NL
                     ${PROJECT_SOURCE_DIR}/lib/error
                     ${SDL_INCLUDE_DIR}
+                    ${LIBXML2_INCLUDE_DIR}
                     common)
 
 LINK_DIRECTORIES(${PROJECT_BINARY_DIR}/lib/NL
