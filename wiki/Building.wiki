@@ -4,12 +4,14 @@
 
 <wiki:toc max_depth="3" />
 
-== Prerequisites ==
+== Dependencies ==
 
-  * [http://www.cmake.org/   CMake] (build system)
-  * [http://www.libsdl.org/  SDL]
-  * SDL_image
-  * SDL_ttf 
+  * [http://www.cmake.org/                     CMake] (build system)
+  * [http://www.libsdl.org/                    SDL]
+  * [http://www.libsdl.org/projects/SDL_image/ SDL_image]
+  * [http://www.libsdl.org/projects/SDL_ttf/   SDL_ttf]
+  * [http://guichan.sourceforge.net/           Guichan (GUI)]
+  * [http://xmlsoft.org/                       Libxml2]
 
 == Building ==
 
