@@ -604,30 +604,11 @@ bool Server::packet_handle(PlayerServerNetwork *from, NL::Packet pack)
         if( x > 0 && y > 0) {
             std::cerr << "B: " << Point(x, y) << " - " << buildingType << std::endl;
 
-            Building *b = BuildingFactory::getBuilding(buildingType,
-                Point(x, y), from->getSlot(), date);
+            BuildingSpecial *b =  
+                    (BuildingSpecial *)BuildingFactory::getBuilding(
+                    buildingType, Point(x, y), from->getSlot(), date);
 
-            int cost;
-
-            switch(buildingType)
-            {
-              case Building::TYPE_POLICE:
-                cost = SIMULTY_COST_POLICE;
-                break;
-              case Building::TYPE_HOSPITAL:
-                cost = SIMULTY_COST_HOSPITAL;
-                break;
-              case Building::TYPE_FIRE:
-                cost = SIMULTY_COST_FIRE;
-                break;
-              case Building::TYPE_POWERPLANT:
-                cost = SIMULTY_COST_POWERPLANT;
-                break;
-              default:
-                throw SIMULTYEXCEPTION("Unkown building type");
-                break;
-            }
-
+            int cost = b->getBuildingInformation()->getBuyCost();
             std::cerr << cost << std::endl;
             if(bman.canBuildSpecialBuilding(b, from->getSlot(), map)) {
               std::cerr << "Space is good" << std::endl;

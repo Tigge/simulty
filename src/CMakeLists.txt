@@ -54,11 +54,11 @@ ADD_EXECUTABLE(../simulty-server server/Server.cpp
     common/Runnable.cpp common/Point.cpp 
     common/Map.cpp common/PlayerManager.cpp common/Tile.cpp common/Player.cpp 
     server/PlayerServerNetwork.cpp server/PlayerServerAI.cpp
-    common/Building.cpp common/BuildingZone.cpp common/BuildingPolice.cpp 
-    common/BuildingFire.cpp common/BuildingHospital.cpp 
-    common/BuildingPowerplant.cpp
+    common/Building.cpp common/BuildingSpecial.cpp common/BuildingZone.cpp 
+    common/BuildingPolice.cpp common/BuildingFire.cpp
+    common/BuildingHospital.cpp common/BuildingPowerplant.cpp
     common/BuildingManager.cpp common/BuildingFactory.cpp
-    common/BuildingLoader.cpp
+    common/BuildingInformation.cpp
     common/BuildingResidential.cpp common/BuildingCommersial.cpp 
     common/BuildingIndustrial.cpp server/PlayerManagerServer.cpp 
     server/BuildingManagerServer.cpp common/ThriveMap.cpp common/Date.cpp
@@ -72,11 +72,11 @@ ADD_EXECUTABLE(../simulty-client client/Client.cpp common/Point.cpp
     common/Runnable.cpp common/PacketReceiver.cpp common/PacketSender.cpp
     common/Map.cpp common/PlayerManager.cpp common/Tile.cpp common/Player.cpp 
     client/PlayerClientLocal.cpp client/PlayerClientRemote.cpp 
-    common/Building.cpp common/BuildingZone.cpp common/BuildingFactory.cpp 
-    common/BuildingFire.cpp common/BuildingHospital.cpp 
-    common/BuildingManager.cpp common/BuildingPolice.cpp 
-    common/BuildingPowerplant.cpp
-    common/BuildingLoader.cpp
+    common/Building.cpp common/BuildingSpecial.cpp common/BuildingZone.cpp 
+    common/BuildingPolice.cpp common/BuildingFire.cpp
+    common/BuildingHospital.cpp common/BuildingPowerplant.cpp
+    common/BuildingManager.cpp common/BuildingFactory.cpp
+    common/BuildingInformation.cpp
     common/BuildingResidential.cpp common/BuildingCommersial.cpp 
     common/BuildingIndustrial.cpp 
     common/Date.cpp common/Budget.cpp

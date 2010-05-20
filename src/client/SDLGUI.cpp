@@ -231,13 +231,13 @@ void SDLGUI::mouseReleased (gcn::MouseEvent &e) {
             // zone
           client->buyZone(mouse_down_tile, mouse_up_tile, tool);
       } else if(tool == SIMULTY_CLIENT_TOOL_BUILD_POLICE) {
-        client->buyBuilding(mouse_down_tile, Building::TYPE_POLICE);
+        client->buyBuilding(mouse_down_tile, 10);
       } else if(tool == SIMULTY_CLIENT_TOOL_BUILD_FIRE) {
-        client->buyBuilding(mouse_down_tile, Building::TYPE_FIRE);
+        client->buyBuilding(mouse_down_tile, 20);
       } else if(tool == SIMULTY_CLIENT_TOOL_BUILD_HOSPITAL) {
-        client->buyBuilding(mouse_down_tile, Building::TYPE_HOSPITAL);
+        client->buyBuilding(mouse_down_tile, 31);
       } else if(tool == SIMULTY_CLIENT_TOOL_BUILD_POWERPLANT) {
-        client->buyBuilding(mouse_down_tile, Building::TYPE_POWERPLANT);
+        client->buyBuilding(mouse_down_tile, 40);
       } else if(tool == SIMULTY_CLIENT_TOOL_BULLDOZER) {
         client->bulldoze(mouse_down_tile, mouse_up_tile);
       } else if(tool == SIMULTY_CLIENT_TOOL_DEZONE) {

@@ -1,17 +1,14 @@
 #ifndef _BUILDINGPOWERPLANT_HPP_
 #define _BUILDINGPOWERPLANT_HPP_
 
-#include "Building.hpp"
+#include "BuildingSpecial.hpp"
 
-class BuildingPowerplant: public Building {
+class BuildingPowerplant: public BuildingSpecial {
 
     public:
 
-    BuildingPowerplant(Point position, int owner, Date built);
+    BuildingPowerplant(BuildingInformation *bi, Point position, int owner, Date built);
 
-    virtual unsigned char getType();
-    virtual unsigned char getWidth();
-    virtual unsigned char getHeight();
 };
 
 #endif
