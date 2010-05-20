@@ -5,8 +5,9 @@
 #include "Point.hpp"
 #include "Map.hpp"
 #include "Building.hpp"
+#include "BuildingSpecial.hpp"
 #include "BuildingZone.hpp"
-#include "BuildingLoader.hpp"
+#include "BuildingInformation.hpp"
 
 #include <map>
 
@@ -22,7 +23,7 @@ class BuildingFactory {
     
     static void loadBuildingInformation(std::string);
 
-    static Building *getBuilding(int buildingType, Point position,
+    static Building *getBuilding(int id, Point position,
         unsigned char owner, Date built);
     static BuildingZone *getBuildingZone(int type, Point position,
         unsigned char owner, int w, int h, Date built, int level, int style);

@@ -28,47 +28,55 @@ void BuildingFactory::init() {
         for(int i = 0; i < 7; i++) {
             std::string file = std::string("resources/buildings/special/") 
                     + files[i];
-            BuildingInformation *bi = BuildingLoader::loadBuildingInformation(
-                    file);
-            buildings[bi->id] = bi;
+            BuildingInformation *bi = BuildingInformation::load(file);
+            buildings[bi->getId()] = bi;
+            std::cout << "Adding " << bi->getId() << ": " << bi << std::endl;
         }
         inited = true;
     }
     
 }
 
-void BuildingFactory::loadBuildingInformation(std::string file) {
 
-
-
-}
-
-
-Building *BuildingFactory::getBuilding(int type, Point position,
+Building *BuildingFactory::getBuilding(int id, Point position,
     unsigned char owner, Date built) {
+    
+    /*std::cerr << "getting building with id " << id << std::endl;
+    std::cerr << "map is " << buildings.size() << " size" << std::endl;
+    std::cerr << "pointer (40):  " << buildings[40] << std::endl;
+    std::cerr << "pointer (200): " << buildings[200] << std::endl;
+    std::cout << "buildings contains:\n";
 
-
-  switch(type) {
-
-    case Building::TYPE_POLICE: {
-      return new BuildingPolice(position, owner, built);
-    }
-
-    case Building::TYPE_FIRE: {
-      return new BuildingFire(position, owner, built);
-    }
-
-    case Building::TYPE_HOSPITAL: {
-      return new BuildingHospital(position, owner, built);
+    for (std::map<int, BuildingInformation *>::iterator it=buildings.begin() ; it != buildings.end(); it++ )
+      std::cout << (*it).first << " => " << (*it).second << std::endl;*/
+    
+    std::map<int, BuildingInformation *>::iterator it = buildings.find(id);
+    
+    if(it == buildings.end()) {
+        throw SIMULTYEXCEPTION("No such building id was loaded");
     }
     
-    case Building::TYPE_POWERPLANT: {
-      return new BuildingPowerplant(position, owner, built);
+    BuildingInformation *bi = it->second;
+    
+    switch(bi->getType()) {
+        case Building::TYPE_POLICE: {
+            return new BuildingPolice(bi, position, owner, built);
+        }
+
+        case Building::TYPE_FIRE: {
+            return new BuildingFire(bi, position, owner, built);
+        }
+
+        case Building::TYPE_HOSPITAL: {
+            return new BuildingHospital(bi, position, owner, built);
+        }
+        
+        case Building::TYPE_POWERPLANT: {
+            return new BuildingPowerplant(bi, position, owner, built);
+        }
     }
 
-  }
-
-  throw SIMULTYEXCEPTION("No such building type");
+    throw SIMULTYEXCEPTION("No such building type");
 }
 
 BuildingZone *BuildingFactory::getBuildingZone(int type, Point position,

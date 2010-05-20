@@ -48,6 +48,7 @@ Client::Client() {
     // Client is using this GUI:
     this->gui = new SDLGUI(this);
     
+    BuildingFactory::init();
     init();
 }
 
