@@ -5,6 +5,7 @@
   * [DesignDocument Design Document]
     * [DesignDocumentSummary        Summary]
     * [DesignDocumentConcepts       Concepts]
+    * [DesignDocumentElectricity    Electricity]
     * [DesignDocumentTraffic        Traffic]
     * [DesignDocumentEconomy        Economy]
     * [DesignDocumentPolitics       Politics]
