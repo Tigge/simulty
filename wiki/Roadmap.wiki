@@ -3,11 +3,13 @@ This page is under construction and is subject to changes. Please contact the pr
 = Milestone 1 =
 
   * Thrive values -                         Partly done
+    * Simple electricity
   * Zones evolve -                          Started
   * Time model working (Pause, speed) -     Partly done
   * Place buildings -                       Partly done
   * Things cost money -                     Partly done
-  * Read buildings from files (XML) -       
+  * Read buildings from files (XML) -       Started
+
 
 == Server ==
 
@@ -17,13 +19,18 @@ This page is under construction and is subject to changes. Please contact the pr
 
   * ~~Simple mini map~~ -                   Done
   * Preliminary zone buildings -            Partly done
+  * Toolbar
+    * Use building information 
+    * Categories
+  * ToolRender
+    * Render special buildings
 
 == Network library ==
 
   * Refactor for multi-threading -          Done 
   * Add cause to exceptions -               
   * Improve exception handling -
-  * Implement socket reusage - 
+  * Set socket reusage - 
 
 -------------------------------------------------------
 
