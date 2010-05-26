@@ -1,0 +1,35 @@
+#summary Design Document: Electricty
+
+=Electricity=
+
+Every building needs a certain amount of electricty depending on their size and level. Special buildings have a set requirement.
+
+To satisfy the electricity need the city needs to have sufficient power to supply the whole city.
+
+== Algorithm ==
+
+For early versions of the game when there is no power lines we will use a simple algorithm that powers the closest buildings first.
+
+{{{
+for(each player) {
+  buildings = all players buildings
+  for(each powerplants) {
+     while(capacity >= 0) {
+        closest building in buildings list = powered
+        capacity = capacity - building need
+        remove building from list
+     }
+  }
+}
+}}}
+
+Where a buildings elecricity need is:
+
+{{{
+if(special building) {
+  need = the special buildings elecricity need (declared in the xml file)
+} else {
+  need = width * height * level
+}
+
+}}}
